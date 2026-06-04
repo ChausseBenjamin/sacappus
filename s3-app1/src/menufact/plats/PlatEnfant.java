@@ -1,17 +1,23 @@
 package menufact.plats;
 
-public class PlatEnfant extends PlatAuMenu{
-    private double proportion;
+import ingredients.Ingredient;
+import menufact.plats.prices.PriceFlyweight;
+
+import java.util.ArrayList;
+
+public class PlatEnfant extends Plat{
+    private float proportion;
 
     public PlatEnfant() {
     }
-
-    public PlatEnfant(int code, String description, double prix, double proportion) {
-        super(code, description, prix);
+    public PlatEnfant(int code, String description, PriceFlyweight prix, float proportion, ArrayList<Ingredient> ingredients) {
+        super(code, description, prix, ingredients);
         this.proportion = proportion;
     }
-
-    public double getProportion() {
+    public void setPrixFlyweight(PriceFlyweight prix) {
+        this.prix = prix;
+    }
+    public float getProportion() {
         return proportion;
     }
 

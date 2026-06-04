@@ -1,5 +1,12 @@
 package menufact.facture;
 
-public enum FactureEtat {
-    OUVERTE, FERMEE, PAYEE
+import menufact.facture.exceptions.FactureException;
+
+public interface FactureEtat {
+
+
+    FactureEtat Payer(Facture fact);
+    FactureEtat Fermer(Facture fact);
+    FactureEtat Ouvrir(Facture fact);
+
 }

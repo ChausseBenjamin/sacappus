@@ -1,49 +1,20 @@
 package menufact.plats;
 
-public class PlatAuMenu {
-    private int code;
-    private String description;
-    private double prix;
+import ingredients.Ingredient;
+import menufact.plats.prices.PriceFlyweight;
 
-    public PlatAuMenu(int code, String description, double prix) {
-        this.code = code;
-        this.description = description;
-        this.prix = prix;
-    }
+import java.util.ArrayList;
 
-    public PlatAuMenu() {
-    }
+public interface PlatAuMenu {
+    void setCode(int code);
+    void setDescription(String description);
 
-    @Override
-    public String toString() {
-        return "menufact.plats.PlatAuMenu{" +
-                "code=" + code +
-                ", description='" + description + '\'' +
-                ", prix=" + prix +
-                "}\n";
-    }
+    int getCode();
+    String getDescription();
+    double getPrix();
+    ArrayList<Ingredient> getIngredients();
+    PriceFlyweight getPrixFlyweight();
+    void setPrixFlyweight(PriceFlyweight prix);
+    String toString();
 
-    public int getCode() {
-        return code;
-    }
-
-    public void setCode(int code) {
-        this.code = code;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public double getPrix() {
-        return prix;
-    }
-
-    public void setPrix(double prix) {
-        this.prix = prix;
-    }
 }

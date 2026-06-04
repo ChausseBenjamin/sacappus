@@ -1,40 +1,52 @@
 package menufact.plats;
 
 import menufact.plats.PlatAuMenu;
+import menufact.plats.prices.PriceFlyweight;
+import ingredients.Ingredient;
 
-public class PlatSante extends PlatAuMenu {
-    private double kcal;
-    private double chol;
-    private double gras;
+import java.util.ArrayList;
 
-    public PlatSante(int code, String description, double prix, double kcal, double chol, double gras) {
-        super(code, description, prix);
-        this.kcal = kcal;
-        this.chol = chol;
-        this.gras = gras;
+
+public class PlatSante extends Plat {
+
+        public PlatSante(int code, String description, PriceFlyweight prix, ArrayList<Ingredient> ingredients) {
+        super(code, description, prix, ingredients);
     }
 
     public PlatSante() {
     }
-
     @Override
     public String toString() {
         return "menufact.plats.PlatSante{" +
-                "kcal=" + kcal +
-                ", chol=" + chol +
-                ", gras=" + gras +
+                "kcal=" + getKcal() +
+                ", chol=" + getChol() +
+                ", gras=" + getGras() +
                 "} " + super.toString();
     }
-
+    public void setPrixFlyweight(PriceFlyweight prix) {
+        this.prix = prix;
+    }
     public double getKcal() {
-        return kcal;
+        int total = 0;
+        for (Ingredient i : getIngredients()){
+            total += i.getKcal();
+        }
+        return total;
     }
 
     public double getChol() {
-        return chol;
+        int total = 0;
+        for (Ingredient i : getIngredients()){
+            total += i.getChol();
+        }
+        return total;
     }
 
     public double getGras() {
-        return gras;
+        int total = 0;
+        for (Ingredient i : getIngredients()){
+            total += i.getFat();
+        }
+        return total;
     }
 }

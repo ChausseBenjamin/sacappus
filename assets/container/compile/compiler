@@ -41,8 +41,10 @@ echo "[compiler] File: ${SRC_FILE}"
 
 # --- Stage (hardlink tree to tmp, keep source clean) --------------------------
 echo "[compiler] Staging to ${TMPDIR} ..."
-rm -rf "${TMPDIR}"
-cp -al "${SRC}" "${TMPDIR}"
+TMPDIR_NEW="$(mktemp -u -p "$(dirname "${TMPDIR}")" ".${PROJECT}.XXXXXXXX")"
+cp -al "${SRC}" "${TMPDIR_NEW}"
+rm -rf "${TMPDIR}" 2>/dev/null || true
+mv "${TMPDIR_NEW}" "${TMPDIR}"
 rm -rf "${TMPDIR}/.venv"
 
 WORK_FILE="${TMPDIR}/${INPUT_FILE}"

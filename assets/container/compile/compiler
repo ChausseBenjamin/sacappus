@@ -1,0 +1,116 @@
+#!/bin/sh
+set -e
+
+PROJECT="${PROJECT:-project}"
+INPUT_FILE="${INPUT_FILE:-00-rapport.tex}"
+OUTPUT_FILE="${OUTPUT_FILE:-rapport.pdf}"
+
+SRC="/workspace/${PROJECT}"
+TMPDIR="/workspace/.tmp/${PROJECT}"
+
+# --- Watch mode ---------------------------------------------------------------
+if [ "${REALTIME}" = "true" ] && [ -z "${_COMP_STATE}" ]; then
+  export _COMP_STATE=watching
+
+  _d="${SRC}"
+  while [ "$_d" != "/" ]; do
+    [ -f "$_d/.gitignore" ] && { _gi="$_d"; break; }
+    _d="$(dirname "$_d")"
+  done
+
+  if [ -n "$_gi" ]; then
+    echo "[compiler] Watching ${SRC} (gitignore: ${_gi}/.gitignore) ..."
+    find "${SRC}" -type f ! -iname '*.pdf' ! -path '*/.venv/*' > /tmp/_all
+    GIT_DISCOVERY_ACROSS_FILESYSTEM=1 \
+      git -C "$_gi" check-ignore --no-index --stdin < /tmp/_all \
+      > /tmp/_ignored 2>/dev/null || true
+    grep -vFxf /tmp/_ignored /tmp/_all > /tmp/_watch
+    [ -s /tmp/_watch ] && exec entr -ccnr /usr/local/bin/compiler < /tmp/_watch
+    # All files gitignored — fall through to extension-based watch
+  fi
+
+  echo "[compiler] Watching ${SRC}/*.${INPUT_FILE##*.} ..."
+  find "${SRC}" -maxdepth 1 -type f -iname "*.${INPUT_FILE##*.}" > /tmp/_watch
+  exec entr -ccnr /usr/local/bin/compiler < /tmp/_watch
+fi
+
+# --- Validate -----------------------------------------------------------------
+SRC_FILE="${SRC}/${INPUT_FILE}"
+[ -f "${SRC_FILE}" ] || { echo "[compiler] ERROR: not found: ${SRC_FILE}" >&2; exit 1; }
+echo "[compiler] File: ${SRC_FILE}"
+
+# --- Stage (hardlink tree to tmp, keep source clean) --------------------------
+echo "[compiler] Staging to ${TMPDIR} ..."
+rm -rf "${TMPDIR}"
+cp -al "${SRC}" "${TMPDIR}"
+rm -rf "${TMPDIR}/.venv"
+
+WORK_FILE="${TMPDIR}/${INPUT_FILE}"
+WORK_DIR="$(dirname "${WORK_FILE}")"
+BASE="$(basename "${WORK_FILE%.*}")"
+
+# --- Python deps for R/knitr (uv sync into ephemeral .venv) ------------------
+case "${WORK_FILE}" in
+  *.rnw|*.Rmd|*.rmd|*.Rpres)
+    _d="${TMPDIR}"
+    while [ "$_d" != "/" ]; do
+      if [ -f "$_d/pyproject.toml" ]; then
+        echo "[compiler] Python project at ${_d}"
+        cd "$_d"
+        if [ -f "$_d/uv.lock" ]; then
+          uv sync --frozen --no-install-project 2>/dev/null || uv sync --frozen
+        else
+          uv sync --no-install-project 2>/dev/null || uv sync
+        fi
+        [ -x "$_d/.venv/bin/python" ] && export RETICULATE_PYTHON="$_d/.venv/bin/python"
+        break
+      fi
+      _d="$(dirname "$_d")"
+    done
+    : "${RETICULATE_PYTHON:=$(command -v python3)}"
+    export RETICULATE_PYTHON
+    echo "[compiler] reticulate Python: ${RETICULATE_PYTHON}"
+    ;;
+esac
+
+cd "${WORK_DIR}"
+
+# --- Compile ------------------------------------------------------------------
+case "${WORK_FILE}" in
+  *.rnw)
+    echo "[compiler] knitr (xelatex) ..."
+    Rscript -e "knitr::rnw2pdf('${WORK_FILE}', compiler='xelatex', clean=TRUE)"
+    ;;
+  *.Rmd|*.rmd)
+    echo "[compiler] rmarkdown ..."
+    Rscript -e "rmarkdown::render('${WORK_FILE}', clean=TRUE)"
+    ;;
+  *.tex)
+    echo "[compiler] LaTeX ..."
+    CMD=pdflatex
+    sed 5q "${WORK_FILE}" | grep -qi 'xelatex' && CMD=xelatex
+    for _i in 1 2 3; do ${CMD} -interaction=nonstopmode "${BASE}"; done
+    ;;
+  *.md)
+    echo "[compiler] pandoc (xelatex) ..."
+    pandoc "${WORK_FILE}" --pdf-engine=xelatex -o "${BASE}.pdf"
+    ;;
+  *)
+    _interp=$(sed 1q "${WORK_FILE}" | grep '^#!/' | sed 's|^#!/||')
+    [ -n "$_interp" ] || { echo "[compiler] ERROR: unknown type: ${WORK_FILE}" >&2; exit 1; }
+    echo "[compiler] Script ..."
+    exec "${_interp}" "${WORK_FILE}"
+    ;;
+esac
+
+# --- Output -------------------------------------------------------------------
+PDF="${WORK_DIR}/${BASE}.pdf"
+OUT="/data/out/${OUTPUT_FILE}"
+if [ -f "${PDF}" ]; then
+  mkdir -p "$(dirname "${OUT}")"
+  mv "${PDF}" "${OUT}"
+  echo "[compiler] Output: ${OUT}"
+else
+  echo "[compiler] WARNING: PDF not found at ${PDF}" >&2
+  find "${WORK_DIR}" -maxdepth 3 -name '*.pdf' -exec echo "  found: {}" \;
+fi

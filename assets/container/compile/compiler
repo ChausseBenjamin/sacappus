@@ -91,7 +91,12 @@ case "${WORK_FILE}" in
     echo "[compiler] LaTeX ..."
     CMD=pdflatex
     sed 5q "${WORK_FILE}" | grep -qi 'xelatex' && CMD=xelatex
-    for _i in 1 2 3; do ${CMD} -interaction=nonstopmode "${BASE}"; done
+    # First pass: generate .aux and .bcf (for biblatex)
+    ${CMD} -interaction=nonstopmode "${BASE}"
+    # Bibliography pass: biber (if biblatex is used; noop otherwise)
+    biber "${BASE}" || true
+    # Second and third pass: resolve references and citations
+    for _i in 2 3; do ${CMD} -interaction=nonstopmode "${BASE}"; done
     ;;
   *.md)
     echo "[compiler] pandoc (xelatex) ..."

@@ -1,0 +1,20 @@
+services:
+  clean:
+    extends:
+      file: ../assets/container/compose.yml
+      service: clean
+
+  app:
+    extends:
+      file: ../assets/container/compose.yml
+      service: compile
+    environment:
+      PROJECT: s2-app6
+      INPUT_FILE: presentation/00-presentation.rnw
+      OUTPUT_FILE: chab1704-pelc1105.pdf
+
+  app-watch:
+    extends:
+      service: app
+    environment:
+      REALTIME: true

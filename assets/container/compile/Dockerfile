@@ -58,6 +58,10 @@ RUN useradd -m -u 1000 builder
 COPY compiler /usr/local/bin/compiler
 RUN chmod +x /usr/local/bin/compiler
 
+# Biber is installed to /usr/bin/vendor_perl/ (Arch perl policy) which is not
+# in the default PATH — symlink it so the compiler can find it.
+RUN ln -sf /usr/bin/vendor_perl/biber /usr/local/bin/biber
+
 WORKDIR /data
 
 ENTRYPOINT ["/usr/local/bin/compiler"]

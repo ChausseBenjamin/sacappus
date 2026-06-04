@@ -1,0 +1,71 @@
+\documentclass[10pt]{beamer}
+
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{siunitx}
+\usepackage{xcolor}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{multirow}
+\usepackage{multicol}
+
+\usetheme{CambridgeUS}
+\usecolortheme{spruce}
+
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{caption}[numbered]{}% Number float-like environments
+
+% Make toc bullets dark green to match the theme
+\setbeamercolor{section number projected}{bg=green!40!black,fg=white}
+\setbeamercolor{subsection number projected}{bg=green!40!black,fg=white}
+% Do the same for bullets in itemize/enumerate environments
+\setbeamercolor{item projected}{bg=green!40!black,fg=white}
+\setbeamercolor{subitem projected}{bg=green!40!black,fg=white}
+\setbeamercolor{subsubitem projected}{bg=green!40!black,fg=white}
+% Change the color of "Figure X -" in captions
+\setbeamercolor{caption name}{fg=green!40!black}
+
+\renewcommand{\frenchtablename}{Tableau}
+
+\renewcommand{\note}[1]{\begin{color}{Orange}\textbf{NOTE:} #1\end{color}}
+\newcommand{\fixme}[1]{\begin{color}{Fuchsia}\textbf{FIXME:} #1\end{color}}
+\newcommand{\question}[1]{\begin{color}{ForestGreen}\textbf{QUESTION:} #1\end{color}}
+
+% use \e for Euler's number
+\newcommand{\e}{\mathrm{e}}
+
+\title[S1-APP6: Analyse d'Émetteur IR]{S2-APP6: Analyse d'un émetteur IR}
+\author[Benjamin Chausse \& Sarah Gosselin]{
+  Benjamin Chausse (chab1704)\\
+  Sarah Gosselin (goss3005)
+}
+\institute[UDS]{Université de Sherbrooke}
+\date{\today}
+
+\AtBeginSection[]{
+\begin{frame}
+  \vfill
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center,shadow=true,rounded=true]{title}
+    \usebeamerfont{title}\insertsectionhead\par%
+  \end{beamercolorbox}
+  \vfill
+\end{frame}
+}
+
+\begin{document}
+\maketitle
+
+\begin{frame}
+	\frametitle{Table des matières}
+	\tableofcontents
+\end{frame}
+
+\include{01-rlc}
+\include{02-emitter}
+\include{03-receiver}
+
+\end{document}
+% vim: ft=tex

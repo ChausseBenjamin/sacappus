@@ -19,3 +19,18 @@ services:
       service: app
     environment:
       REALTIME: true
+
+  pres:
+    extends:
+      file: ../assets/container/compose.yml
+      service: compile
+    environment:
+      PROJECT: s1-app6
+      INPUT_FILE: beamer/00-main.tex
+      OUTPUT_FILE: chab1704-goss3005-beamer.pdf
+
+  pres-watch:
+    extends:
+      service: pres
+    environment:
+      REALTIME: true

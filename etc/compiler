@@ -1,0 +1,29 @@
+#!/bin/sh
+
+[ -z "$INPUT_FILE" ] || INPUT_FILE="00-rapport.tex"
+
+INPUT_DIR="/data/in"
+OUTPUT_DIR="/data/out"
+
+file=$(readlink -f "$INPUT_DIR/$INPUT_FILE")
+base="${file%.*}"
+dir=$(dirname "$file")
+
+output="$base"
+[ -z "$OUTPUT_FILE" ] || output="$OUTPUT_FILE"
+
+textype() {
+  command="pdflatex"
+  (sed 5q "$file" | grep -i -q 'xelatex') && command="xelatex"
+	for i in $(seq 3); do # Latex needs multiple compiler passes
+		$command --output-directory="$dir" "$base"
+	done
+}
+
+case "$file" in
+*\.rmd) echo "require(rmarkdown); render('$file')" | R -q --vanilla ;;
+*\.rnw) Rscript -e "knitr::knit2pdf('""$file""',compiler='xelatex')" ;;
+*\.tex) textype "$file" ;;
+*\.md) pandoc "$file" --pdf-engine=xelatex -o "$base".pdf ;;
+*) sed 1q "$file" | grep "^#!/" | sed "s/^#!//" | xargs -r -I % "$file" ;;
+esac

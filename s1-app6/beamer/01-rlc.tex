@@ -1,0 +1,132 @@
+\section{Circuit RLC}
+
+\subsection{Choix des composantes et explications}
+\begin{frame}
+	\frametitle{Choix des composantes}
+	\begin{columns}
+		\begin{column}{.5\textwidth}
+			\begin{table}
+				\caption{Composantes du RLC déterminées}
+				\begin{tabular}{ll}
+					\toprule
+					Résistance & Valeur Choisie      \\
+					\midrule\midrule
+					$R_1$      & \SI{40}{\ohm}       \\
+					$R_2$      & \SI{100}{\kilo\ohm} \\
+					\bottomrule
+				\end{tabular}
+			\end{table}
+		\end{column}
+		\begin{column}{.5\textwidth}
+			\begin{figure}
+				\includegraphics[width=.7\textwidth]{figure/screenshot-rlc.jpg}
+				\caption{Circuit du RLC}
+				\label{fig:circuit-rlc}
+			\end{figure}
+		\end{column}
+	\end{columns}
+\end{frame}
+
+\subsection{À la charge}
+\begin{frame}
+	\frametitle{Mises en équation de la charge}
+	\begin{align}
+		V_\mathrm{in}(t) & = V_C(t) + V_R(t) + V_L(t)
+		\Rightarrow
+		V_\mathrm{in}^{\prime\prime}(t) = V_L^{\prime\prime}(t) +
+		\frac{R}{L}V_L^{\prime}(t) +
+		\frac{1}{LC}V_L(t)                                                                    \\
+		V_C(0)           & = 0;\quad
+		V_R(0) = 0;\quad
+		V_L(0) = 12;\quad
+		I(0) = 0;                                                                             \\
+		V_L(t)           & = \e^{-1000t} \left( 12\cos(8516.42t) - 1.41\sin(8516.42t) \right)
+	\end{align}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Graphiques de charge théoriques}
+	\begin{columns}
+
+		\begin{column}{0.5\textwidth}
+			\begin{figure}
+				\includegraphics[width=.9\textwidth]{figure/vl_t_charge.jpg}
+				\caption{M.E.É. du circuit RLC en charge}
+				\label{graph:mee-charge-rlc}
+			\end{figure}
+		\end{column}
+
+		\begin{column}{0.5\textwidth}
+			\begin{figure}
+				\includegraphics[width=.9\textwidth]{figure/tp12-dual.png}
+				\caption{Simulation du circuit RLC en charge}
+				\label{graph:lts-charge-rlc}
+			\end{figure}
+		\end{column}
+
+
+	\end{columns}
+\end{frame}
+
+\subsection{À la décharge}
+\begin{frame}
+	\frametitle{Mises en équation de la décharge}
+	\begin{align}
+		V_\mathrm{in}(t) & = V_C(t) + V_R(t) + V_L(t)              \\
+		V_\mathrm{in}(0) & = 0  ;\quad
+		V_C(0) = 12;\quad
+		V_R(0) = 0;\quad
+		I(0) = 0;                                                  \\
+		V_L^\prime(t)    & = -\frac{R}{L}V_L(t) = -\frac{R}{L}12 =
+		60\times10^{6}                                             \\
+		V_L(t)           & = -12 \e^{5\times10^{6}t}
+	\end{align}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Graphiques de décharge théoriques}
+	\begin{columns}
+
+		\begin{column}{0.5\textwidth}
+			\begin{figure}
+				\includegraphics[width=.9\textwidth]{figure/vl_t_decharge.jpg}
+				\caption{M.E.É. du circuit RLC en décharge}
+				\label{graph:mee-decharge-rlc}
+			\end{figure}
+		\end{column}
+
+		\begin{column}{0.5\textwidth}
+			\begin{figure}
+				\includegraphics[width=.9\textwidth]{figure/todo.png}
+				\caption{Simulation du circuit RLC en décharge}
+				\label{graph:lts-decharge-rlc}
+			\end{figure}
+		\end{column}
+	\end{columns}
+\end{frame}
+
+\subsection{Résultats expérimentaux}
+\begin{frame}
+	\frametitle{Résultats expérimentaux}
+	\begin{columns}
+
+		\begin{column}{0.5\textwidth}
+			\begin{figure}
+				\includegraphics[width=.9\textwidth]{figure/todo.png}
+				\caption{Résultats expérimentaux de la charge}
+				\label{graph:osc-charge-rlc}
+			\end{figure}
+		\end{column}
+
+		\begin{column}{0.5\textwidth}
+			\begin{figure}
+				\includegraphics[width=.9\textwidth]{figure/todo.png}
+				\caption{Résultats expérimentaux de la décharge}
+				\label{graph:osc-decharge-rlc}
+			\end{figure}
+		\end{column}
+
+
+	\end{columns}
+\end{frame}
+%vim: ft=tex

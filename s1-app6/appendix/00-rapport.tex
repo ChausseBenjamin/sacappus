@@ -1,0 +1,586 @@
+\documentclass[a11paper, 11pt]{article}
+% xelatex
+
+\usepackage{libs/titlepage}
+\usepackage{libs/document}
+\usepackage{booktabs}
+\usepackage{bookmark}
+\usepackage{subcaption}
+% \usepackage[american]{circuitikz}
+\usepackage{float}
+\usepackage{multicol}
+\usepackage{siunitx}
+\usepackage{amsmath}
+\usepackage{mathtools}
+\usepackage{cancel}
+\usepackage{witharrows}
+\usepackage[dvipsnames]{xcolor}
+\usepackage[T1]{fontenc}
+\usepackage{csquotes}
+\usepackage[french]{babel}
+\usepackage{hyperref}
+\usepackage[french]{cleveref}
+
+\newcommand{\note}[1]{\begin{color}{Orange}\textbf{NOTE:} #1\end{color}}
+\newcommand{\todo}[1]{\begin{color}{Red}\textbf{TODO:} #1\end{color}}
+\newcommand{\fixme}[1]{\begin{color}{Fuchsia}\textbf{FIXME:} #1\end{color}}
+\newcommand{\question}[1]{\begin{color}{ForestGreen}\textbf{QUESTION:} #1\end{color}}
+
+% \d{x} command for integral delimiters
+\renewcommand{\d}[1]{\mathrm{d}#1}
+\newcommand{\dt}{\mathrm{d}t}
+\newcommand{\ddt}[1]{\frac{\text{d}^{#1}}{\text{d}t^{#1}}}
+\newcommand{\vlt}{V_L(t)}
+\newcommand{\vct}{V_C(t)}
+\newcommand{\vrt}{V_R(t)}
+\newcommand{\vst}{V_S(t)}
+\newcommand{\vlz}{V_L(0^+)}
+
+\newcommand{\ilt}{I_L(t)}
+\newcommand{\ict}{I_C(t)}
+
+\newcommand{\al}{\alpha}
+\newcommand{\la}{\lambda}
+\newcommand{\wz}{\omega_{0}}
+\newcommand{\ws}{\omega_{0}^2}
+\newcommand{\wn}{\omega_{\mathrm{n}}}
+
+\renewcommand{\exp}[1]{\times10^{#1}}
+
+\newcommand{\rootd}{\sqrt{\al^2-\ws}}
+
+
+\DeclareSIPrefix{\micro}{%
+  \text{%
+    \fontencoding{TS1}\fontfamily{kurier}\selectfont
+    \symbol{"B5}%
+  }%
+}{-6}
+
+% \addbibresource{bibliography.bib}
+% \institution{Université de Sherbrooke}
+% \faculty{Faculté de génie}
+% \department{Département de génie électrique et de génie informatique}
+\title{Annexe de résolution à la problématique}
+\class{Circuits et systèmes du deuxième ordre}
+\classnb{GEN111, GEN136, GEN122}
+\author{
+  \addtolength{\tabcolsep}{-0.4em}
+  \begin{tabular}{rcl} % Ajouter des auteurs au besoin
+      Benjamin Chausse & -- & CHAB1704 \\
+      Sarah Gosselin   & -- & GOSS3005 \\
+  \end{tabular}
+}
+\teacher{Jean-Philippe Gouin}
+% \location{Sherbrooke}
+% \date{\today}
+
+\begin{document}
+\maketitle
+\newpage
+
+\begin{appendix}
+	\section{Outils mathématiques (Bible)}
+	\label{sec:bible}
+	Les fonction suivantes seront utilisées et référencées tout au long de l'annexe.
+
+	\begin{gather}
+		\vct = \frac{1}{C}\int\ict \dt \label{eq:vct}\\
+		\ict = C\frac{\text{d}}{\dt}\vct \label{eq:ict}\\
+		\nonumber\\
+		\vlt = L\frac{\text{d}}{\dt}\ilt \label{eq:vlt}\\
+		\ilt = \frac{1}{L}\int \vlt\dt \label{eq:ilt}\\
+		\nonumber\\
+		V(t) = RI(t) \label{eq:vri}\\
+		\nonumber\\
+		\al = \frac{R}{2L} \label{eq:alpha}\\
+		\wz = \frac{1}{\sqrt{LC}} \label{eq:omega_0}\\
+		\omega_n = \sqrt{\ws  - \al^2 \label{eq:omega_n}} \\
+		e^{j\theta} = \cos(\theta) + j\sin(\theta) \label{e:euler}
+	\end{gather}
+
+	\newpage
+	\section{Circuit RLC}
+	\subsection{Charge}
+	On pose l'équation de l'état du circuit au temp $t(0)$ et on substitue pour
+	avoir en fonction de $\vlt$.
+	Puisque que circuit simplifié est constitué d'une seule boucle, le courant
+	se simplifie comme suit: $I_C = I_R = I_V = I$.
+
+
+	\begin{gather}
+		\vst = \vct + \vrt + \vlt \label{eq:vst-initiale-charge}\\
+		\vst = \frac{1}{C}\int I(t) \dt + RI(t) + \vlt \\
+		\vst = \frac{1}{CL} \iint \vlt \dt\ \dt + \frac{R}{L}\int\vlt\dt + \vlt\\
+		\nonumber \text{On substitue les termes $R, L, C$ par les \cref{eq:alpha,eq:omega_0}}\\
+		\ddt{2}V_S = \ddt{2}\vlt + 2\al\ddt{}\vlt + \ws\vlt
+	\end{gather}
+
+	On entame la résolution de l'equation différentielle d'ordre 2 à coéfficient
+	constant et forcé par la solution homogène.
+	Tel que présenté par l'\cref{eq:vlt-charge-generale}.
+	\begin{gather}
+		V_{L_g} = V_{L_h} + V_{L_p} \label{eq:vlt-charge-generale}\\
+		\nonumber \text{On pose la forme de la solution homogène: } V_{L_h} = Ae^{\la t} = 0\\
+		0 = \la^2Ae^{\la t} + 2\al\la Ae^{\la t} + \ws Ae^{\la t}\\
+		0 = \cancelto{0}{Ae^{\la t}}\left(\la^2 + 2\al\la + \wz\right)\\
+		\la_{1,2} = \frac{-2\al \pm \sqrt{(2\al)^2 - 4\ws }}{2}\\
+		\la_{1,2} = -\al\pm\sqrt{\al^2 - \ws }\\
+		\nonumber\text{Puisque le discriminant est négatif, on le multiplie par $-1$,}\\
+		\nonumber\text{on sort $j$ et on simplifie avec l'\cref{eq:omega_n}.}\\
+		\la_{1,2} = -\al\pm j\omega_n\\
+		\begin{WithArrows}
+			V_{L_h} &= A_1e^{(-\al+j\wn)t} + A_2e^{(-\al+j\wn)t} \Arrow{Se simplifie} \\
+			V_{L_h} &= e^{-\al t}\left(A_1e^{j\wn t} + A_2e^{-j\wn t}\right)
+		\end{WithArrows}
+	\end{gather}
+
+	On utilise ensuite la formule d'Euler afin de résoudre l'équation.
+	\begin{gather}
+		V_{L_h} = e^{-\al t}\left[A_1\cos(\wn t) + A_1j\sin(\wn t) + A_2\cos(\wn t) - A_2j\sin(\wn t)\right]\\
+		V_{L_h} = e^{-\al t}\left[\underbrace{(A_1+A_2)}_{C_1}\cos(\wn t)
+			+ \underbrace{(A_1-A_2)j}_{C_2}\sin(\wn t)\right]\\
+		V_{L_h} = e^{-\al t}\left[C_1\cos(\wn t) + C_2\sin(\wn t)\right]\label{eq:vlh-sol-homo}
+	\end{gather}
+
+	Ayant maintenant la solution homogène, il faudrait trouver la solution particulière
+	afin d'arriver à l'\cref{eq:vlt-charge-generale}
+	Cependant, puisque le terme forcé est une constante, la solution particulière $V_{L_p}$
+	basé sur sa dérivée est donc nulle.
+	\begin{gather}
+		V_{L_g} = V_{L_h} + \cancelto{0}{V_{L_p}}\label{eq:vlt-sol-generale}
+	\end{gather}
+
+
+	Les conditions initiales sont trouvées en se basant sur l'\cref{eq:vst-initiale-charge}:
+	\begin{DispWithArrows}
+		\ddt{}\vst &= \ddt{}\vct + \ddt{}\vrt + \ddt{}\vlt \Arrow{\footnotesize Isoler $\vlt$}\\
+		\ddt{}\vlt &=
+		\cancelto{0}{\ddt{}\vst} - \underbrace{\ddt{}\vct}_{\text{\cref{eq:vct}}} -
+		\underbrace{\ddt{}\vrt}_{\text{\cref{eq:vri}}} \Arrow{\footnotesize Se simplifie} \\
+		\vlt &= \cancelto{0}{\frac{I_C(0)}{C}} - \frac{R}{L}\vlz \label{eq:cond-init-deriv-charge}
+	\end{DispWithArrows}
+
+	Les conditions initiales sont donc:
+	\begin{gather}
+		\vlz = 12 \ \text{\footnotesize(Provenant de l'\cref{eq:vst-initiale-charge})} \\
+		\ddt{}\vlz = -24000 \ \text{\footnotesize(Provenant de l'\cref{eq:cond-init-deriv-charge})}
+	\end{gather}
+
+	Puisque la condition initiale de l'\cref{eq:cond-init-deriv-charge} requiert la dérivé
+	de $V_{L_g}$ (\cref{eq:vst-initiale-charge}):
+	\begin{gather}
+		\ddt{}V_{L_g} = -\al e^{-\al t}\left[C_1\cos(\wn t) + C_2\sin(\wn t)\right] +
+		e^{-\al t}\left[-C_1\wn\sin(\wn t) - C_2\wn\cos(\wn t)\right] \\
+		\ddt{}V_{L_g} = -e^{-\al t}\left[C_1\al\cos(\wn t) + C_2\al\sin(\wn t) +
+			C_1\wn\sin(\wn t) - C_2\wn\cos(\wn t)\right] \label{eq:grosse-criss-de-derivee}
+	\end{gather}
+
+	Il est maintenant possible de trouver $C_1$ et $C_2$ en se servant des
+	conditions initiales présenté aux \cref{eq:vlh-sol-homo,eq:grosse-criss-de-derivee}
+	\begin{gather}
+		V_{L_h}(0) = 12 = \cancelto{1}{e^{-\al t}}\left[C_1\cancelto{1}{\cos(\wn t)} +
+			\cancelto{0}{C_2\sin(\wn t)}\right]\\
+		12 = C_1\\
+		\ddt{}V_{L_g}(0) = -24000 = \cancelto{1}{-e^{-\al t}}
+		\left[12\al\cancelto{1}{\cos(\wn t)} + \cancelto{0}{C_2\al\sin(\wn t)} +
+			\cancelto{0}{12\wn\sin(\wn t)} - C_2\wn\cancelto{1}{\cos(\wn t)}\right]\\
+		-24000 = -12\al + C_2\wn\\
+		C_2 = \frac{-24000 + 12\al}{\wn} = -1.41 \\
+		\vlt = e^{-\al t}\left[12\cos(\wn t) - 1.41\sin(\wn t)\right]
+	\end{gather}
+
+	Avec les valeurs de $C_1$ et $C_2$ il est maintenant possible d'écrire la fonction $\vlt$ complète.
+	\begin{gather}
+		\al = 1000;\quad \wn = 8516.42; \\
+		\vlt = e^{-1000t}\left[12\cos(8516.42 t) - 1.41\sin(8516.42 t)\right]
+	\end{gather}
+
+
+
+	\subsection{Décharge}
+	\begin{gather*}
+		\begin{align}
+			0                             & = \vlt + V_C(t) + V_R(t)                                                              \\
+			\label{eq:rlc_decharge_initial}
+			0                             & = \vlt+\frac{1}{C}\int \ilt\dt + R_I(t)                                               \\
+			0                             & = \ddt{2}\left[ \vlt + \frac{1}{LC}\iint\vlt\dt\ \dt + \frac{R}{L}\ddt{} \vlt \right] \\
+			0                             & = \ddt{2}\vlt+ \frac{R}{L}\ddt{}\vlt +\frac{1}{LC}\vlt                                \\
+			0                             & = \ddt{2}\vlt+2\al\ddt{}\vlt+\ws                                                      \\
+			\nonumber \text{Posons que: } &
+			\vlt=Ae^{\la t} \Rightarrow
+			\ddt{}\vlt=\la Ae^{\la t} \Rightarrow
+			\ddt{2}\vlt=\la^{2}Ae^{\la t}                                                                                         \\
+			0                             & = \la^2Ae^{\la t} +2\al Ae^{\la t} + \ws Ae^{\la t}                                   \\
+			0                             & = \cancel{Ae^{\la t}} \left(\la^2 +2\al\la+\ws \right)                                \\
+			0                             & = \la^2 +2\al\la+\ws                                                                  \\
+			\la_{1,2}                     & = \frac{-2\al\pm\sqrt{(-2\al)^2-4\ws}}{2}                                             \\
+			\la_{1,2}                     & = -\al\pm\sqrt{\al^2-\ws}
+		\end{align}
+	\end{gather*}
+	Puisque $R$ est de l'ordre des \si{\kohm} et $L$ de l'ordre des \SI{}{\mH}, on peut déterminer
+	sans faire de calculs que l'intérieur de la racine carrée $\wn$ est positive donc nul besoin de
+	passer par notre ami Euler pour déterminer les valeurs de $\la$.
+
+	Nous pouvons maintenant réintégrer
+	ce coefficient dans notre supposition initiale que $\vlt=Ae^{\la t}$.
+
+	\begin{equation}
+		\vlt = A_1e^{(-\al-\rootd)t} + A_2e^{(-\al+\rootd)t} \\
+		\label{eq:vl_straight_decharge}
+	\end{equation}
+
+	Du même coup, le résultat de cette expression évaluée à $t=0^+$ sera utille pour isoler $A_1$ et $A_2$
+	plus tard. La voici donc:
+
+	\begin{gather*}
+		\begin{align}
+			\vlz & = A_1\cancelto{1}{e^0} + A_2\cancelto{1}{e^0} = A_1 + A_2 = -12
+		\end{align}
+	\end{gather*}
+
+	Pour déterminer les constantes $A_1$ et $A_2$, il faudra une deuxième équation dont on connait les
+	charactéristiques à un temps donné. On peut obtenir en dérivant l'équation de $\vlt$ dont
+	il est possible de déterminer les propriétés à $t=0^+$ (\cref{eq:vlt-decharge-deriv}).
+
+	Lors de la simulation \textit{LTspice}, les spécifications de décharge du circuit généraient déjà une
+	régression exponentielle suffisament rapides pour les besoins du circuit. La valeur de $R_2$ (\SI{100}{\kohm})
+	est donc gardée idem puis utilisée dans le calcul de la dérivée pour en simplifier la résolution. La résistance $R_1$
+	est négligée puisque sa valeur est moindre face à la tolérance $\pm 5\%$ de $R_2$.
+
+	\begin{gather*}
+		\begin{align}
+			R    = \SI{100}{\kohm} & ;\quad L  = \SI{20}{\mH};\quad C = \SI{680}{\nF}                               \\
+			\al                    & = \frac{1\exp{5}}{2\cdot20\exp{-3}} = 2.5\exp{6}                               \\
+			\al^2                  & = 6.25\exp{12}                                                                 \\
+			\wz                    & =\frac{1}{\sqrt{20\exp{-3}\cdot680\exp{-9}}} = \frac{1}{\sqrt{1.36\exp{-8}}}   \\
+			\ws                    & =\frac{1}{1.36\exp{-8}}                                                        \\
+			\rho                   & = \sqrt{\al^2-\ws} \quad\text{\footnotesize(variable pour alléger la lecture)} \\
+			\rho                   & = \sqrt{6.25\exp{12}-\frac{1}{1.36\exp{-8}}}                                   \\
+			\rho                   & = 2499985.2941\ldots                                                           \\
+			\al-\rho               & \approx 14.7059                                                                \\
+			\al+\rho               & \approx 4'999'999.2941
+		\end{align}
+	\end{gather*}
+	On peut alors dériver l'\cref{eq:vl_straight_decharge} pour obtenir la deuxième équation
+	nécessaire pour déterminer $A_1$ et $A_2$:
+	\begin{align}
+		\ddt{}\vlt & =\ddt{}\left( A_1e^{\al-\rho} + A_2e^{\al+\rho}\right)                      \\
+		\ddt{}\vlt & =\ddt{}\left( A_1e^{14.7059t} + A_2e^{4'999'999.2941t}\right)               \\
+		\ddt{}\vlt & = 14.7059\cdot A_1e^{14.7059t} + 4'999'999.2941\cdot A_2e^{4'999'999.2941t}
+		\label{eq:vlt-decharge-deriv}                                                            \\
+		\ddt{}\vlz & = 14.7059 A_1\cancelto{1}{e^{0}} + 4'999'999.2941 A_2\cancelto{1}{e^{0}}
+		\label{eq:bertha_mommy_decharge}
+	\end{align}
+
+	Nous connaissons donc la forme de la dérivée de $\vlz$ mais pas sa valeur à
+	$t=0^+$. Toutefois, il est possible d'avoir que des termes dont la condition
+	initiale est connue en remaniant la mise en équation du circuit avec les
+	équations de l'\cref{sec:bible}:
+	\begin{gather*}
+		\begin{align}
+			0          & = \ddt{}\vlt + \ddt{}V_C(t) + \ddt{}V_R(t)\quad \\
+			\ddt{}\vlt & =  - \ddt{}V_C(t) - \ddt{}V_R(t)                \\
+			\ddt{}\vlt & = \frac{-1}{C}I(t) - R\ddt{}I(t)
+		\end{align}
+	\end{gather*}
+	En réarangeant les termes de l'\cref{eq:vlt}, nous pouvons substituer $\ddt{}I(t)$ pour obtenir:
+	\begin{gather*}
+		\begin{align}
+			\ddt{}\vlt & = \frac{-1}{C}I(t) - \frac{R}{C}\vlt
+		\end{align}
+	\end{gather*}
+	Nous pouvons enfin déterminer la dériver du système à $t=0^+$ puisque tout les termes de droite sont connus:
+	\begin{gather*}
+		\begin{align}
+			I(0^+)     & = 0                                              \\
+			\vlz       & = -12                                            \\
+			\ddt{}\vlz & =  0  - 12\frac{1\exp{5}}{20\exp{-3}} = 6\exp{7}
+		\end{align}
+	\end{gather*}
+	Il est maintenant possible d'isoler $A_1$ et $A_2$ en résolvant un système d'équations.
+	\begin{gather*}
+		\begin{align}
+			-12 = A_1 + A_2 \Rightarrow -176.4708 = 14.7059A_1 + 14.7059A_2
+		\end{align}
+	\end{gather*}
+	Il est maintenant trivial d'isoler $A_2$:
+	\begin{gather*}
+		\begin{array}{l@{\quad}cr@{}ll}
+			                   &  & -176.4708 & {}=        \cancel{14.7059A_1} & + 14.7059A_2         \\
+			\text{\bfseries--} &  & 6\exp{7}  & {}= \cancel{14.7059 A_1}       & + 4'999'999.2941 A_2 \\ \cline{2-5}
+			\approx            &  & 6\exp{7}  & {}= 0                          & -4'999'999.2941 A_2
+		\end{array}
+	\end{gather*}
+	\begin{gather*}
+		\begin{align}
+			A_2 & \approx -\frac{6\exp{7}}{5\exp{6}} = -12 \\
+			-12 & = A_1 + A_2                              \\
+			A_1 & = 0
+		\end{align}
+	\end{gather*}
+	La solution de la décharge est donc:
+
+	\begin{gather*}
+		\begin{align}
+			\vlt & = \cancelto{0}{0e^{(\al-\rootd)t}} -12 e^{-5\exp{6}t} \\
+			\vlt & = -12 e^{-5\exp{6}t}
+		\end{align}
+	\end{gather*}
+
+
+	\newpage
+	\section{Circuit RC (\texorpdfstring{$C_2$}{TEXT})}
+	\subsection{Charge}
+	Le circuit RC forme une équation différentielle du premier order forcé et à coefficient constant.
+	Sont but est de réguler la longueur des pulsation envoyé envoyé à l'amplis U2.
+	Ce dernier étant en configuration "Comparateur", on sait que la tension à laquelle le changement
+	s'opère est celle dicté par le diviseur de tension $R_8 = \SI{2}{\kohm}$ et $R_9 = \SI{1}{\kohm}$.
+	\begin{gather}
+		V_x = V_S\frac{R_x}{R_t}\\
+		V_x = 12\frac{R_9}{R_8 = R_9}\\
+		V_x = \SI{4}{\V}
+	\end{gather}
+
+	Les conditions initiales en charge du circuit sont les suivantes:
+	\begin{gather}
+		\vst = \vct + V_D + \vrt \label{eq:rc-charge-base}\\
+		V_S(0) = 12\\
+		V_C(0) = -12\\
+		V_D(0) = 0.6\\
+		V_R(0) = 23.4 \label{eq:rc-charge-init}\\
+	\end{gather}
+
+	En substituant l'\cref{eq:vct} dans l'\cref{eq:rc-charge-base} afin de tout
+	avoir en fonction de $\vrt$:
+	\begin{DispWithArrows}[rr,xoffset=0.4cm]
+		\vst &= \frac{1}{C}\int I\dt + \vrt + V_D
+		\Arrow{\footnotesize Utilisation de \\l'\cref{eq:rc-charge-base}} \\
+		\vst &= \frac{1}{RC}\int\vrt + \vrt + V_D
+		\Arrow{On dérive}\\
+		\cancelto{0}{\ddt{}\vst} &= \frac{1}{RC}\vrt + \ddt{}\vrt + \cancelto{0}{V_D}\label{eq:rc-charge-deriv}
+	\end{DispWithArrows}
+
+	On pose ensuit la fomre standarde des équations différentielle homogène et
+	on l'applique à l'\cref{eq:rc-charge-deriv}.
+	\begin{DispWithArrows}[format=c]
+		V_{R_h} = Ae^{\la t} \Arrow[jump=3,tikz=<-]{On reporte dans\\\cref{eq:rc-charge-homo}} \label{eq:rc-charge-homo}\\
+		0 = \la Ae^{\la t} + \frac{1}{RC}Ae^{\la t}\\
+		\la\cancelto{1}{Ae^{\la t}} = -\frac{1}{RC}\cancelto{1}{Ae^{\la t}}\\
+		\la = -\frac{1}{RC}
+	\end{DispWithArrows}
+
+	Après avoir rapporté la valeur de $\la$ dans l'\cref{eq:rc-charge-homo} on trouve la valeur
+	de la constante $A$ à l'aide de la condition initiale à l'\cref{eq:rc-charge-init}.
+
+	\begin{gather}
+		V_{R_h}(0) = 23.4 = A\cancelto{0}{e^{-\frac{t}{RC}}}\\
+		23.4 = A\\
+		\nonumber\text{Forme finale de l'equation:}\\
+		\vrt = 23.4Ae^{-\frac{t}{RC}} \label{eq:rc-charge-final}
+	\end{gather}
+
+	Un des requis du problème est la longueure des impulsions.
+	Sachant que celle-ci doivent durer \SI{150}{\us} et s'atténuent à une tension de \SI{4}{\V},
+	on peut les imposé à l'\cref{eq:rc-charge-final} afin de trouver la valeur de $R$ qui
+	satisfera le circuit.
+
+	\begin{DispWithArrows}[format=c]
+		V_R(\SI{150}{\us})= 4 = 23.4e^{-\frac{\num{150e-6}}{RC}}\\
+		\frac{4}{23.4} = e^{-\frac{\num{150e-6}}{RC}}\\
+		\ln(\frac{4}{23.4}) = -\frac{\num{150e-6}}{RC}\\
+		R = -\frac{\num{150e-6}}{C\ln(\frac{4}{23.4})} \Arrow{Application \\numérique}\\
+		R_7 = \SI{8491}{\ohm} \xrightarrow{\text{Serie E24}} R_7 = \SI{8.2}{\kohm}
+	\end{DispWithArrows}
+
+	\subsection{Décharge} \label{sc:rc-decharge}
+	La décharge du condensateur est indentique à la charge en tout point sauf
+	les conditions initiales et les requis pour l'application numérique servant à
+	déduire $R_6$.
+	Voici les conidions initiales pour la décharge:
+	\begin{gather}
+		\vst = \vct + V_D + \vrt \label{eq:rc-decharge-base}\\
+		V_S(0) = -12\\
+		V_C(0) = 12\\
+		V_D(0) = -0.6\\
+		V_R(0) = -23.4 \label{eq:rc-decharge-init}\\
+	\end{gather}
+
+	Les étapes suivantes sont similaires aux \crefrange{eq:rc-charge-base}{eq:rc-charge-final}
+	à quelques signes près.
+	On obtient donc l'équation $V_R(t)$ suivante:
+	\begin{gather}
+		\vrt = -23.4Ae^{-\frac{t}{RC}} \label{eq:rc-decharge-final}
+	\end{gather}
+	Contrairement à la charge, il n'est pas immédiatement évident que la valeur de $R$ est
+	fixée avec une coordonée concrète (comme \SI{4}{\V} après \SI{150}{\us} pour la charge).
+	La coordonée fixant la résistance à la décharge est basée sur une proportion de la décharge.
+	Il faut qu'après \SI{15}{\us}, la tension au bornes de la résistance valle $63.7\%$ de la
+	tension qui était présente à $t=0^+$ (Communément appelé $\tau$).
+	Il est important de noter que puisque le condensateur a
+	un charge initiale de \SI{12}{\V}, la tension au borne de la résistance doit chuter à
+	$63.7\%$ de \SI{23.4}{\V}.
+	\begin{gather}
+		\SI{-23.4}{\V} \times (1-0.637) = \SI{-8.712}{\V}
+	\end{gather}
+
+	La valeur de la résistance $R_6$ est donc fixée afin de satisfaire une tension à ses bornes
+	de \SI{8.712}{\V} à \SI{15}{\us} après le début de la décharge.
+	\begin{DispWithArrows}[format=c]
+		V_R(\SI{15}{\us})= -8.712 = -23.4e^{-\frac{\num{15e-6}}{RC}}\\
+		\frac{-8.712}{-23.4} = e^{-\frac{\num{15e-6}}{RC}}\\
+		\ln(\frac{-8.712}{-23.4}) = -\frac{\num{15e-6}}{RC}\\
+		R = -\frac{\num{15e-6}}{C\ln(\frac{-8.712}{-23.4})} \Arrow{Application \\numérique}\\
+		R_7 = \SI{1518.17}{\ohm} \xrightarrow{\text{Serie E24}} R_6 = \SI{1.5}{\kohm}
+	\end{DispWithArrows}
+
+	La valeur calculée est amplement dans la marge $\pm 5\%$ de la valeur nominale de $R_6$.
+
+
+	\subsection{Confirmation}
+	Le résultat obtenue à l'\cref{sc:rc-decharge} sont adéquat puisqu'il prouvent l'équation:
+	\begin{DispWithArrows}[format=c]
+		\tau = RC \Rightarrow R = \frac{\tau}{C}\Arrow{Application\\numérique}\\
+		R = \frac{\num{15e-6}}{\num{10e-9}} = \SI{1.5}{\kohm}
+	\end{DispWithArrows}
+
+	\newpage
+	\section{Circuit RC (\texorpdfstring{$C_3$}{TEXT})}
+	\subsection{Charge}
+	La charge du condensateur $C_3$ suit une logique similaire à celle du condensateur $C_2$.
+	Voici les conditions initiales pour la décharge:
+	\begin{gather}
+		\vst = \vct + V_D + \vrt \label{eq:rc2-charge-base}\\
+		V_S(0) = 12\\
+		V_C(0) = 0 \\
+		V_D(0) = 0.6\\
+		V_R(0) = 11.4
+	\end{gather}
+
+	Puisque la diode est placé devant le capaciteur et qu'elle produit une chute de tension
+	d'environ \SI{0.6}{\V}, on considerera que la tension de la source est celle restante
+	après la diode soit \SI{11.4}{\V}.
+
+	\begin{DispWithArrows}[format=c]
+		\vst = \vrt + \vct \Arrow[ll]{En substituan l'\cref{eq:vri}} \\
+		\vst = RI(t) + \vct \Arrow[rr]{En substituan l'\cref{eq:ict}} \\
+		\vst = RC\ddt{}\vct + \vct
+	\end{DispWithArrows}
+
+	En se fiant aux \crefrange{eq:rc-charge-base}{eq:rc-charge-final},
+	on assume la solution homogène:
+	\begin{gather}
+		V_{C_h} = Ae^{-\frac{t}{RC}}
+	\end{gather}
+
+	Puisque l'équation est forcé par une constante, la solution particulière correspond à
+	la valeur de la source tel que démontré par les \cref{eq:rc2-charge-particu,eq:rc2-charge-partires}.
+
+	\begin{DispWithArrows}[format=c]
+		V_{C_p} = K_0\vst + \cancelto{0}{K_1\ddt{}\vst}
+		\Arrow{Application \\numérique}\label{eq:rc2-charge-particu}\\
+		11.4 = K_011.4 \Rightarrow K_0 = 11.4 \label{eq:rc2-charge-partires}
+	\end{DispWithArrows}
+
+	Vient ensuite la solution générale $V_{C_g}$ et l'application des conditions initiales
+	afin de trouver les coéfficients de la fonction.
+
+	\begin{DispWithArrows}[format=c]
+		V_{C_g} = V_{C_h} + V_{C_p}
+		V_{C_g} = Ae^{-\frac{t}{RC}} + 11.4 \Arrow{Cond. Initiale} \\
+		V_{C_g}(0) = A\cancelto{1}{e^{-\frac{t}{RC}}} + 11.4 \\
+		-11.4 = A \\
+		\nonumber\text{Réponse du system: }\\
+		V_{C_g}(0) = -11.4e^{-\frac{t}{RC}} + 11.4
+	\end{DispWithArrows}
+
+	On peut ensuite trouver la valeur de la résistance $R_{10}$ nécessaire au fonctionnement
+	du circuit.
+	En assumant que le condensateur ne se vide pas entre les impulsions, on peut déduire le
+	temps pendant lequel il se remplira en multipliant le nombre d'impulsions avec la durée
+	établie d'inpusions de \SI{150}{\us}.
+	Pour deux impulsions (\SI{300}{\us}) on vise \SI{2.5}{\V} $\pm$ \SI{0.5}{\V}.
+	Pour 5  (\SI{750}{\us}) on vise \SI{5}{\V} $\pm$ 10\%.
+
+	\subsubsection{2 impulsions}
+	\begin{gather}
+		2.5 = -11.4e^{-\frac{\num{300e-6}}{\num{1e-6}R}} + 11.4\\
+		\ln\left(\frac{2.5 - 11.4}{-11.4}\right) = -\frac{\num{300e-6}}{\num{1e-9}R}\\
+		R = \frac{\num{300e-6}}{\num{1e-6}\ln\left(\frac{2.5 - 11.4}{-11.4}\right)}\\
+		R_{10} = \SI{1.2}{\kohm}
+	\end{gather}
+
+	\subsubsection{5 impulsions}
+	\begin{gather}
+		5 = -11.4e^{-\frac{\num{750e-6}}{\num{1e-6}R}} + 11.4\\
+		\ln\left(\frac{5 - 11.4}{-11.4}\right) = -\frac{\num{750e-6}}{\num{1e-9}R}\\
+		R = \frac{\num{750e-6}}{\num{1e-6}\ln\left(\frac{5 - 11.4}{-11.4}\right)}\\
+		R_{10} = \SI{1.3}{\kohm}
+	\end{gather}
+
+	Puisque la série E24 inclue des résistance exacte pour les deux équations,
+	il faudra déterminer comment le systeme se comporte dans les limites
+	des tolérance.
+	Pour tester le pire des sénario, on utilise les valeurs extrêmes extérieurs.
+	On teste donc $\SI{1.2}{\kohm} - 5\%$ et $\SI{1.3}{\kohm} + 5\%$
+
+	\begin{gather}
+		V_{C_3} = -11.4e^{-\frac{\num{750e-6}}{1140(\num{1e-6})}} + 11.4 = \SI{5.494}{\V} \\
+		V_{C_3} = -11.4e^{-\frac{\num{300e-6}}{1365(\num{1e-6})}} + 11.4 = \SI{2.24}{\V}
+	\end{gather}
+
+	À la lumière de ces résultats, les deux résistance ferait l'affaire mais
+	on observe une plus grande marge de manoeuvre avec la résistance de \SI{1.2}{\kohm}.
+
+	\subsection{Décharge}
+	\begin{gather*}
+		\begin{align}
+			V_S(t)    & = V_C(t) + V_R(t)                   \\
+			0         & = RI(t) - V_C(t)                    \\
+			0         & =RC\ddt{}V_C(t) - V_C(t)            \\
+			\nonumber & \text{Posons: } V_C(t) = Ae^{\la t}
+		\end{align}
+	\end{gather*}
+	Puisqu'il existe deux cas de figure possible pour la charge initiale du
+	condensateur (Minimum de $\rho_1=\SI{2}{\V}$ pour deux pulses et $\rho_2=\SI{5.5}{\V}$ pour 5).
+	$\rho$ est donc posé comme variable pour représenter ces deux extrêmes:
+
+	\begin{gather*}
+		\begin{align}
+			V_C(0^+) = \rho = A e^0 \\
+			\rho = A                \\
+			V_C(t) = \rho e^{\frac{-t}{RC}}
+		\end{align}
+	\end{gather*}
+
+	Apposons la contrainte que le condensateur doit être déchargé de $99.3\%$ de sa valeur
+	initiale après \SI{1}{\ms}:
+	\begin{DispWithArrows}[format=c]
+		(1-0.993)\rho \Arrow{$\rho_1$}\Arrow[jump=2,xoffset=1cm]{$\rho_2$}\\
+		\sigma_1 = \SI{0.014}{\V} \\
+		\sigma_2 = \SI{0.0385}{\V}
+	\end{DispWithArrows}
+
+	\begin{DispWithArrows}[format=c]
+		R = \frac{-1\exp{-3}}{1\exp{-6}\ln(\frac{\sigma}{\rho})}
+		\Arrow{$\rho_1,\ \sigma_1$}\Arrow[jump=2,xoffset=1.8cm]{$\rho_2,\ \sigma_2$}\\
+		R_{11_2} =  \SI{201.54}{\ohm}\\
+		R_{11_{5.5}} = \SI{201.54}{\ohm}
+	\end{DispWithArrows}
+
+	Puisque la résistance actuelle de \SI{200}{\ohm} dépasserait le seuil à $\pm 5\%$
+	Une valeur inférieur de résistance est choisis, $R_{11}=\SI{180}{\ohm}$. Il est possible de
+	s'assurer, que celle-ci se décharge toujours de $99.3\%$
+	ou plus en \SI{1}{\ms} ou moins:
+
+	\begin{DispWithArrows}[format=c]
+		V_C(t) = \rho e^{\frac{-1\exp{-3}}{1\exp{-6}\cdot180}}
+		\Arrow{$\rho_1$}\Arrow[jump=2,xoffset=1cm]{$\rho_2$}\\
+		\sigma_1 = \SI{0.014}{\V} \geq \SI{0.0077}{\ohm} \\
+		\sigma_2 = \SI{0.0385}{\V}\geq\SI{0.0212}{\ohm}
+	\end{DispWithArrows}
+
+\end{appendix}
+
+\end{document}
+

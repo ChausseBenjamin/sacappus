@@ -1,0 +1,122 @@
+\section{Circuit Émetteur}
+
+\subsection{Choix des composantes et explications}
+\begin{frame}
+	\frametitle{Choix des composantes}
+	\begin{columns}
+		\begin{column}{.5\textwidth}
+			\begin{table}
+				\caption{Composantes de l'émetteur déterminées}
+				\begin{tabular}{ll}
+					\toprule
+					Résistance & Valeur Choisie  \\
+					\midrule\midrule
+					$R_6$      & \SI{1500}{\ohm} \\
+					$R_7$      & \SI{8200}{\ohm} \\
+					\bottomrule
+				\end{tabular}
+			\end{table}
+		\end{column}
+
+		\begin{column}{.5\textwidth}
+			\begin{figure}
+				\includegraphics[width=.7\textwidth]{figure/screenshot-emitter.jpg}
+				\caption{Circuit de l'émetteur}
+				\label{fig:circuit-emitter}
+			\end{figure}
+		\end{column}
+	\end{columns}
+\end{frame}
+
+\subsection{À la charge}
+\begin{frame}
+	\frametitle{Mises en équation de la charge}
+	\begin{align}
+		V_\mathrm{in}(0) & = 12; \quad
+		V_C(0)             = -12; \quad
+		V_D(0)             = 0.6; \quad
+		V_R(0)             = \SI{23.4}{\V}                               \\
+		V_\mathrm{in}(t) & = V_C(t) + V_D(t) + V_R(t) \Rightarrow
+		V_\mathrm{in}^{\prime}(t) = \frac{1}{RC}V_R(t) + V_R^{\prime}(t) \\
+		V_R(t)           & = 23.4\e^{\frac{-t}{1.5\times10^{-5}}}
+	\end{align}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Graphiques de charge théoriques}
+	\begin{columns}
+
+		\begin{column}{0.5\textwidth}
+			\begin{figure}
+				\includegraphics[width=.9\textwidth]{figure/dodo.jpg}
+				\caption{M.E.É. de l'émetteur en charge}
+				\label{graph:mee-charge-emitter}
+			\end{figure}
+		\end{column}
+
+		\begin{column}{0.5\textwidth}
+			\begin{figure}
+				\includegraphics[width=.9\textwidth]{figure/tp34-single.png}
+				\caption{Simulation de l'émetteur en charge}
+				\label{graph:lts-charge-emitter}
+			\end{figure}
+		\end{column}
+
+
+	\end{columns}
+\end{frame}
+
+\subsection{À la décharge}
+\begin{frame}
+	\frametitle{Mises en équation de la décharge}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Graphiques de décharge théoriques}
+	\begin{columns}
+
+		\begin{column}{0.5\textwidth}
+			\begin{figure}
+				\includegraphics[width=.9\textwidth]{figure/todo.png}
+				\caption{M.E.É. de l'émetteur en décharge}
+				\label{graph:mee-decharge-emitter}
+			\end{figure}
+		\end{column}
+
+		\begin{column}{0.5\textwidth}
+			\begin{figure}
+				\includegraphics[width=.9\textwidth]{figure/todo.png}
+				\caption{Simulation de l'émetteur en décharge}
+				\label{graph:lts-decharge-emitter}
+			\end{figure}
+		\end{column}
+
+
+	\end{columns}
+\end{frame}
+
+\subsection{Résultats expérimentaux}
+\begin{frame}
+	\frametitle{Résultats expérimentaux}
+	\begin{columns}
+
+		\begin{column}{0.5\textwidth}
+			\begin{figure}
+				\includegraphics[width=.9\textwidth]{figure/todo.png}
+				\caption{Mesure de l'émetteur en charge}
+				\label{graph:osc-charge-emitter}
+			\end{figure}
+		\end{column}
+
+		\begin{column}{0.5\textwidth}
+			\begin{figure}
+				\includegraphics[width=.9\textwidth]{figure/todo.png}
+				\caption{Mesure de l'émetteur en décharge}
+				\label{graph:osc-decharge-emitter}
+			\end{figure}
+		\end{column}
+
+
+	\end{columns}
+\end{frame}
+% vim: ft=tex

@@ -1,0 +1,331 @@
+\documentclass[11pt,a11paper]{article}
+
+\usepackage{etc/document}
+\usepackage{siunitx}
+\usepackage{xcolor}
+\usepackage{float}
+\usepackage{graphicx}
+\usepackage{etc/titlepage}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+
+% \addbibresource{bibliography.bib}
+% \nofiles
+
+% \institution{Université de Sherbrooke}
+% \faculty{Faculté de génie}
+% \department{Département de génie électrique et de génie informatique}
+
+\title{Rapport d'APP}
+
+\classnb{S2--APP2}
+
+\class{Mathématique des signaux à temps continu et
+électronique analogique 1}
+
+\author{
+  \addtolength{\tabcolsep}{-0.4em}
+  \begin{tabular}{rcl} % Ajouter des auteurs au besoin
+      Benjamin Chausse & -- & CHAB1704 \\
+      Vincent Lamy     & -- & LAMV1904 \\
+  \end{tabular}
+}
+\teacher{Roch Lefebvre}
+% \location{Sherbrooke}
+% \date{\today}
+
+\newcommand{\TODO}[1]{\textcolor{red}{\textbf{TODO:} #1}}
+
+\renewcommand{\d}{\mathrm{d}}
+
+\begin{document}
+\maketitle
+\newpage
+\tableofcontents
+\listoftables
+\listoffigures
+\newpage
+
+<<engine='python', echo=FALSE, results='hide'>>=
+import numpy as np
+import matplotlib.pyplot as plt
+FS=7
+@
+
+\section{Filtre passe-bande \SI{5}{\kilo\hertz}}
+
+\subsection{Développement en série de Fourier du signal d’entrée}
+\label{sec:fourier}
+
+Le signal d'entrée est une onde carrée de fréquence $\SI{1}{\kilo\hertz}$. Puisque
+le LM555 est configuré en mode astable, la fréquence de l'onde carrée ne peut
+pas avoir un rapport cyclique de 50\%. Nous avons donc choisi nos résistances
+afin de s'en approcher le plus possible sans toutefois l'atteindre. Expérimentalement,
+nous avons mesuré un rapport cyclique de $49.5\%$. Toutefois, nous nous limiterons
+à un rapport cyclique de 50\% pour simplifier les calculs:
+
+\begin{align}
+  X(k) &= \frac{1}{T} \int_{0}^{T} x(t) e^{-j\omega_0kt} \d t \\
+  X(k) &= \frac{A}{T} \int_{0}^{T/2} e^{-j\omega_0kt} \d t  +
+          \frac{0}{T} \int_{T/2}^{T} \ldots \d t \\
+  X(k) &= \frac{A}{T} \bigg[  \frac{e^{-j\omega_0kt}}{-jk\omega_0}  \bigg|_{0}^{T/2} \\
+  X(k) &= \frac{A}{T} \left( \frac{e^{-j\omega_0kT/2}-e^0}{-jk\omega_0} \right) \\
+  X(k) &= \frac{A}{T} \left( \frac{1-e^{-j\omega_0kT/2}}{jk\omega_0}    \right) \\
+  X(k) &= \frac{2A}{\omega_0kT} \left( \frac{1-e^{-j\omega_0kT/2}}{2j}    \right) \\
+  X(k) &= \frac{2A}{\omega_0kT} \left( \frac{  e^{-j\omega_0kT/4}\left( e^{j\omega_0kT/4}-e^{-j\omega_0kT/4} \right)   }{2j}    \right) \\
+  X(k) &= \frac{2A\sin{(\omega_0kT/4)}}{\omega_0kT} e^{-jk\omega_0kT/4}  \\
+  A=10,\ f=\SI{5}{\kilo\hertz},\ T&=\frac{1}{f}=\frac{1}{5000},\ \omega_0=2\pi f=10000\pi \\
+  \omega_0T&=\frac{2000\pi}{1000}=2\pi \\
+  X(k) &= \frac{2\sin{(\frac{k\pi}{2})}\cdot10}{2\pi k} e^{-jk2\pi/4}  \\
+  X(k) &= \frac{10\sin{(\frac{k\pi}{2})}}{\pi k} e^{-jk\pi/2}  \\
+  \|X(k)\| &= \frac{10\sin{(\frac{k\pi}{2})}}{\pi k} \\
+  \angle X(k) &= \frac{k\pi}{2}
+\end{align}
+
+
+\subsection{Choix des paramètres du filtre ($f_0$, $K$, $Q$, $R_{29}$, $R_{30}$
+	\& $R_{31}$)}
+
+\subsubsection{Choix de $f_0$, $K$ et $Q$}
+
+Le signal d'entrée du filtre est une onde carrée de fréquence
+$\SI{1}{\kilo\hertz}$. Fourier nous dit que cette onde carrée peut être
+décomposée en une somme infinie de sinusoïdes dont la période est un multiple
+de la période de l'onde carrée. Nous verrons en \ref{sec:sig_in} les 20
+premières harmoniques de cette onde carrée. Le but du filtre passe-bande actif
+est d'amplifier la fréquence voulu ($f=5\si{\kilo\hertz}$) tout en atténuant
+toutes les autres fréquences.
+
+Pour ce faire, devons donc centrer notre filtre autour de la fréquence de
+$5\si{\kilo\hertz}$. Ainsi, la fréquence de résonance de notre filtre $f_0$
+doit être égale à la fréquence de la 5e harmonique du signal en entrée:
+
+\begin{equation}
+  f_0 = 5 \si{\kilo\hertz}
+\end{equation}
+
+La problématique nous indique que nous voulons amplifier la fréquence ciblée
+afin d'obtenir une amplitude de $\SI{4}{\volt}_{\textrm{pointe}}$. Observons
+comment ce détail modifie la fonction de transfert du filtre (qui nous est donnée):
+
+\begin{align}
+  H(f) &= \frac{-K}{1 + jQ\left(\frac{f}{f_0} - \frac{f_0}{f}\right)} \label{eq:transfer} \\
+  &= \frac{-K}{1 + jQ\left(\frac{f}{5000} - \frac{5000}{f}\right)} \\
+  \| H(f=\SI{5}{\kilo\hertz})\|  &= \SI{4}{\volt} \\
+  \SI{4}{\volt} &= \|\frac{-K}{1 + jQ\left(\frac{5000}{5000} - \frac{5000}{5000}\right)}\| \\
+  \SI{4}{\volt} &= \frac{-K}{\sqrt{1^2 + Q^2\left(1 - 1\right)^2}} \\
+  \SI{4}{\volt} &= \frac{-K}{\sqrt{1}} \\
+  K &= -4
+\end{align}
+
+Nul besoin de calculer $Q$ pour trouver $K$. Nous voulons aussi que les autres harmoniques
+soient atténuées d'au moins $\SI{15}{\decibel}$. Pour ce faire, nous devons d'abord connaître
+la fréquence de ces harmoniques. Ce que nous ferons en déterminant l'amplidude des premières
+harmoniques du signal en entrée pour ensuite fixer un $Q$ capable de les atténuer d'au moins
+$\SI{15}{\decibel}$. Heureusement, nous avons déjà fait ce travail en \ref{sec:fourier}. Aussi,
+comme nous observerons en \ref{sec:sig_in}, les amplitudes des harmoniques paires sont nulles,
+l'amplitudes des harmoniques impaires sont inversément proportionnelles à leur $k$. Nous n'avons
+donc que les valeurs $k=1$ et $k=3$ à vérifier\footnote[1]{Pour des raisons de déficite de sommeil,
+nous laisserons cette étape comme exercice pour le lecteur.}.
+
+
+Toutefois, le guide étudiant recommande de s'assurer que $10 \leq Q\leq14$ afin de ne pas
+dépasser les limites de l'amplificateur opérationnel. Pour cette raison, nous avons choisi
+de fixer $Q=13$.
+
+\subsubsection{Choix de $R_{29}$, $R_{30}$ \& $R_{31}$}
+
+L'Annexe B du guide étudiant nous indique que les condensateurs $C_{32}$ et $C_{33}$ ont tous
+deux une valeur de $\SI{1}{\nano\farad}$. Aussi, trois équations représentant les relations
+dans le filtre nous sont données:
+
+\begin{align}
+  \omega_0^2 &= \frac{1}{R_{30}C_{32}C_{33}} \left(\frac{1}{R_{29}}+\frac{1}{R_{31}} \right) \label{eq:omega2} \\
+  \frac{\omega_0}{Q} &= \frac{C_{32}+C_{33}}{R_{30}C_{32}C_{33}} \label{eq:omegaQ} \\
+  K &= \frac{R_{30}C_{32}}{R_{29}(C_{32}+C_{33})} \label{eq:K}
+\end{align}
+
+Dans l'équation \ref{eq:omegaQ}, notre seul inconnu est $R_{30}$. Nous pouvons donc l'isoler.
+Puisque chaque condensateur a une valeur de $\SI{1}{\nano\farad}$, nous les simplifierons
+à $C$. Isolons donc $R_{30}$:
+
+\begin{align}
+  \frac{\omega_0}{Q} &= \frac{C+C}{R_{30}CC} \\
+  \frac{\omega_0}{Q} &= \frac{2C}{R_{30}C^2} \\
+  \frac{\omega_0}{Q} &= \frac{2}{R_{30}C} \\
+  2\frac{Q}{C\omega_0} &= R_{30} \\
+  R_{30} &= 2\frac{13}{\SI{1e-9}{\farad}\cdot2\pi\cdot\SI{5e3}{\hertz}} \simeq \SI{413812}{\ohm} \simeq \SI{390}{\kilo\ohm}
+\end{align}
+
+Maintenant, c'est au tour de l'équation \ref{eq:K} de n'avoir qu'un seul inconnu: $R_{29}$. Isolons-le:
+
+\begin{align}
+  K &= \frac{R_{30}C}{R_{29}(C+C)} \\
+  K &= \frac{R_{30}C}{2CR_{29}} \\
+  R_{29}K &= \frac{R_{30}C}{2C} \\
+  R_{29} &= \frac{R_{30}}{2K} = \frac{\SI{390}{\kilo\ohm}}{2\cdot4} \simeq 48.75\si{\ohm} \simeq \SI{47}{\ohm}
+\end{align}
+
+\newpage
+Enfin, ne reste plus qu'à isoler $R_{31}$ dans l'équation \ref{eq:omega2}:
+\begin{align}
+  \omega_0^2 &= \frac{1}{R_{30}C^2} \left(\frac{1}{R_{29}}+\frac{1}{R_{31}} \right) \\
+  C^2R_{30}\omega_0^2 &= \frac{1}{R_{29}}+\frac{1}{R_{31}} \\
+  C^2R_{30}\omega_0^2-\frac{1}{R_{29}} &= \frac{1}{R_{31}}
+  \left(C^2R_{30}\omega_0^2-\frac{1}{R_{29}}\right)^{-1} &= R_{31}
+\end{align}
+
+\subsection{Simulations Python}
+
+\subsubsection{Signal d'entrée}
+\label{sec:sig_in}
+
+Le signal d'entrée est une onde carrée de fréquence $\SI{1}{\kilo\hertz}$. Puisque
+le LM555 est configuré en mode astable, la fréquence de l'onde carrée ne peut
+pas avoir un rapport cyclique de 50\%. Nous avons donc choisi nos résistances
+afin de s'en approcher le plus possible sans toutefois l'atteindre. Expérimentalement,
+nous avons mesuré un rapport cyclique de $49.5\%$.
+
+Ayant utilisé des listes pour stocker les valeurs de nos signaux, nous avons donc des valeurs
+discrètes composé de \textit{RESOLUTION} pas allant de 0 à la période du signal $T$.
+Voici donc le graphique de notre signal d'entrée:
+
+<<engine='python', results='hide'>>=
+RESOLUTION = 1000
+f = {"res": RESOLUTION, "freq": 1000}
+f["t"] = np.linspace(0, 1 / f["freq"], RESOLUTION)
+# 0-10V, 49.5% duty cycle square wave
+f["y"] = np.concatenate(
+    (
+        np.ones(int(0.495 * RESOLUTION)) * 10,  # 49.5% on time
+        np.zeros(int((0.505 * RESOLUTION))),  # 50.5% off time
+    )
+)
+@
+<<engine='python', echo=FALSE, fig.width=6, fig.height=3.7, fig.align='center', fig.pos='H', fig.cap='Signal en entrée'>>=
+plt.plot(f["t"], f["y"])
+plt.xlabel("Temps (s)",fontsize=FS)
+plt.ylabel("Amplitude (V)",fontsize=FS)
+@
+
+À partir de ce signal, nous pouvons approximer la série de Fourier (une intégral)
+en faisant la somme de tout petits rectangles de largeur $\d t$ et de hauteur
+$f(t)\d t$. Ceci n'est qu'une approximation parce que nos largeurs de $\d t$ sont
+discrètes (de largeur $T/\textrm{RESOLUTION}$) et non continues. Voici donc comment nous
+faisons cette approximation pour les 20 premières harmoniques. Nous devrions donc obtenir
+20 valeurs de $X(k)$ (qui sont des complexes):
+
+<<engine='python', results='hide'>>=
+# Deduce info about the function (knowing we only receive one period)
+T = f["t"][-1] - f["t"][0]
+w_0 = (2 * np.pi) / T
+dt = T / f["res"]
+num_k = 20  # Number of harmonics to calculate
+
+# We want to calculate the inside of the integral for all K harmonics
+# We will therefore need NUM_K arrays which are all of length f["res"]
+# Each cell must be able to contain a complex number
+u = np.zeros((num_k + 1, f["res"]), dtype=complex)
+for k in range(0, num_k + 1):
+    u[k] = f["y"] * np.exp(-1j * k * w_0 * f["t"]) * dt
+
+# The inside of the integral needs to be summed and multiplied by
+# (1/T) to obtain X(k). Let's create that array (capital X):
+f["X"] = np.zeros(num_k + 1, dtype=complex)
+for k in range(0, num_k + 1):
+    f["X"][k] = np.sum(u[k]) * (1 / T)
+
+# We can now gather every harmonic amplitude as stems as follows
+f["stem_k"] = range(-num_k, num_k + 1)
+f["amps"] = np.concatenate((np.flip(np.abs(f["X"][1:])), np.abs(f["X"])))
+
+# When it comes to the phase stem,
+# some angles are very close to zero but not quite, let's fix that
+f["X"].real[abs(f["X"].real) < 1e-15] = 0
+f["X"].imag[abs(f["X"].imag) < 1e-15] = 0
+ang = np.angle(f["X"])
+
+f["phases"] = np.concatenate((np.flip(-ang[1:]), ang))
+@
+
+
+\newpage
+Visualisons maintenant les amplitudes des 20 premières harmoniques
+(ce qui équivaut à $\|X(k)\|$) autant pour les valeurs positives que négatives:
+
+<<engine='python', echo=FALSE, fig.width=6, fig.height=3.5, fig.align='center', fig.pos='H', fig.cap='Amplitudes des 20 premières harmoniques'>>=
+plt.stem(f["stem_k"], f["amps"])
+plt.xlabel("Harmonique (k)",fontsize=FS)
+plt.ylabel("Amplitude (V)",fontsize=FS)
+@
+
+Visualisons aussi les phase des 20 premières harmoniques
+(ce qui équivaut à $\angle X(k)$) autant pour les valeurs positives que négatives:
+
+
+<<engine='python', echo=FALSE, fig.width=6, fig.height=3.4, fig.align='center', fig.pos='H', fig.cap='Phases des 20 premières harmoniques'>>=
+plt.stem(f["stem_k"], f["phases"])
+plt.xlabel("Harmonique (k)",fontsize=FS)
+plt.ylabel("Phase (rad)",fontsize=FS)
+@
+
+
+\subsubsection{Lieu de Bode du filtre passe-bande}
+Le guide étudiant recommande de s'assurer que $10 \leq Q\leq14$ afin de ne pas
+dépasser les limites de l'amplificateur opérationnel et que celui-ci continue
+de se comporter comme un op-amp idéal.
+
+Donc en reprennant la fonction de transfert \ref{eq:transfer}, ainsi que nos
+valeurs de $K$ et $f_0$, traçons le lieu de Bode des différentes valeurs de $Q$:
+
+<<engine='python', results='hide'>>=
+RESOLUTION = int(1e6)
+max_Hertz = int(2e4)
+
+f_0 = 5e3
+K = -4
+Q = [5,10,13,15,20,30,40,100]
+
+f = np.linspace(1,max_Hertz,RESOLUTION)
+A = abs(-K / (1 + 1j * Q[3] * (f / f_0 - f_0 / f)))
+G = 20 * np.log10(A)
+@
+
+<<engine='python', echo=FALSE, fig.width=6, fig.height=3.5, fig.align='center', fig.pos='H', fig.cap='Lieu de Bode du filtre passe-bande'>>=
+target = 13
+color = "#1f77b4"
+taget_color =  "#ff7f0e"
+for q in Q:
+    H = abs(-K / (1 + 1j * q * (f / f_0 - f_0 / f)))
+    G = 20 * np.log10(H)
+    plt.semilogx(f, G, label=f"Q={q}", color=(color if q != target else taget_color))
+plt.xlabel("Fréquence (Hz)",fontsize=FS)
+plt.ylabel("Gain (dB)",fontsize=FS)
+plt.legend(fontsize=FS)
+@
+
+\subsection{Simulations Altium}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\textwidth]{figure/altium-5k.png}
+  \caption{2 signaux temporels : Entrée (onde carrée) et sortie (sinus) du filtre passe-bande}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\textwidth]{figure/altium-bode}
+  \caption{Lieu de Bode du filtre passe-bande}
+\end{figure}
+
+\section{Redresseur double-alternance et filtre passe-bas Réseau RC d’ordre 1}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\textwidth]{figure/altium-redresseur.png}
+  \caption{Redresseur double-alternance}
+\end{figure}
+
+% \newpage
+% \printbibliography
+\end{document}

@@ -1,0 +1,22 @@
+---
+services:
+  compile:
+    image: compile
+    user: "${UID:-1000}:${GID:-1000}"
+    build:
+      context: ./compile
+      dockerfile: Dockerfile
+    environment:
+      INPUT_FILE: 00-rapport.tex
+      OUTPUT_FILE: rapport.pdf
+    volumes:
+      - ../../:/workspace
+      - ../../build:/data/out
+
+  clean:
+    image: clean
+    build:
+      context: ./clean
+      dockerfile: Dockerfile
+    volumes:
+      - ../../.tmp:/data

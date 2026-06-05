@@ -1,0 +1,21 @@
+---
+services:
+  clean:
+    extends:
+      file: ../assets/container/compose.yml
+      service: clean
+
+  doctest:
+    extends:
+      file: ../assets/container/compose.yml
+      service: compile
+    environment:
+      PROJECT: s4-app2
+      INPUT_FILE: doctest/00-plan-tests.tex
+      OUTPUT_FILE: plan-tests.pdf
+
+  doctest-watch:
+    extends:
+      service: app
+    environment:
+      REALTIME: true

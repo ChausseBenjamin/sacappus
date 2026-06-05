@@ -1,0 +1,16 @@
+# Vivado generated outputs
+mips32_unicycle_reference.cache/
+mips32_unicycle_reference.gen/
+mips32_unicycle_reference.hw/
+mips32_unicycle_reference.ip_user_files/
+mips32_unicycle_reference.runs/
+mips32_unicycle_reference.sim/
+# Vivado waveform configs
+*.wcfg
+*.wdb
+# Vivado logs
+*.jou
+*.log
+# OS files
+.DS_Store
+Thumbs.db

@@ -1,0 +1,304 @@
+\documentclass[a11paper, 11pt]{article}
+
+\usepackage{libs/document}
+\usepackage{libs/titlepage}
+\usepackage{libs/codeblocks}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+
+% \addbibresource{bibliography.bib}
+% \nofiles
+
+\newcommand{\todo}[1]{\textcolor{orange}{\textbf{TODO}: #1}}
+\newcommand{\note}[1]{\textcolor{purple}{\textbf{NOTE}: #1}}
+\newcommand{\xxx}[1]{\textcolor{red}{\textbf{XXX}: #1}}
+
+% \institution{Université de Sherbrooke}
+% \faculty{Faculté de génie}
+% \department{Département de génie électrique et de génie informatique}
+\title{Rapport d'APP}
+\classnb{GIF391}
+\class{Conception d'un système distribué}
+\author{
+  \addtolength{\tabcolsep}{-0.4em}
+  \begin{tabular}{rcl} % Ajouter des auteurs au besoin
+  Benjamin Chausse & -- & CHAB1704 \\
+  Samuel Bilodeau  & -- & BILS2704 \\
+  \end{tabular}
+}
+\teacher{Frédéric Mailhot}
+% \location{Sherbrooke}
+% \date{\today}
+
+\begin{document}
+\maketitle
+\newpage
+\tableofcontents
+\newpage
+
+\section{Description des solutions utilisées}
+
+\subsection{Arrêt 1: Exemple d'utilisation des commandes}
+
+À ce stade, l'infrastructure emploie un seul conteneur pour son fonctionnement.
+Afin de lancer le système, il faut d'abord construire l'image du conteneur à
+partir de son \textit{Dockerfile}. Par la suite, il faut lancer le conteneur
+afin qu'il puisse s'exécuter en arrière-plan. Enfin, il est possible de s'y
+connecter pour utiliser le système. Voici un exemple d'utilisation de
+l'infrastrucure (le résultat de commandes de mise en place est remplacé par
+"\texttt{...}"):
+
+\begin{code}[title={zsh (dans un terminal)},listing options={language=bash, style=bashstyle}]
+docker build -t arret01 . # Construction de l'image
+docker run -it arret01 # Lancement interactif du conteneur
+\end{code}
+
+\begin{code}[title={sh (dans le conteneur)},listing options={language=bash, style=bashstyle}]
+liste   # Liste des taches dans la liste (devrait etre vide)
+nouveau # Ajout d'une taches utilisant fortune pour la description
+liste   # La liste devrait maintenant contenir un taches
+retrait # Retrait de la tache ajoute precedemment
+liste   # La liste devrait etre vide a nouveau
+\end{code}
+
+À l'intérieur de l'environnement de l'application (dans le conteneur), les
+commandes \texttt{liste}, \texttt{nouveau} et \texttt{retrait} permettent la
+gestion des tâches pour un seul utilisateur. Puisque ce système sert de
+prototype, la commande \texttt{nouveau} génère une description aléatoire à
+l'aide de l'utilitarie \texttt{fortune}. Dans un système réel, cette commande
+devrait être remplacée par une commande permettant d'ajouter une tâche avec une
+description spécifiée par l'utilisateur et l'auteur de la tâche devrait être
+déterminé au préalable (possiblement dans un fichier de configuration).
+
+\subsection{Arrêt 2: Fichier de configuration fonctionnel}
+\input{arret02.tex}
+
+\newpage
+
+Lors de cet arrêt, l'application est segmentée en deux section. Le client ne
+fait qu'envoyer des requêtes mais ne contient aucune tâche. Le serveur lui,
+gère les tâches et répond aux requêtes du client. Ce type de segmentation peut
+permettre en pratique d'avoir le serveur sur une machine et le client sur une
+autre. Dans le cas de la problématique toutefois, le client et le serveur sont
+sur la même machine afin de simplifier les tests.
+
+% \newpage
+\subsection{Arrêt 3: Fichier \textit{yml} utilisé pour \textit{docker-compose}}
+\input{arret03.tex}
+
+Dans cet arrêt, l'idée est la même qu'à l'arrêt 2, mais cette fois-ci, trois
+clients utilisent le service (chacun ayant un serveur unique leur étant
+associé). L'avantage de cette approche est (en plus des mêmes présentes à
+l'arrêt 2) qu'aucun de conflit de données ne peut survenir entre les clients
+puisque leurs données sont stockées sur des serveurs différents.
+
+\subsection{Arrêt 4: Explication des problèmes inhérents}
+
+Cet arrêt a pour but de simplifier l'infrastructure de l'arrêt précédent en
+implémentant un seul serveur pour tous les clients. Cette approche est plus
+simple si elle est bien mise en place. Toutefois, l'implémentation actuelle est
+vulnérable à des confilts de données. Des problèmes peuvent survenir si deux
+clients (ou plus) tentent d'accéder aux tâches en même temps. Ceci est dû au
+fait que toutes les tâches sont stockées dans un seul fichier.
+
+\subsection{Arrêt 5: Fichier \textit{yml} utilisé pour \textit{docker-compose}}
+\input{arret05.tex}
+
+Compte tenu des problèmes de l'arrêt précédent, l'objectif de cet arrêt est de
+rendre l'infrastructure plus robuste. Pour ce faire, les données sont stockées
+dans une base de donnée \textit{PostgreSQL}. Cette base de donnée s'occupe de
+la gestion des conflits de données.
+
+
+\subsection{Arrêt 6: Fichier \textit{yml} utilisé pour \textit{kubernetes}}
+
+Lors de ce dernier arrêt, le but but est de simuler un déploiement de
+l'infrastructure sur plusieurs machines. Pour simuler ce type de déploiement,
+\textit{minikube} est utilisé. \textit{Minikube} est un outil qui permet à
+\textit{kubernetes} (un outil permettant de gérer des conteneurs distribués).
+
+\input{arret06.tex}
+
+
+\section{Discussion de la structure}
+
+La version finale du système offre une plus grande flexibilité par rapport aux
+premières itérations. Son principal inconvénient réside dans sa complexité
+croissante, ce qui peut entraîner des problèmes à différents niveaux, parfois
+difficiles à détecter. Cependant, les avantages sont nombreux. La nature
+distribuée du système facilite son expansion horizontale, le rendant ainsi
+adapté à un grand nombre d'utilisateurs. L'utilisation d'une base de données
+garantit l'atomicité des transactions pour éviter les conflits et les
+enregistrements en double. La réplication des serveurs et des bases de données
+augmente la redondance et, par conséquent, la résilience du système. La
+modularité des composants permet des mises à niveau fluides et transparentes
+pour l'utilisateur.
+
+\subsection{Technologies sous-jacentes}
+
+\subsubsection{Identification des ressources}
+
+La technologie utilisée pour identifier les ressources s'appelle "namespace".
+Elle nous a permis d'attribuer différentes ressources. Au début, nous l'avons
+principalement utilisée pour assigner des emplacements de stockage afin de
+partager des fichiers entre les différents conteneurs. Par la suite, lorsque
+des requêtes réseau via SSH ont été introduites, nous avons utilisé les
+namespaces pour créer un réseau virtuel sur lequel les machines pouvaient
+communiquer facilement. Les noms des conteneurs étaient utilisés pour remplacer
+les adresses IP, ce qui simplifiait grandement nos interactions. En résumé, les
+namespaces sont utiles pour assigner diverses ressources telles que le réseau,
+les systèmes de fichiers, les processus, les groupes ou les utilisateurs, et
+bien d'autres encore.
+
+\subsubsection{Contrôle d'accès aux ressources}
+
+Pour contrôler l'accès aux ressources, nous avons utilisé les cgroups. Ces
+derniers permettent d'attribuer l'allocation de différentes ressources
+(processeur, mémoire, disque) en fonction des membres du cgroup. Ces membres
+peuvent être un processus spécifique, un utilisateur ou un conteneur dans son
+intégralité. Nous pouvons gérer la quantité minimale de ressources et donner la
+priorité à certaines entités par rapport à d'autres. Les cgroups sont également
+un bon moyen de gérer les accès à des répertoires et à des réseaux spécifiques.
+
+\subsubsection{Gestion des accès aux fichiers utilisés}
+
+
+Docker utilise une technologie Linux très pratique appelée "système de fichiers
+en couches" (Union File System). Le concept est simple : certains répertoires
+sont en lecture seule, et lorsqu'une modification est nécessaire, elle est
+enregistrée dans un répertoire qui stocke uniquement les différences (ce qui
+est conceptuellement similaire la technologie Git). Cette approche permet à
+plusieurs conteneurs d'utiliser la même base commune, mais chacun d'entre eux
+de manière distincte avec son propre répertoire de modifications. Dans la
+dernière itération, plusieurs clients utilisaient l'image client, mais chacun
+était unique. Cela nous permet d'utiliser efficacement l'espace de stockage et
+d'éviter de corrompre l'image initiale.
+
+
+% \todo{Quels sont les pilotes utilisables pour la persistance du système de fichiers
+% à union ?} \\
+% \todo{Quel pilote de persistence a été utilisé et pourquoi ?}
+
+Plusieurs pilotes sont disponibles pour gérer les fichiers à union, tels que
+UFS (Advanced Multi-Layered Unification File System), DeviceMapper, Btrfs
+(B-Tree File System), ZFZ (Zettabyte file system), mais celui qui nous
+intéresse est OverlayFS, plus spécifiquement sa deuxième version, Overlay2.
+Depuis la version 1.13 de Docker, Overlay2 est le pilote par défaut utilisé.
+
+Overlay2 est une version améliorée d'OverlayFS qui nous permet de gérer
+efficacement les modifications tout en maintenant la transparence des fichiers
+uniques pour l'utilisateur. Il garantit également l'intégrité des fichiers
+sous-jacents et réduit l'utilisation de l'espace mémoire nécessaire. Avec
+Overlay2, les modifications apportées aux fichiers dans les conteneurs sont
+enregistrées de manière efficace en créant des couches supplémentaires, tout en
+préservant l'état d'origine de l'image de base. Cela permet une utilisation
+efficace des ressources et facilite la création de conteneurs basés sur des
+images existantes.
+
+\subsubsection{Configuration réseau pour la communication des conteneurs}
+
+Pour simplifier l'environnement dans lequel nous travaillions, nous avons
+utilisé un namespace de réseau pour regrouper toutes les entités sur la même
+couche. Bien que cela fonctionnait, cette architecture n'était pas la plus
+idéale dans un environnement de production. Certaines entités, comme les
+clients, ne devraient pas nécessairement avoir accès aux autres, telles que la
+base de données. En général, ceux-ci sont disposées sur des réseaux distants et
+les interactions requises sont déterminées à l'avance. Afin d'assurer
+l'encapsulation des composants et la sécurité du système, l'authentification et
+le chiffrement sont des étapes obligatoires avant toute action. Étant donné que
+l'objectif de l'activité ne portait pas spécifiquement sur la mise en réseau,
+tous les services étaient visibles et accessibles à tous.
+
+\subsubsection{Duplication mise en place pour les ressources}
+
+Il y a quatre types principaux de ressources dans notre système : matériel,
+logiciel, données et réseau. La duplication de ces ressources s'applique
+différemment en fonction du contexte. En ce qui concerne le matériel, nous
+avons développé nos solutions dans un environnement de test principalement sur
+nos ordinateurs portables et systèmes personnels. Toutes les composantes
+utilisaient des ressources virtuellement dupliquées, mais fondamentalement,
+nous utilisions le même processeur et la même mémoire vive pour faire
+fonctionner l'ensemble du système. Pour le logiciel, toutes les images
+reposaient sur les mêmes fondations Docker et contenaient une copie du script
+"todo.py". Cela signifiait que toute modification nécessitait la mise à jour de
+tous les fichiers et la relance complète du déploiement. En ce qui concerne les
+données, nous sommes passés d'un simple fichier texte à une base de données
+entièrement autonome. Dans le cas où plusieurs bases de données seraient
+utilisées, la réplication des données entre les bases de données deviendrait un
+aspect important à prendre en compte. En ce qui concerne le réseau, étant donné
+que nous étions tous sur la même machine, aucune duplication n'était
+nécessaire. Il est important de noter que la duplication des ressources peut
+varier en fonction des exigences spécifiques du système pour lequel il est
+conçu, de la redondance souhaitée et des contraintes de performance. Les
+stratégies de duplication sont mises en place pour assurer la disponibilité et
+la résilience des opérations du système.
+
+
+% \todo{Quelles ressources doivent être dupliquées, et pourquoi?} \\
+
+Dans le cas d'un système ou tout les clients/serveurs sont sur la même machine
+(ex: arrêt 3), la duplication d'images est inutile puisque chaque
+serveur/client peuvent utiliser les mêmes images. Toutefois, dans le cas d'un
+système distribué (ex: si l'arret 6 était réparti sur plusieurs machines), il
+serait nécéssaire que chaque image soit dupliquée sur chaque machine. En ce qui
+concerne les données, la duplication dépends de la redondance souhaitée.
+
+
+Dans un système de production, la duplication des données est essentielle pour
+garantir leur intégrité. On met généralement en place des répliques de bases de
+données et des copies de sauvegarde qui sont envoyées en dehors de leur site
+physique respectif. Cette duplication des données améliore également la
+résilience et les performances du système. En répartissant les sites
+géographiquement, on réduit la distance entre l'utilisateur et le système, et
+en cas de panne, le trafic peut être redirigé vers d'autres sites fonctionnels.
+
+De manière générale, les systèmes distribués sont situés dans des clusters où
+la duplication est déjà prise en charge. Les machines physiques ne sont que des
+unités de puissance de calcul, et la défaillance de l'une d'entre elles
+n'entraîne pas de perte de performance notable. La redondance du réseau est
+également assurée dans ces centres, car ils disposent d'une infrastructure
+robuste face aux pannes. De nos jours, les systèmes de cloud se chargent en
+grande partie de la réplication physique pour la performance et de la
+redondance réseau pour assurer l'accessibilité.
+
+Dans un environnement de développement ou de test, il est courant de dupliquer
+les données uniquement sur notre machine pour faciliter les opérations. En
+revanche, dans un système de production, la duplication des données devrait se
+faire sur plusieurs sites pour plusieurs raisons. Tout d'abord, la
+disponibilité : en cas de panne d'une machine, une autre machine dans un autre
+site peut prendre en charge rapidement les demandes. Ensuite, la performance :
+avec des sites géographiquement dispersés, les données sont réparties et les
+requêtes sont acheminées vers le serveur le plus proche, réduisant ainsi le
+temps de réponse.
+
+De façon connexe, il est possible de dupliquer les données d'un service dans
+une même machine. Prenons l'exemple suivant: un service n'est pas suffisamment
+grand pour justifier l'utilisation de plusieurs machines qui hébergent des
+données. Ces données sont stockés dans des disques durs ayant une période de
+vie finie. Dans le cas où un disque dur tombe en panne, les données sont
+perdues. Si cette information est dupliquée sur un autre disque, la perte de
+données est évitée sans avoir à utiliser plusieurs machines.
+
+\section{Conclusion}
+
+Pour conclure, les systèmes distribués font partie intégrante de notre
+quotidien, car ils sont présents dans toutes les applications et services que
+nous utilisons. Leur objectif principal est d'assurer l'intégrité, la
+confidentialité et la disponibilité des données. Ils parviennent à atteindre
+cet objectif grâce à la duplication des ressources aux quatre niveaux
+mentionnés : matériel, logiciel, données et réseau.
+
+La redondance au niveau matériel et réseau garantit l'accessibilité du système,
+en permettant la reprise rapide en cas de défaillance d'une machine ou d'un
+réseau. La duplication des composants logiciels et des données contribue à
+améliorer les performances et la disponibilité en répartissant les charges de
+travail et en permettant une récupération rapide en cas de panne.
+
+Les systèmes distribués et leur duplication des ressources jouent un rôle
+crucial dans notre monde connecté. Ils nous permettent de bénéficier
+d'applications et de services fiables et disponibles en permanence, améliorant
+ainsi notre expérience numérique du quotidien.
+
+% \newpage
+% \printbibliography[heading=bibintoc]
+\end{document}

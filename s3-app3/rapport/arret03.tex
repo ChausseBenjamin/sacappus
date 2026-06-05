@@ -1,0 +1,77 @@
+\begin{code}[listing options={language=YAML},
+  title=\texttt{arret03/docker-compose.yml}
+]
+version: '3.2'
+
+services:
+    c1: # Premier client - Ajoute et retire des taches automatiquement
+      build:
+        context: ./
+        dockerfile: ./Dockerfile.client
+      container_name: arret03-c1
+      image: arret03-client
+      tty: true
+      environment:
+        - MONSERVEUR='s1'
+        - MONNOM='c1'
+    c2: # Deuxieme client - Ajoute et retire des taches automatiquement
+      container_name: arret03-c2
+      image: arret03-client
+      tty: true
+      environment:
+        - MONSERVEUR='s2'
+        - MONNOM='c2'
+    c3: # Troisieme client - Ajoute et retire des taches automatiquement
+      container_name: arret03-c3
+      image: arret03-client
+      tty: true
+      environment:
+        - MONSERVEUR='s3'
+        - MONNOM='c3'
+\end{code}
+\begin{code}[listing options={language=YAML},
+  title=\verb!docker-compose.yml! (suite)
+]
+    s1: # Premier serveur - Traite les demandes todo
+      build:
+        context: ./
+        dockerfile: ./Dockerfile.serveur
+      container_name: arret03-s1
+      image: arret03-serveur
+      tty: true
+      volumes:
+        - ./fortune:/fortune
+      environment:
+        - MONSERVEUR='s1'
+        - MONNOM='c1'
+    s2: # Deuxieme serveur - Traite les demandes todo
+      container_name: arret02-s2
+      image: arret02-serveur
+      tty: true
+      volumes:
+        - ./fortune:/fortune
+      environment:
+        - MONSERVEUR='s2'
+        - MONNOM='c2'
+    s3: # Troisieme serveur - Traite les demandes todo
+      container_name: arret02-s3
+      image: arret02-serveur
+      tty: true
+      volumes:
+        - ./fortune:/fortune
+      environment:
+        - MONSERVEUR='s3'
+        - MONNOM='c3'
+    gestionnaire: # Affiche la liste des todo
+      build:
+        context: ./
+        dockerfile: ./Dockerfile.gestionnaire
+      container_name: arret03-gestionnaire
+      image: arret03-gestionnaire
+      tty: true
+      environment:
+        - MONSERVEUR='s1,s2,s3'
+        - MONNOM='c1,c2,c3'
+networks: # Reseau par defaut
+  arret03-todo-net:
+\end{code}

@@ -1,0 +1,37 @@
+\begin{code}[title=\texttt{arret02/docker-compose.yml}, listing options={language=yaml}]
+version: '3.2'
+
+services: # Definition des services docker
+    c1: # Client - Ajoute et retire des taches automatiquement
+      build:
+        context: ./
+        dockerfile: ./Dockerfile.client
+      container_name: arret02-c1
+      tty: true
+      environment:
+        - MONSERVEUR='s1'
+        - MONNOM='c1'
+    s1: # Serveur - Traite les demandes todo
+      build:
+        context: ./
+        dockerfile: ./Dockerfile.serveur
+      container_name: arret02-s1
+      tty: true
+      volumes:
+        - ./fortune:/fortune
+      environment:
+        - MONSERVEUR='s1'
+        - MONNOM='c1'
+    gestionnaire: # Permet d'observer les taches en cours
+      build:
+        context: ./
+        dockerfile: ./Dockerfile.gestionnaire
+      container_name: arret02-gestionnaire
+      tty: true
+      environment:
+        - MONSERVEUR='s1'
+        - MONNOM='c1'
+
+networks: # Reseau par defaut
+  arret02-todo-net:
+\end{code}

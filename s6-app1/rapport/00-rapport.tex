@@ -1,0 +1,92 @@
+\documentclass[a4paper]{article}
+
+\usepackage{titling}
+\usepackage{tabularx}
+\usepackage{libs/titlepage}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{libs/document}
+\usepackage{booktabs}
+\usepackage{float}
+\usepackage{graphicx}
+\usepackage{libs/utils}
+\usepackage{multicol}
+\usepackage{subcaption}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{enumitem}
+\usepackage{siunitx}
+\usepackage{hyperref}
+\usepackage[toc,page]{appendix}
+
+% Guide etudiant requires custom header/footer for some reason
+\usepackage{fancyhdr}
+
+\title{Rapport d'APP}
+
+\class{Réseaux sans fil}
+\classnb{GIF673}
+\renewcommand{\frenchtablename}{Tableau}
+
+\teacher{Domingo Palao Muñoz}
+
+\author{
+  \addtolength{\tabcolsep}{-0.4em}
+  \begin{tabular}{rcl}
+      Benjamin Chausse & -- & CHAB1704 \\
+      Shawn Couture    & -- & COUS1912 \\
+  \end{tabular}
+}
+
+\makeatletter
+\let\title\@title
+\let\authors\@author
+\let\thedate\@date
+\makeatother
+
+\begin{document}
+\maketitle
+\contents{
+\tableofcontents
+% \listoffigures
+% \listoftables
+}
+\pagestyle{fancy}
+\fancyhf{} % clear default header/footer
+\fancyhead[L]{\footnotesize \title}
+\fancyhead[R]{\footnotesize Benjamin Chaussé, Shawn Couture}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt} % optional
+\renewcommand{\footrulewidth}{0pt}
+
+\section{Introduction}
+Ce projet vise à faire l'analyse d'un prototype d'une station météo connectée permettant la collecte et le partage de données climatiques
+en temps réel, afin de rendre le prototype plus robuste et viable pour une mise en marché.
+Un prototype est développé pour démontrer la faisabilité du système et soutenir une démarche de financement. Ce document présente les
+choix technologiques retenus et leur justification.
+
+% Pour faire votre analyse, vous devrez prendre en considération les éléments de contexte inclut
+% dans la problématique. Vous êtes libre de compléter le contexte si des éléments ne sont pas
+% mentionnées. Il est attendu que les éléments de discussions ne soient pas analysés en silo.
+% Par exemple, le choix d'une interface de communications sans �l peut impacter le choix
+% d'interface entre le capteur et le microcontrôleur.
+
+\section{Station actuel}
+\input{03-prototype-actuel.tex}
+
+\section{Étude de cas pour l'usage de nouveaux capteurs}
+\input{01-new-sensors.tex}
+
+\section{Requis pour un déploiement commercial}
+\input{02-commercial-changes.tex}
+
+\section{Conclusion}
+L'architecture basée sur un ESP32-S3, des capteurs industriels et
+LoRa est validée pour sa robustesse et sa faible consommation.
+Ces choix assurent une solution scalable et adaptée à une commercialisation.
+Le système peut évoluer vers une version industrielle fiable et durable.
+
+% \newpage
+% \appendix
+% \input{99-annexe.tex}
+
+\end{document}

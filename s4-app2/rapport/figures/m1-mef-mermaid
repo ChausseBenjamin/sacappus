@@ -1,0 +1,18 @@
+---
+config:
+  layout: elk
+---
+stateDiagram
+  direction LR
+  Wait --> Read:<code>lrc_front_changed=1</code>
+  Read --> Save:<code>cpt_bits>22</code>
+  Save --> Send
+  Send --> Wait
+  Read --> Read:<code>cpt_bit<22</code>
+
+  Wait:<b>Wait For Transition</b> <br><code>cpt_bit_reset=NOT(lrc_front_changed)</code> <br><code>bit_enable=lrc_front_changed</code> <br><code>load_left=NOT LRC</code> <br><code>load_right=LRC</code> <br><code>str_dat=0</code>
+  Read:<b>Read Word</b> <br><code>cpt_bit_reset=0</code> <br><code>bit_enable=1</code> <br><code>load_left=0</code> <br><code>load_right=0</code> <br><code>str_dat=0</code>
+  Save:<b>Saving Received Word</b> <br><code>cpt_bit_reset=0</code> <br><code>bit_enable=0</code> <br><code>load_left=NOT(LRC)</code> <br><code>load_right=LRC</code> <br><code>str_dat=0</code>
+  Send:<b>Sending Str Dat</b> <br><code>cpt_bit_reset=0</code> <br><code>bit_enable=0</code> <br><code>load_left=0</code> <br><code>load_right=0</code> <br><code>str_dat=0</code>
+
+%% vim: ft=mermaid

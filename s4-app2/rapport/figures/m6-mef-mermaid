@@ -1,0 +1,16 @@
+---
+config:
+  layout: elk
+---
+stateDiagram
+  direction LR
+  Wait --> Save:<code>(i_en='1')AND(raising_edge(bclk))</code>
+  Save --> Calc
+  Calc --> Wait
+  Wait --> Wait
+
+  Wait:<b>Await Enable</b> <br><code>o_param=o_param</code>
+  Save:<b>Save & Shift New Values</b> <br><code>o_param=o_param</code>
+  Calc:<b>Calculate & Output New Value</b> <br><code>o_param=math</code>
+
+%% vim: ft=mermaid

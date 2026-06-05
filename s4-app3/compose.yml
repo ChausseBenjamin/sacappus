@@ -32,3 +32,17 @@ services:
       service: app
     environment:
       REALTIME: true
+
+  app:
+    extends:
+      file: ../assets/container/compose.yml
+      service: compile
+    environment:
+      PROJECT: s4-app3
+      INPUT_FILE: rapport/00-rapport.tex
+      OUTPUT_FILE: chab1704-cous1912.pdf
+  app-watch:
+    extends:
+      service: app
+    environment:
+      REALTIME: true

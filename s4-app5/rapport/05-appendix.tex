@@ -1,0 +1,88 @@
+\appendix
+
+\section{Machines à état finie}
+
+\begin{figure}[H]
+\centering
+\input{assets/tikz/token.tex}
+\caption{Mise en unités lexicales}
+\end{figure}
+
+% \begin{figure}[H]
+% \centering
+% \input{assets/tikz/syntax.tex}
+% \caption{Analyse lexicale}
+% \end{figure}
+
+\quickfig{MEF de détection d'un délimiteur}{fsm-delimiter}{.7}{assets/img/fsm-delimiter.png}
+\quickfig{MEF de détection d'un identificateur}{fsm-identifier}{.7}{assets/img/fsm-identifier.png}
+\quickfig{MEF de détection d'un litéral}{fsm-literal}{.7}{assets/img/fsm-literal.png}
+\quickfig{MEF de détection d'un opérateur}{fsm-operator}{.7}{assets/img/fsm-operator.png}
+
+\newpage
+\section{Arbres syntaxiques}
+
+\quickfig{Représentation graphique du json généré par le test \#\ref{tid:first}}{ast-first}{.85}{assets/img/ast-1.png}
+\quickfig{Représentation graphique du json généré si le test \#\ref{tid:first} n'avait pas de parenthèses}{ast-err}{.85}{assets/img/ast-err.png}
+% \quickfig{Représentation graphique du json généré par le test \#\ref{tid:second}}{ast-second}{.85}{assets/img/ast-2.png}
+\quickfig{Représentation graphique du json généré par le test \#\ref{tid:sum}}{ast-sum}{.6}{assets/img/ast-E.png}
+\quickfig{Représentation graphique du json généré par le test \#\ref{tid:prod}}{ast-prod}{.6}{assets/img/ast-T.png}
+
+\newpage
+\section{Messages d'erreurs}
+
+\begin{error}[Message d'erreur issu du test \#\ref{tid:start-op}]{err:start-op}
+\begin{verbatim}
+app6.SyntaxException: Syntax Error at position 0: Unexpected token
+  Expected: literal, identifier, or '('
+  Found: +
+  Context: +2-3
+\end{verbatim}
+\end{error}
+
+\begin{error}[Message d'erreur issu du test \#\ref{tid:end-op}]{err:end-op}
+\begin{verbatim}
+app6.SyntaxException: Syntax Error at position 3: Expected operand after operator
+  Expected: number or expression
+  Found: end of input
+  Context: *
+\end{verbatim}
+\end{error}
+
+\begin{error}[Message d'erreur issu du test \#\ref{tid:double-op}]{err:double-op}
+\begin{verbatim}
+app6.SyntaxException: Syntax Error at position 2: Unexpected token
+  Expected: literal, identifier, or '('
+  Found: /
+  Context: /2-3
+\end{verbatim}
+\end{error}
+
+\begin{error}[Message d'erreur issu du test \#\ref{tid:missing-close}]{err:missing-close}
+\begin{verbatim}
+app6.SyntaxException: Syntax Error at position 6: Expected closing parenthesis
+  Expected: ')'
+  Found: end of input
+\end{verbatim}
+\end{error}
+
+\begin{error}[Message d'erreur issu du test \#\ref{tid:missing-open}]{err:missing-open}
+\begin{verbatim}
+app6.SyntaxException: Syntax Error at position 3: Failed to parse complete
+expression - unexpected tokens remain
+  Found: )
+  Context: ) - 3
+\end{verbatim}
+\end{error}
+
+\begin{error}[Message d'erreur issu du test \#\ref{tid:empty-paren}]{err:empty-paren}
+\begin{verbatim}
+app6.SyntaxException: Syntax Error at position 5: Expected opening parenthesis
+  Expected: '('
+  Found: )
+  Context: )/3
+\end{verbatim}
+\end{error}
+
+
+

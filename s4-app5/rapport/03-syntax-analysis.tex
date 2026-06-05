@@ -1,0 +1,119 @@
+\section{Conception de l'analyseur syntaxique par la méthode descendante}
+
+\subsection{Principes de fonctionnement}
+
+\subsubsection{Analyseur descendant}
+
+Un analyseur syntaxique descendant construit l'\textit{AST} à partir d'un
+symbole de départ. Il dérive l'entrée de gauche à droite ou de droite à
+gauche en appliquant des règles de grammaire. Ces règles permettent de choisir
+le bon prochain symbole ou la bonne combinaison de symboles. Une méthode peut
+implémenter des \textit{lookahead tokens} pour déterminer les symboles
+suivants et choisir la règle de production adéquate. L'analyseur essaie
+plusieurs règles de production jusqu'à ce que la chaîne d'entrée soit analysée
+ou qu'une erreur soit détectée.
+
+\subsection{Analyseur LL}
+
+Le premier L de la méthode LL indique que l'entrée est lue de gauche à droite.
+Le second L signifie que les dérivations sont effectuées à gauche. Dans
+l'énoncé de la problématique, on indique d'utiliser LL(1). Le nombre entre
+parenthèses indique la quantité de \textit{lookahead tokens} disponibles.
+Dans ce cas, un seul. Cela signifie que les fonctions d'analyse ne peuvent lire
+que le caractère actuel et un seul suivant.
+
+La méthode LL est prédictive. Elle anticipe la règle à utiliser et utilise des
+appels récursifs aux règles de production.
+
+L'analyseur commence à gauche de l'expression, avec le symbole de départ. Il
+regarde le caractère suivant, et s’il peut répondre à une règle avec ce
+caractère, il crée un nœud d'arbre avec deux symboles ; sinon, il passe au
+suivant. Plus loin dans ce document, la grammaire utilisée démontre ce
+principe.
+
+\subsection{Catégorie LL la plus utilisée en pratique}
+
+La méthode la plus utilisée en pratique est \verb|LL(1)|. Cela s'explique par
+sa simplicité d'implémentation, souvent via une descente récursive comme
+celle de l'APP. Elle est suffisante pour de nombreux langages de
+programmation à la syntaxe robuste.
+
+Des méthodes beaucoup plus complexes existent pour traiter des syntaxes
+ambiguës ou des grammaires complexes.
+
+\subsection{Type de grammaires applicables}
+
+Les grammaires pour la méthode \verb|LL(1)| ne doivent pas contenir
+d’ambiguïtés. Étant donné que la lecture est de gauche à droite, il ne doit
+pas y avoir de récursivité à gauche, seulement à droite. De plus, les ensembles
+de premiers et de suivants doivent être disjoints. Les grammaires dites
+``LL(1)'' sont utilisées pour cette méthode. Les règles de production doivent
+aussi être associatives à droite, car il n’est pas possible de vérifier
+l'ensemble de la règle avec un seul \textit{lookahead token} dans le cas
+d’une associativité à gauche.
+
+\subsection{Définition formelle de la syntaxe d’expressions arithmétiques}
+
+Cette section présente la grammaire utilisée pour résoudre des équations
+arithmétiques sans nombres à virgule, sans nombres négatifs, avec parenthèses.
+La priorité des opérations stipule que la division et la multiplication ont
+la même priorité, supérieure à celle de l'addition et la soustraction.
+
+Comme la méthode doit construire à gauche, les règles de production récursives
+sont réécrites pour une récursivité à droite. La construction descendante
+nécessite une définition allant du moins prioritaire au plus prioritaire.
+
+\begin{align}
+E &\rightarrow \textrm{T | [ +E | -E ]} \\
+T &\rightarrow \textrm{P | [ *T | /T ]} \\
+P &\rightarrow \textrm{( E )} \\
+P &\rightarrow \textrm{délimiteur | littéral}
+\end{align}
+
+\subsection{Exemples de séquences de dérivations}
+
+L'exemple suivant montre une séquence de dérivations d'une expression
+arithmétique à l'aide de la grammaire définie ci-dessus :
+
+\begin{equation}
+1+2*(3/5)-6
+\end{equation}
+
+\begin{center}
+\begin{minipage}{0.8\textwidth}
+  \begin{enumerate}
+    \setlength{\itemsep}{0pt}
+    \setlength{\parskip}{0pt}
+    \begin{multicols}{2}
+      \item $E$
+      \item $T+E$
+      \item $P+E$
+      \item $l+E$
+      \item $l+T$
+      \item $l+P*T$
+      \item $l+l*T$
+      \item $l+l*P$
+      \item $l+l*(E)$
+      \item $l+l*(T)$
+      \item $l+l*(P/T)$
+      \item $l+l*(l/T)$
+      \item $l+l*(l/P)$
+      \item $l+l*(l/l)$
+      \item $l+l*(l/lE$
+      \item $l+l*(l/lT-E$
+      \item $l+l*(l/lP-E$
+      \item $l+l*(l/l)-E$
+      \item $l+l*(l/l)-T$
+      \item $l+l*(l/l)-P$
+      \item $l+l*(l/l)-l$
+    \end{multicols}
+  \end{enumerate}
+\end{minipage}
+\end{center}
+
+Lorsqu'il n'est plus possible d'appliquer les règles de production de la
+grammaire, et qu'il reste des unités lexicales, l'analyseur recommence à
+partir du caractère actuel. C’est pour cela qu’un symbole $E$ apparaît à la
+position de la parenthèse fermante. La fonction $P$ s’est assurée qu’une
+parenthèse fermante suivait l’appel de $E$, puis l'analyse est remontée et a
+repris à partir de ce point.

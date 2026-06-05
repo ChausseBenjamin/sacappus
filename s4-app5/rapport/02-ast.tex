@@ -1,0 +1,40 @@
+\section{Structures de données d’arbres syntaxiques abstraits}
+
+Un arbre syntaxique abstrait, d'un point de vue programmation, n'est qu'un
+arbre binaire dont les différents membres stockent des informations sur eux-
+mêmes. Pour plus de détails sur l'implémentation, le code Java est fourni en
+annexe du rapport, mais n'est pas transcrit textuellement pour garder le
+rapport concis.
+
+\subsection{ElemAST (abstraite)}
+
+Tout élément d'un arbre fait partie de cette classe. Cela permet d'agglomérer
+et d'imposer, si nécessaire, certaines fonctions telles que \verb|toString|,
+\verb|asPostFix|, etc. De plus, un nœud ne sait pas si ses branches
+contiendront d'autres nœuds ou des feuilles. Cette classe permet de faire
+abstraction de cette distinction.
+
+\subsection{NoeudAST}
+
+Un nœud contient les informations suivantes :
+
+\begin{itemize}
+  \item \verb|type| : (toujours un opérateur dans notre cas, mais pourrait être
+        un appel à une fonction dans une grammaire différente)
+  \item \verb|lexeme| : permet d'évaluer l'expression. Omettre un lexème comme
+        \verb|*| rendrait impossible de connaître l'opération désirée lors de
+        l'évaluation.
+  \item \verb|left| : contient le terme gauche du nœud (feuille ou un autre nœud)
+  \item \verb|right| : contient le terme droit du nœud (comme \verb|left|)
+\end{itemize}
+
+\subsection{FeuilleAST}
+
+Une feuille contient les informations suivantes :
+
+\begin{itemize}
+  \item \verb|type| : litéral ou identificateur dans la grammaire actuelle, mais
+        pourrait contenir autre chose comme booléen, flottant, etc.
+  \item \verb|lexeme| : tout comme dans le nœud, il serait impossible
+        d'évaluer l'arbre par la suite s'il n'était pas présent.
+\end{itemize}

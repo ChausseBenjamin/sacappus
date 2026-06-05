@@ -1,0 +1,141 @@
+\section{Conception de l'analyseur lexical}
+
+\subsection{Définir les unités lexicales à l’aide d’expressions régulières
+et d'automates}
+
+\subsubsection{Littéraux}
+
+Les littéraux sont des unités lexicales comme des nombres, des valeurs
+booléennes, etc. C'est une valeur fixe directement écrite dans le code source
+d'un programme. Or, la tâche demandée nécessite uniquement la détection de
+nombres entiers sans exposants. L'alphabet des littéraux contient alors
+uniquement les chiffres de 0 à 9.
+
+\paragraph{Expression régulière}
+
+\begin{align}
+  \sum_{\textrm{literal}} &= \{0,1,2,3,4,5,6,7,8,9 \} \\
+  \textrm{Expression} &= \sum^+_{\textrm{literal}}
+\end{align}
+
+L'expression régulière suivante présente celle d'en haut d'une façon plus
+régulière :
+\begin{equation}
+  \textrm{Expression} = (0|1|2|3|4|5|6|7|8|9)^+
+\end{equation}
+
+L'automate de la figure \ref{fig:fsm-literal} est une partie de l'automate
+complet de l'analyseur lexical. Il fonctionne uniquement pour les littéraux
+numériques entiers.
+
+\subsubsection{Opérateurs}
+
+Dans le contexte du langage de la problématique, les opérateurs sont des
+unités lexicales permettant d'exécuter une évaluation arithmétique entre un
+nombre à gauche de l'unité et un autre à droite. Les deux nombres étant des
+unités de type littéral. Les opérateurs reconnus sont l'addition, la
+soustraction, la multiplication et la division. Aucun opérateur n'est composé
+de plusieurs caractères.
+
+\paragraph{Expression régulière}
+
+\begin{align}
+  \sum_{\textrm{opérateurs}} &= \{+,-,*,/\} \\
+  \textrm{Expression} &= \sum_{\textrm{opérateurs}}
+\end{align}
+
+De façon plus lisible, cette expression peut être présentée comme suit. Notez
+que les apostrophes sont là uniquement pour indiquer qu’il s’agit de
+caractères littéraux et non de symboles d'expression régulière.
+
+\begin{equation}
+  \textrm{Expression} = +|-|*|/
+\end{equation}
+
+L'automate de la figure \ref{fig:fsm-operator} est une partie de l'automate
+complet de l'analyseur lexical. Il fonctionne uniquement pour les opérateurs
+à symbole unique.
+
+\subsubsection{Identificateurs}
+
+Dans le contexte du langage de la problématique, deux types d'opérandes sont
+possibles : les littéraux ou les chaînes de caractères. Ces dernières sont
+formellement appelées "identificateurs". Ils sont valides uniquement s'ils
+commencent par une lettre majuscule. Ils peuvent contenir des lettres
+minuscules et majuscules ainsi que des underscores. Cependant, ils ne peuvent
+pas se terminer par un underscore et il ne peut pas y avoir deux underscores
+consécutifs. Ils ont une longueur minimale d’un caractère.
+
+\paragraph{Expression régulière}
+
+Par souci de simplicité, l'alphabet n'est pas mentionné. Les expressions
+suivantes présentent l'expression régulière pour la détection d'identificateurs
+valides :
+
+\begin{align}
+  \textrm{Maj} &= (A|B|C|D|E|F|G|H|I|J|K|L|M|N|O|P|Q|R|S|T|U|V|W|X|Y|Z) \\
+  \textrm{Min} &= (a|b|c|d|e|f|g|h|i|j|k|l|m|n|o|p|q|r|s|t|u|v|w|x|y|z) \\
+  \textrm{Lettres} &= \textrm{Maj} | \textrm{Min}
+\end{align}
+
+Il serait plus simple de les écrire en \textit{Regex} comme suit, mais ce
+n’est pas demandé :
+
+\begin{align}
+  \text{Maj} &= [\textrm{A-Z}] \\
+  \text{Min} &= [\textrm{a-z}] \\
+  \text{Lettres} &= [\textrm{A-Za-z}] = [\textrm{A-z}]
+\end{align}
+
+L'expression est donc la suivante :
+\begin{equation}
+  \textrm{Expression}=\textrm{Maj} (\_?\textrm{Lettres}^+)*
+\end{equation}
+
+Cela signifie : une lettre majuscule suivie de zéro ou plusieurs occurrences
+d’un underscore optionnel suivi d’une ou plusieurs lettres.
+
+L'automate de la figure \ref{fig:fsm-identifier} est une partie de l'automate
+complet de l'analyseur lexical. Il fonctionne uniquement pour les
+identificateurs.
+
+\subsubsection{Délimiteurs}
+
+Par nature, un délimiteur est une unité lexicale qui délimite des portions de
+programme. Dans le contexte du langage de la problématique, les délimiteurs
+sont uniquement les parenthèses standards. L'automate et l'expression
+régulière seront donc identiques à ceux des opérateurs. L'alphabet change
+pour ne contenir que les parenthèses.
+
+\paragraph{Expression régulière}
+
+\begin{align}
+  \sum_{\textrm{délimiteurs}} &= \{(,)\} \\
+  \textrm{Expression} &= \sum^{\textrm{délimiteurs}}
+\end{align}
+
+L'expression régulière suivante présente celle d'en haut d'une façon plus
+régulière :
+
+\begin{equation}
+  \textrm{Expression} = \textrm{'('} | \textrm{')'}
+\end{equation}
+
+L'automate de la figure \ref{fig:fsm-delimiter} est une partie de l'automate
+complet de l'analyseur lexical. Il fonctionne uniquement pour les délimiteurs.
+
+\subsection{Classes Java qui implémentent l’analyse lexicale}
+
+Pour effectuer l'analyse lexicale, des classes déjà existantes du projet de
+départ ont été utilisées. \verb|AnaLex| effectue l’analyse lexicale à partir
+d’une expression donnée et implémente les automates définis plus haut.
+\verb|Terminal| a été utilisée comme classe représentant une unité lexicale
+et contient donc son type et son lexème. \verb|AnaLex| construit une liste
+d’unités lexicales, qui sont en fait des objets \verb|Terminal|. Ensuite, une
+classe statique d’alphabet a été ajoutée au projet, permettant d’utiliser des
+fonctions qui vérifient si une lettre appartient à certains alphabets comme
+celui d’un opérateur, du début d’un identificateur, du corps d’un
+identificateur, etc. Cette dernière est utilisée pour éviter de coder
+directement les chaînes de caractères dans \verb|AnaLex|. Afin d'éviter
+d'alourdir inutilement ce rapport, le code est omis puisqu’il est déjà
+fourni dans la remise.

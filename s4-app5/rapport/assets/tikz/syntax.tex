@@ -1,0 +1,56 @@
+\begin{tikzpicture}[
+    > = stealth,
+    shorten > = 1pt,
+    auto,
+    node distance = 2cm,
+    semithick,
+    state/.style = {circle, draw, minimum size = 1cm},
+    error/.style = {circle, draw, fill = red!20, minimum size = .5cm},
+    final/.style = {circle, draw, double, minimum size = 1cm}
+]
+
+% States
+\node[error]                            (err)       {Err};
+\node[error, above = .5cm of err]       (errIntPar) {Err 1(};
+\node[error, above = .5cm of errIntPar] (errIntInt) {Err 11};
+\node[error, above = .5cm of errIntInt] (errParPar) {Err )(};
+\node[error, above = .5cm of errParPar] (errParInt) {Err )1};
+\node[error, above = .5cm of errParInt] (errOpOp)   {Err ++};
+\node[error, above = .5cm of errOpOp]   (errOpPar)  {Err +)};
+
+\node[state, left = 5cm of err]       (0) {0};
+\node[state, left = 5cm of errIntInt] (1) {1};
+\node[state, left = 5cm of 1]         (3) {3};
+\node[state, left = 4cm of errOpPar]  (2) {2};
+\node[state, left = 2cm of errParInt] (4) {4};
+
+\node[error, left = 2.5cm of 0]      (errParOp) {Err +)};
+\node[error, left = 1cm of errParOp] (errEmpty) {Err ()};
+
+
+% Transitions from state 0
+\draw[->] (0) to            node {opérateur} (err);
+\draw[->] (0) to            node {opérande}  (1);
+\draw[->] (0) to node {')'}       (3);
+
+\draw[->] (1) to[bend left] node {opérateur} (2);
+\draw[->] (1) to[bend right] node[right] {')'}       (4);
+\draw[->] (1) to            node {'('}       (errIntPar);
+\draw[->] (1) to            node {opérande}  (errIntInt);
+
+\draw[->] (2) to[bend right] node[left] {'('}       (3);
+\draw[->] (2) to             node       {opérande}  (1);
+\draw[->] (2) to             node       {opérateur} (errOpOp);
+\draw[->] (2) to             node       {')'}       (errOpPar);
+
+\draw[->] (3) to[loop left]  node       {'('}       (3);
+\draw[->] (3) to             node[left] {opérateur} (errParOp);
+\draw[->] (3) to[bend right] node[left] {')'}       (errEmpty);
+\draw[->] (3) to node                   {opérande}  (1);
+
+\draw[->] (4) to             node[right] {opérateur} (2);
+\draw[->] (4) to[loop right] node        {')'}       (4);
+\draw[->] (4) to[bend right] node        {'('}       (errParPar);
+\draw[->] (4) to[bend left]  node        {opérande}  (errParInt);
+
+\end{tikzpicture}

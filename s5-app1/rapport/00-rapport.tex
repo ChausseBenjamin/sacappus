@@ -1,0 +1,60 @@
+\documentclass[a4paper]{article} \usepackage{tabularx}
+\usepackage{libs/titlepage}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{libs/document}
+\usepackage{booktabs}
+\usepackage{float}
+\usepackage{graphicx}
+\usepackage{libs/utils}
+\usepackage{multicol}
+\usepackage{subcaption}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{enumitem}       % customizable list environments
+\usepackage[toc,page]{appendix}
+
+
+
+\title{Rapport d'APP}
+
+\class{Éléments de statique et dynamique}
+\classnb{GEN411}
+
+\teacher{Olivier Fournier \& Rémy Rahem}
+
+\newcommand{\todo}[1]{\begin{color}{Red}\textbf{TODO:} #1\end{color}}
+\newcommand{\note}[1]{\begin{color}{Orange}\textbf{NOTE:} #1\end{color}}
+\newcommand{\fixme}[1]{\begin{color}{Fuchsia}\textbf{FIXME:} #1\end{color}}
+\newcommand{\question}[1]{\begin{color}{ForestGreen}\textbf{QUESTION:} #1\end{color}}
+
+\newcommand{\dd}[1]{\frac{\partial}{\partial#1}}
+\renewcommand{\vec}[1]{\overrightarrow{#1}}
+
+\author{
+  \addtolength{\tabcolsep}{-0.4em}
+  \begin{tabular}{rcl} % Ajouter des auteurs au besoin
+      Benjamin Chausse & -- & CHAB1704 \\
+      Shawn Couture    & -- & COUS1912 \\
+  \end{tabular}
+}
+
+\begin{document}
+\maketitle
+\tableofcontents
+\newpage
+
+\section{Analyse cinématique}
+\input{01-cinematique.tex}
+
+\section{Cas d'études en cinématique}
+\input{02-cas-horizontal.tex}
+\input{03-cas-vertical.tex}
+
+\section{Analyse statique}
+\input{04-statique.tex}
+
+\section{Analyse dynamique}
+\input{05-dynamique.tex}
+
+\input{99-annexe.tex}
+\end{document}

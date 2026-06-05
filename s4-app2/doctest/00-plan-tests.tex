@@ -1,0 +1,126 @@
+\documentclass[a11paper]{article}
+
+\usepackage{karnaugh-map}
+\usepackage{tabularx}
+\usepackage{libs/titlepage}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{libs/document}
+\usepackage{booktabs}
+\usepackage{multicol}
+\usepackage{float}
+\usepackage{csquotes}
+\usepackage{fancyvrb}
+\usepackage{hyperref}
+\usepackage{tablefootnote}
+
+\usepackage{witharrows}
+\usepackage{enumitem}
+
+\usepackage[usenames,dvipsnames]{xcolor}
+
+\newcommand{\todo}[1]{\begin{color}{Red}\textbf{TODO:} #1\end{color}}
+\newcommand{\note}[1]{\begin{color}{Orange}\textbf{NOTE:} #1\end{color}}
+\newcommand{\fixme}[1]{\begin{color}{Fuchsia}\textbf{FIXME:} #1\end{color}}
+\newcommand{\question}[1]{\begin{color}{ForestGreen}\textbf{QUESTION:} #1\end{color}}
+
+
+% \renewcommand{\not}[1]{\overline{#1}}
+\renewcommand{\not}[1]{#1^{\prime}}
+\newcommand{\rhs}[1]{#1^{\prime}}
+\newcommand{\xor}{\oplus}
+\newcommand{\Cuz}[1]{\Arrow{\footnotesize #1}}
+
+% \item $A+B=B+A \hspace{\fill}\text{commutativity}$
+\usepackage{enumitem}       % customizable list environments
+
+\newcommand{\cbox}[1][\relax]{\bgroup\setlength{\fboxsep}{4pt}\setlength{\fboxrule}{0.5pt}\fbox{}\egroup}
+
+\title{Validation}
+
+\class{Logique Séquentielle}
+\classnb{APP1}
+
+\teacher{Berthié Gouin-Ferland \& Nikola Zelovic}
+
+\author{Benjamin Chausse --- CHAB1704}
+
+\begin{document}
+\maketitle
+
+\section{Plan de tests}
+
+\begin{table}[H]
+  \centering
+  \footnotesize
+  \caption{Plan de vérification de la MEF de détection de fréquence}
+  \begin{tabular}{llp{4.7cm}p{3cm}l}
+    \toprule
+    \multicolumn{3}{l}{Objectif ciblé} & \multicolumn{2}{l}{Valider la MEF}  \\
+    & Condition à proscrire & Aucune &  \\
+    \midrule
+    \# & Test & Action & Résultats attendus & \\
+    \midrule
+
+    1 & Sinusoide pure surpassant les limites &
+      Remplacer \Verb#input_signal.txt# par \Verb#sinusSignalHexa_26000Hz.txt# &
+      La sortie alterne sans jamais converger & \cbox[name = hf_sin_over]{ } \\
+
+    2 & Sinusoide pure de haute fréquence &
+      Remplacer \Verb#input_signal.txt# par \Verb#sinusSignalHexa_20000Hz.txt# &
+      La sortie converge aux alentours de deux\footnotemark[1] & \cbox[name = hf_sin_pure]{ } \\
+
+    3 & Sinusoide pure de basse fréquence &
+		  Remplacer \Verb#input_signal.txt# par \Verb#sinusSignalHexa_1000Hz.txt# &
+      La sortie converge vers 48 après la première période\footnotemark[2] & \cbox[name = lf_sin_pure]{ } \\
+
+    4 & Sinusoide obstruée de haute fréquence &
+      Remplacer \Verb#input_signal.txt# par \Verb#sinusSignalHexa_20000Hz_Noise.txt# &
+      La sortie converge vers deux\footnotemark[3] & \cbox[name = hf_sin_noise]{ } \\
+
+    5 & Sinusoide obstruée de basse fréquence &
+		  Remplacer \Verb#input_signal.txt# par \Verb#sinusSignalHexa_1000Hz_Noise.txt# &
+      La sortie converge vers 48 après la première période\footnotemark[2]  & \cbox[name = lf_sin_noise]{ } \\
+
+    6 & Onde Carré pure surpassant les limites &
+      Remplacer \Verb#input_signal.txt# par \Verb#squareSignalHexa_26000Hz.txt# &
+      Dû à la nature du carré, le lecteur converge vers une donnée erronée. & \cbox[name = hf_square_over]{ } \\
+
+    7 & Onde Carrée pure de haute fréquence &
+      Remplacer \Verb#input_signal.txt# par \Verb#squareSignalHexa_10000Hz.txt# &
+      La sortie converge aux alentours de 4-5 après la première période\footnotemark[1] \\
+
+    8 & Onde Carrée pure de basse fréquence &
+		  Remplacer \Verb#input_signal.txt# par \Verb#squareSignalHexa_1000Hz.txt# &
+      La sortie converge vers 48 après la première période\footnotemark[2]   & \cbox[name = lf_square_pure]{ } \\
+
+    9 & Onde Carrée obstruée de haute fréquence &
+      Remplacer \Verb#input_signal.txt# par \Verb#squareSignalHexa_10000Hz_Noise.txt# &
+      La sortie converge aux alentours de 4-5\footnotemark[3] & \cbox[name = hf_square_noise]{ } \\
+
+    10 & Onde Carrée obstruée de basse fréquence &
+		  Remplacer \Verb#input_signal.txt# par \Verb#squareSignalHexa_1000Hz_Noise.txt# &
+      La sortie converge vers 48 après la première  période (si le bruit est raisonable)&
+      \cbox[name = lf_square_noise]{ } \\
+
+    11 & Sinusoide de très basse fréquence &
+		  Remplacer \Verb#input_signal.txt# par \Verb#sinusSignalHexa_200Hz.txt# &
+      La sortie converge vers 240 après la première période\footnotemark[4]   & \cbox[name = lf_square_pure]{ } \\
+
+    \bottomrule
+  \end{tabular}
+  \footnotetext[1]{hihihaha}
+\end{table}
+
+\footnotetext[1]{La sortie du module M5 est un nombre entier. Si le véritable
+nombre d'échantillon par seconde est fractionnaire, la sortie entère va osciller
+autour du nombre.}
+\footnotetext[2]{Ce qui correspond à 30 en hexadécimal}
+\footnotetext[3]{Le bruit impacte beaucoup les lectures à de haute fréquence.
+On s'attends à une convergence générale mais pas parfaite dû à cette limitation}
+\footnotetext[4]{Ce qui correspond à F0 en hexadécimal}
+
+
+
+
+\end{document}

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="simul_module_sig_tb_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="glbl" />
+            <top_module name="simul_module_sig_tb" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="187878250fs"></ZoomStartTime>
+      <ZoomEndTime time="990378251fs"></ZoomEndTime>
+      <Cursor1Time time="293378250fs"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="182"></NameColumnWidth>
+      <ValueColumnWidth column_width="87"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="7" />
+   <wvobject fp_name="/simul_module_sig_tb/d_ac_bclk" type="logic">
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="ElementShortName">d_ac_bclk</obj_property>
+      <obj_property name="ObjectShortName">d_ac_bclk</obj_property>
+      <obj_property name="label">I2S Bit Clock</obj_property>
+   </wvobject>
+   <wvobject fp_name="/simul_module_sig_tb/d_sig_pbdat" type="logic">
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="ElementShortName">d_sig_pbdat</obj_property>
+      <obj_property name="ObjectShortName">d_sig_pbdat</obj_property>
+      <obj_property name="label">I2S data</obj_property>
+   </wvobject>
+   <wvobject fp_name="/simul_module_sig_tb/d_ac_pblrc" type="logic">
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="ElementShortName">d_ac_pblrc</obj_property>
+      <obj_property name="ObjectShortName">d_ac_pblrc</obj_property>
+      <obj_property name="label">I2S Word Select (LRC)</obj_property>
+   </wvobject>
+   <wvobject fp_name="/simul_module_sig_tb/s_sw" type="array">
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="ElementShortName">s_sw[3:0]</obj_property>
+      <obj_property name="ObjectShortName">s_sw[3:0]</obj_property>
+      <obj_property name="label">switch param selection</obj_property>
+   </wvobject>
+   <wvobject fp_name="/simul_module_sig_tb/d_ech_reg_right" type="array">
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="ElementShortName">d_ech_reg_right[23:0]</obj_property>
+      <obj_property name="ObjectShortName">d_ech_reg_right[23:0]</obj_property>
+      <obj_property name="label">i2s_right_channel_ech</obj_property>
+      <obj_property name="Radix">REALRADIX</obj_property>
+      <obj_property name="radix_realType">SIGNEDFIXEDPOINTRADIX</obj_property>
+      <obj_property name="radix_fractionWidth">23</obj_property>
+      <obj_property name="radix_otherWidth">0</obj_property>
+      <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="/simul_module_sig_tb/d_param" type="array">
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="ElementShortName">d_param[7:0]</obj_property>
+      <obj_property name="ObjectShortName">d_param[7:0]</obj_property>
+      <obj_property name="label">power_level</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      <obj_property name="CustomSignalColor">#FF00FF</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="/simul_module_sig_tb/rightInputFileName" type="array">
+      <obj_property name="ElementShortName">rightInputFileName[1:26]</obj_property>
+      <obj_property name="ObjectShortName">rightInputFileName[1:26]</obj_property>
+      <obj_property name="CustomSignalColor">#008000</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+</wave_config>

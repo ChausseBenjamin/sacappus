@@ -1,0 +1,100 @@
+\documentclass[a11paper]{article}
+% xelatex
+
+\usepackage{subcaption}
+\usepackage{tabularx}
+\usepackage{libs/titlepage}
+\usepackage{libs/document}
+\usepackage{booktabs}
+\usepackage{multicol}
+\usepackage{multirow}
+\usepackage{float}
+\usepackage{varwidth}
+\usepackage{graphicx}
+\usepackage{siunitx}
+\usepackage{pifont}
+\usepackage{subcaption}
+% \usepackage[toc,page]{appendix}
+\usepackage[usenames,dvipsnames]{xcolor}
+
+\title{Rapport d'APP}
+
+\class{Logique Combinatoire}
+\classnb{GEN420 \& GEN430}
+
+\teacher{Berthié Gouin-Ferland \& Nikola Zelovic}
+
+\author{
+  \addtolength{\tabcolsep}{-0.4em}
+  \begin{tabular}{rcl} % Ajouter des auteurs au besoin
+      Benjamin Chausse & -- & CHAB1704 \\
+      Shawn Couture    & -- & COUS1912 \\
+  \end{tabular}
+}
+
+\newcommand{\todo}[1]{\begin{color}{Red}\textbf{TODO:} #1\end{color}}
+\newcommand{\note}[1]{\begin{color}{Orange}\textbf{NOTE:} #1\end{color}}
+\newcommand{\fixme}[1]{\begin{color}{Fuchsia}\textbf{FIXME:} #1\end{color}}
+\newcommand{\question}[1]{\begin{color}{ForestGreen}\textbf{QUESTION:} #1\end{color}}
+
+% Checkboxes
+\setlength{\fboxsep}{1pt}
+\newcommand{\cbox}{\fbox{\phantom{\ding{51}}}}
+\newcommand{\cboxtick}{\fbox{\ding{51}}}%
+
+\newcommand{\quicktable}[4]{
+  \begin{table}[H]
+    \footnotesize
+    \centering
+    \caption{#1}
+    \label{tab:#2}
+    \begin{tabular}{#3}
+      #4
+    \end{tabular}
+  \end{table}
+}
+
+\newcommand{\quickfigure}[4]{
+  \begin{figure}[H]
+    \centering
+		\includegraphics[width=#3\textwidth]{#4}
+    \caption{#1}
+    \label{fig:#2}
+  \end{figure}
+}
+
+\begin{document}
+\maketitle
+\newpage
+\tableofcontents
+\listoffigures
+\listoftables
+\newpage
+
+% \note{Un total de 4 pages est permis, excluant la page titre, la table des matières, l'introduction,
+% la conclusion et les références.}
+
+\section{Introduction}
+
+Dans le cadre de l'APP2 de la session S4, il est demandé de compléter le
+développement d'une pédale d'effets de guitare numérique à l'aide d'un FPGA
+sur la carte Zybo. Plus précisément, ce rapport documente la conception,
+l'implémentation et la vérification de deux modules essentiels au système:
+le décodeur I2S (M1), responsable de la désérialisation du signal audio reçu,
+et le module de calcul de la puissance du signal (M6). Ces travaux ont été
+réalisés en respectant les contraintes de synchronisation, de modularité et
+de formalisme en VHDL, selon les normes enseignées. Le rapport présente les
+diagrammes d'états, les schémas-blocs, les plans de vérification ainsi que
+les résultats de simulation attestant de la conformité fonctionnelle des
+modules développés.
+
+\input{01-module-M1.tex}
+\input{02-module-M6.tex}
+
+\section{Conclusion}
+
+Au terme de ce projet, nous avons conçu, implémenté et vérifié quatres modules dont deux sont présentés dans ce rapport pour le traitement audio numérique sur FPGA, soit le décodeur I2S (M1) et le calculateur de puissance (M6). Le module M1 a démontré une désérialisation fiable des échantillons audio stéréo, tout en respectant la synchronisation imposée par le protocole I2S. Quant au module M6, il a permis une estimation continue de la puissance du signal en intégrant une stratégie de filtrage efficace, bien que perfectible à basse fréquence.
+
+Les résultats obtenus à travers les plans de vérification et les simulations confirment la fonctionnalité attendue de chacun des modules selon les critères du projet. Ce travail a permis de consolider nos compétences en conception VHDL, en validation de systèmes logiques, ainsi qu’en méthodologie de développement modulaire sur FPGA.
+
+\end{document}

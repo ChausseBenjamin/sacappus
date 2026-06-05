@@ -1,0 +1,60 @@
+# Vivado generated directories
+pb_logique_seq.cache/
+pb_logique_seq.runs/
+pb_logique_seq.gen/
+pb_logique_seq.hw/
+pb_logique_seq.ip_user_files/
+pb_logique_seq.sim/
+hw_handoff/
+
+# Xilinx internal files
+.Xil/
+**/.Xil/
+
+# Vivado logs and journals
+*.jou
+*.log
+*.pb
+
+# Waveform database (regeneratable; .wcfg is trackable)
+*.wdb
+*.wdf
+
+# Design checkpoints (large binary, regeneratable)
+*.dcp
+
+# Synthesis status markers
+__synthesis_is_complete__
+*.queue.rst
+*.begin.rst
+*.end.rst
+
+# Per-run scripts (regenerated each run)
+ISEWrap.sh
+ISEWrap.js
+rundef.js
+runme.sh
+runme.bat
+gen_run.xml
+
+# Vivado auto-generated TCL (per-run)
+*.tcl
+# But keep the user's custom schema.tcl
+!schema.tcl
+
+# Simulation artifacts
+*.vcd
+*.vpd
+*.saif
+xsim.dir/
+xsim.cmd
+*.wdb
+simulate.log
+elaborate.log
+compile.log
+xvhdl.log
+xvhdl.pb
+protoinst_files/
+
+# Vivado project backup
+pb_logique_seq.xpr.bak

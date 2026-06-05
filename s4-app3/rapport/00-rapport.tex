@@ -1,0 +1,550 @@
+\documentclass[a11paper]{article}
+
+\usepackage{karnaugh-map}
+\usepackage{subcaption}
+\usepackage{tabularx}
+\usepackage{libs/titlepage}
+\usepackage{libs/document}
+\usepackage{booktabs}
+\usepackage{multicol}
+\usepackage{float}
+\usepackage{varwidth}
+\usepackage{graphicx}
+% \usepackage[toc,page]{appendix}
+\usepackage[dvipsnames]{xcolor}
+
+\title{Rapport d'APP}
+
+\class{Architecture des ordinateurs}
+\classnb{GIF310}
+
+\teacher{Marc-André Tétrault}
+
+\author{
+  \addtolength{\tabcolsep}{-0.4em}
+  \begin{tabular}{rcl} % Ajouter des auteurs au besoin
+      Benjamin Chausse & -- & CHAB1704 \\
+      Shawn Couture    & -- & COUS1912 \\
+  \end{tabular}
+}
+
+\newcommand{\todo}[1]{\begin{color}{Red}\textbf{TODO:} #1\end{color}}
+\newcommand{\note}[1]{\begin{color}{Orange}\textbf{NOTE:} #1\end{color}}
+\newcommand{\fixme}[1]{\begin{color}{Fuchsia}\textbf{FIXME:} #1\end{color}}
+\newcommand{\question}[1]{\begin{color}{ForestGreen}\textbf{QUESTION:} #1\end{color}}
+
+\begin{document}
+\pagenumbering{gobble}  % Disable page numbers
+\maketitle
+\newpage
+\tableofcontents
+\newpage
+\pagenumbering{arabic}  % Start page numbering
+\setcounter{page}{1}    % Start from page 1
+% \small
+
+\section{Performances d'organisations}
+
+Une analyse des différentes organisations proposées est effectuée dans cette
+section. Cette analyse donne une vision des gains de performances qu'un
+changement de la méthode d'exécution des instructions amènerait.
+
+\subsection{Analyse du code de référence}
+
+Le code de référence contient des pseudo-instructions assembleur que MARS
+transforme en instructions standard. Premièrement, les instructions "li" sont
+des pseudo-instructions. Cependant, ces dernières sont traduites en une seule
+instruction et donc n'ont pas d'impact sur le nombre d'instructions total
+et le temps d'exécution. Malheureusement, les 4 instructions "sw" et "lw"
+dans \verb|boucle_interne| sont des pseudo-instructions puisqu'elles indexent
+des tableaux directement. Ceci n'est pas possible en MIPS. MARS remplace ces
+pseudo-instructions par 3 instructions différentes. En premier, il charge
+l'adresse du tableau dans un registre, ensuite il décale l'adresse pour
+qu'elle pointe sur le bon indice du tableau, et finalement un vrai "lw" ou
+"sw" est effectué à l'indice 0 de l'adresse décalée. Ceci veut dire que la
+\verb|boucle_interne| a 6 instructions supplémentaires.
+
+\subsection{Organisation unicycle}
+
+%\todo{documenter sous forme algébrique l'organisation unicycle}
+%\todo{Calculer en cycles d'horloge l'organisation unicycle}
+
+Le calcul du temps d'exécution en cycles d'horloge pour une organisation
+unicycle est aussi simple que de compter le nombre d'instructions exécutées.
+Aucune bulle ou vidange n'est nécessaire.
+
+La boucle interne a un total de $15$ instructions qui, une fois traduites,
+donne un total de $23$. Ces $23$ instructions sont exécutées $4$ fois. Au 5e
+appel, une seule instruction est exécutée, soit la comparaison \verb|beq|, qui
+branche dans \verb|finBoucleInterne|, laquelle contient $2$ instructions. La
+formule pour la boucle interne est donc:
+
+\begin{equation}
+  T = 4\times(23)+(2+1)
+\end{equation}
+
+La boucle externe est aussi exécutée $4$ fois. Elle contient $2$ instructions,
+puis une exécution complète de la boucle interne. À la 5e exécution, une seule
+instruction est exécutée pour sortir de la boucle et appeler
+\verb|finBoucleExterne|. Cette dernière contient $2$ instructions. La formule
+pour la boucle externe est donc la suivante:
+
+\begin{equation}
+T = 4\times(2+4\times(23)+(2+1)) + (2+1)
+\end{equation}
+
+Reste juste le \verb|main| à inclure, qui contient $2$ instructions. Le temps
+d'exécution en cycles d'horloge est donc:
+
+\begin{align}
+  T &= 2+ 4\times(2+4\times(23)+(2+1)) + (2+1) \\
+  T &= 4\times(4\times(23)+5) + 5 \\
+  T &= 4\times(97) + 5 \\
+  T &= 393
+\end{align}
+
+\subsection{Organisation en pipeline avec branchement au 4\textsuperscript{e} étage}
+
+%\todo{identifier et calculer toutes les pénalités causées par deux organisations avec branchement au 4e étage en pipeline}
+%\todo{identifier et calculer toutes les pénalités causées par deux organisations avec branchement au 2e étage}
+
+L'analyse de l'organisation en pipeline avec branchement au 4\textsuperscript{e}
+étage est faite sans unité d'avancement ni détection des aléas de données. Ceci
+dit, l'ajout de bulles est nécessaire pour éviter que des instructions utilisant
+les mêmes registres entrent en concurrence. Si ce n'est pas fait, une
+instruction pourrait additionner dans un certain registre, l'instruction
+suivante l'utiliserait sans avoir la bonne valeur, car l'instruction
+précédente n'aurait pas terminé de s'exécuter. Après une analyse de
+l'organisation, une bulle de $2$ instructions minimum est nécessaire entre
+instructions concurrentes. Vu que les branchements sont au 4\textsuperscript{e}
+étage, une bulle de $3$ \verb|nop| est nécessaire après chaque appel
+d'instructions de format J pour éviter que les instructions suivant les
+branchements soient chargées dans le pipeline alors qu'elles ne le devraient pas.
+
+Finalement, il faut prendre en compte la traduction des pseudo-instructions.
+En effet, elles sont traduites en instructions qui utilisent des registres
+concurrents! L'ajout de $2$ bulles de $2$ instructions par pseudo-instruction
+est donc nécessaire : la première entre le chargement de l'adresse du tableau
+et son déplacement, la deuxième entre le déplacement de l'adresse et
+l'écriture ou la lecture à cet endroit. Cependant, les bulles ajoutées avant
+l'appel des pseudo-instructions ne sont pas nécessaires puisque le registre
+n'est utilisé que $2$ instructions plus loin. Ceci réduit de $8$ \verb|nop|
+le total de la boucle interne.
+
+Après analyse du programme de référence, le \verb|main| devient $4$
+instructions, la boucle interne a un nouveau total de $55$ instructions, la
+boucle externe en a $8$ au lieu de $2$, le \verb|main| en a $4$ au lieu de $2$,
+la fin de boucle externe en a $8$ au lieu de $2$, et la fin de boucle interne
+en a $5$ au lieu de $2$. La nouvelle formule est donc :
+
+\begin{align}
+  T &= 4+ 4\times(7+4\times(55)+(5+1)) + (8+1) \\
+  T &= 945
+\end{align}
+
+\subsection{Organisation en pipeline avec branchement au 2\textsuperscript{e} étage}
+
+Cette organisation change l'emplacement des branchements et les monte de
+$2$ étages. Ils sont donc effectués plus tôt dans la chaîne d'événements du
+pipeline. Cela a pour effet que $2$ des $3$ \verb|nop| nécessaires pour les
+instructions de format J peuvent être enlevés. Par la suite, cette
+organisation, pour notre cas d'étude, implémente une unité d'avancement. Ceci
+permet aux résultats des instructions d'être disponibles plus tôt et de ne pas
+devoir attendre leur mise en mémoire (pour les instructions qui ne sont pas
+des branchements), éliminant les bulles entre les accès des instructions
+concurrentes. Cependant, les branchements sont exécutés plus haut que
+l'emplacement de retour de l'unité d'avancement. Cela veut dire que la bulle
+reste nécessaire lorsque les instructions concurrentes sont avec des
+instructions de branchement. De plus, une unité de détection des aléas est
+présente. Cette dernière est plutôt complexe, mais enlève complètement la
+nécessité de rajouter des \verb|nop| manuellement pour créer des bulles.
+Malheureusement, on doit tout de même calculer les délais ajoutés, tel que
+mentionné plus haut. Le \verb|syscall| a encore besoin de ses $4$
+instructions précédentes et d'une bulle de $2$ pour le registre \verb|$v0|
+avant son appel. De même, les pseudo-instructions n'ont plus de bulles et ont
+donc le même impact d'ajout d'instructions que dans l'organisation unicycle.
+
+Cela veut dire que le \verb|main| a encore $4$ instructions, la boucle
+interne en a maintenant $25$, la boucle externe en a maintenant $5$, la fin
+de boucle externe en a encore $8$ et la fin de boucle interne en a maintenant
+$3$. La formule algébrique est donc la suivante:
+
+
+\begin{align}
+  T &= 4+ 4\times(5+4\times(25)+(3+1)) + (8+1) \\
+  T &= 449
+\end{align}
+
+\subsection{Temps d'exécution}
+
+%\todo{calculez le temps d'exécution en vous basant sur une vitesse d'opération de 25 ns pour l'organisation unicycle}
+%\todo{calculez le temps d'exécution en vous basant sur une vitesse d'opération de 10 ns pour l'organisation pipeline}
+
+Pour notre cas d'étude, l'organisation unicycle a un temps de $25\,\text{ns}$
+par instruction, tandis que les organisations en pipeline prennent $10\,\text{ns}$.
+La formule triviale suivante indique que le temps d'exécution est le total des
+instructions multiplié par le temps d'un cycle d'horloge.
+
+\begin{equation}
+\text{T}_{\text{sys}} = \text{instructions} \times \text{T}_{\text{CPU}}
+\end{equation}
+
+L'unicycle prend donc $9825$ nanosecondes, le pipeline avec branchement au
+4\textsuperscript{e} étage prend $9450$ nanosecondes, et l'organisation en
+pipeline avec branchement au 2\textsuperscript{e} étage prend $4490$ nanosecondes.
+
+\subsection{Analyse des résultats}
+
+L'organisation en pipeline avec branchement au 2\textsuperscript{e} étage est
+$2{,}2\times$ plus performante que l'organisation unicycle, avec l'avantage
+de n'avoir aucune différence dans les codes assembleurs. Cependant, la
+modification de l'organisation vers une méthode pipeline peut être coûteuse en
+développement et nécessite un changement matériel. Quant à l'organisation avec
+branchement au 4\textsuperscript{e} étage, le gain de performance n'est que de
+$0{,}03\times$, ce qui est complètement négligeable, et nécessite l'ajout
+manuel de bulles dans le langage assembleur. Les gains ne sont pas à négliger
+cependant, puisqu'une amélioration de $2{,}2\times$ atteint presque la demande
+d'amélioration de $3\times$, sans nécessairement faire $3\times$ moins
+d'instructions, tel que demandé.
+
+\section{Performances SIMD}
+
+\subsection{Instructions identifiées}
+
+\subsubsection{Charger un vecteur}
+Vu que le programme doit utiliser des vecteurs, leur chargement doit être
+possible. Donc, une instruction SIMD \verb|lwv| est à implémenter. Elle vient
+avec le bonus d'enlever la traduction des pseudo-instructions.
+
+\subsubsection{Multiplication}
+Le code de référence effectue une multiplication entre deux données de deux
+vecteurs dans la boucle interne. Or, ceci peut être fait dans une instruction
+SIMD, ce qui éliminera éventuellement la boucle interne. L'instruction
+\verb|multv| permet de multiplier deux vecteurs et de mettre le résultat dans
+un autre.
+
+\subsubsection{Somme d'un vecteur}
+L'analyse du code de référence montre qu'une somme des données est effectuée.
+Or, l'utilisation d'une instruction SIMD est possible ici. Une instruction
+spéciale appelée \verb|sumv| permet d'additionner les $4$ valeurs d'un vecteur
+ensemble et de mettre le résultat dans un registre standard. Ceci permet de
+mettre immédiatement le résultat au bon endroit dans le vecteur de sortie.
+
+\subsection{Nouveau temps d'exécution}
+Dans le nouveau code de référence, le \verb|main| a $7$ instructions. La boucle
+interne a complètement disparu grâce aux instructions SIMD. La boucle
+externe a $9$ instructions. La comparaison est à la toute fin, ce qui réduit
+d'une instruction car la boucle n'est pas exécutée $5$ fois, mais seulement
+$4$. La fin de boucle est de $2$ instructions. De plus, il n'y a plus de
+pseudo-instructions.
+
+Ceci dit, la formule de calcul du nombre d'instructions est maintenant la
+suivante :
+
+\begin{align}
+  T &= 7 + 4\times(9) + 2 \\
+  T &= 45
+\end{align}
+
+\subsection{Comparaison avec l'unicycle}
+
+Le total d'instructions passe de $393$ à juste $45$. C'est un gain de $8{,}7$ !
+Ce gain démontre amplement qu'il est possible de réduire d'au minimum $3$ fois
+le nombre d'instructions total pour la problématique, étant donné la nature
+similaire des deux programmes assembleurs.
+
+%\todo{identifiez les instructions qui seraient à convertir en SIMD}
+
+%\todo{calculez le nouveau temps d'exécution en cycles d'horloge, pour enfin le
+%comparer avec celui en unicycle}
+
+%\todo{dire si le gain de performance permet d'espérer d'atteindre les objectifs
+%de la problématique}
+
+
+
+\section{Performances des mémoires sur processeur unicycle}
+
+\subsection{SRAM}
+La SRAM n'est pas prise en compte dans l'analyze puisque la problématique
+indique clairement que son implémentation serait trop couteuse. Il faut
+savoir que si elle était implémenté, il n'y aurait aucune pénalité d'accès.
+
+\subsection{Pour la mémoire de données}
+
+\subsubsection{Cas de la DRAM de la problématique}
+
+La DRAM de base a une pénalité de $10$ coups d'horloge par accès. Chaque accès
+fournit 2 mots séquentiels. De base, aucune cache de données n’est incluse.
+Donc, chaque accès aux données nécessite $10$ coups d'horloge. Le mode de
+lecture "2-word burst" n’apporte aucun avantage puisque les données ne sont pas
+sauvegardées dans une cache. Cela veut donc dire qu’un des deux mots chargés
+n’est pas utilisé et qu’un autre accès à la DRAM est nécessaire plus tard pour
+aller chercher le deuxième mot ! Cependant, si des instructions SIMD sont
+utilisées, alors ce mode de lecture permet de gagner du temps lors du
+chargement de vecteurs. Charger un vecteur de $4$ prendrait uniquement $20$
+coups d’horloge plutôt que $40$ sans ajout d’instructions SIMD.
+
+Le calcul du temps d’accès pour l’implémentation de mémoire sans cache est très
+simple. Chaque appel de \verb|sw| et \verb|lw| cause des délais d’accès.
+Les instructions immédiates n’en causent aucun puisque les données sont
+directement dans l’instruction. Une fois que les données sont dans les registres,
+le coût d’accès est nul.
+
+Le programme matriciel de référence fait $4$ appels à ce genre
+d’instructions à l’intérieur de la boucle interne. La formule mathématique
+des coups d’horloge supplémentaires est donc simplement :
+
+\begin{align}
+  \text{T} &= 10\times4\times(4\times4) \\
+  \text{T} &= 10\times4\times(4\times4) \\
+  T        &= 640
+\end{align}
+
+Si on rajoute les instructions de l'organisation unicycle, on obtient un
+total de $1033$ coups d'horloge, sans compter les pénalités de mémoire
+d'instructions !
+
+\subsubsection{Cas avec une cache attachée}
+
+Pour réduire le nombre de pénalités engendrées par l'accès à la DRAM, il
+suffit d'ajouter une cache. Pour ce cas d'étude, il s'agit d'une cache de $256$ blocs
+avec $2$ mots de $32$ bits par bloc, avec un mode de DRAM "write-through".
+Dans les caches, les premiers accès causent une pénalité de lecture. Les accès
+suivants, aux mêmes données, ne causent pas de pénalité puisque le programme n'a
+plus besoin d'accéder à la DRAM. Hors, les vecteurs d'entrée et de sortie sont
+de $4$ mots. Sachant que la cache enregistre des données contiguës à l'écriture,
+la lecture initiale des vecteurs cause $2$ pénalités d'accès.
+Pour la matrice, $8$ pénalités ont lieu pour toute la mettre dans la cache par
+groupe de $2$ mots. La cache ayant $256$ blocs, aucun remplacement de blocs
+aura lieu.
+
+Le calcul reste simple, uniquement les pénalités d'accès mentionnées plus haut
+doivent être calculées puisque n'importe quelle autre lecture ou écriture
+n'a plus besoin d'accéder à la DRAM. Voici donc la formule :
+
+\begin{align}
+  \text{T} &= 10\times(2+2+8) \\
+  \text{T} &= 120
+\end{align}
+
+\subsection{Pour les instructions}
+\subsubsection{Cas de la DRAM de la problématique}
+
+Le calcul des délais d'accès en mémoire pour les instructions est
+relativement facile pour le cas de la DRAM de la problématique. En effet,
+sans cache, chaque appel d'instruction engendre un délai d'accès ! Même si
+la DRAM fournit $2$ mots (donc deux instructions) par appel, l'organisation
+unicycle ne peut en exécuter qu'une et sans cache, elle ne peut pas
+enregistrer la prochaine instruction. Donc chaque instruction crée $10$
+coups d'horloge supplémentaires.
+
+Le calcul est relativement simple, il s'agit de multiplier le nombre total
+d'instructions calculé plus haut par $10$ pour obtenir les coups d'horloge
+supplémentaires engendrés par leur accès. On obtient donc la performance
+suivante :
+
+\begin{equation}
+  \text{T}=393\times10=3930
+\end{equation}
+
+\subsubsection{Cas avec une cache attachée}
+
+L'attachement d'une cache à la DRAM permet l'enregistrement des instructions
+pour éviter d'aller les chercher avec pénalité à chaque accès. De plus, les
+instructions dans les boucles et la fin de boucle interne sont chargées une
+seule fois dans la cache. Heureusement, la cache de $256$ blocs de $2$ mots
+proposée par le cas d'étude a assez d'espace pour qu'aucun remplacement de
+bloc n'ait lieu.
+
+Le calcul reste simple : une pénalité a lieu tous les deux accès (par bloc).
+Il suffit donc de compter le nombre d'instructions uniques dans le programme,
+de le diviser par $2$, puis de multiplier par $10$ ns pour obtenir la pénalité
+totale en nanosecondes liée à l'accès à la DRAM.
+
+Dans notre cas, on compte $23$ instructions uniques, incluant les traductions
+des pseudo-instructions. La formule mathématique pour le nombre de cycles
+supplémentaires est donc la suivante :
+
+\begin{align}
+  \text{T} &= 10\times\lceil23/2\rceil \\
+  \text{T} &= 10\times12 \\
+  \text{T} &= 120
+\end{align}
+
+\subsection{Analyse des résultats}
+
+Après l'analyse des configurations de cache, il est évident que l'ajout d'une
+mémoire cache à la DRAM apporte des gains significatifs en performance.
+En effet, un gain d'un facteur $32$ est observé pour la mémoire
+d'instructions, et un gain de $5{,}3$ pour les accès aux données.
+L'ajout d'une cache améliore donc nettement la performance, même si
+cela implique un changement matériel coûteux et ne réduit pas
+le nombre d'instructions exécutées. Cependant, un gain de performance
+de $32$ pourrait significativement réduire leur problème.
+
+\section{Configuration des caches}
+
+Le programme de référence ainsi que l'algorithme de Viterbi utilisent des
+tableaux séparables en vecteurs de taille $4$. En effet, la meilleure
+implémentation SIMD pour ces programmes utilise des instructions gérant
+des vecteurs de $4$ éléments. De plus, les deux algorithmes exploitent la
+même structure de données : une matrice $4\times4$ et deux tableaux de
+taille $1\times4$. Optimiser pour l'un optimise donc partiellement l'autre.
+
+La cache gère les requêtes et est très versatile. Par exemple, pour une
+cache avec blocs de $4$ mots et une DRAM avec blocs de $2$ mots,
+la cache récupérera ses $4$ mots via deux appels DRAM. Si une instruction
+demande $8$ mots, la cache les fournira en un temps similaire à celui
+d'une instruction demandant un seul mot.
+
+Cela simplifie grandement l'optimisation de la cache. Le nombre optimal
+de mots par bloc est $2$, ce qui permet des remplacements partiels.
+Ainsi, si un vecteur de $4$ mots est mis en cache, il occupe deux blocs.
+Un remplacement partiel n'entraîne alors que la récupération partielle
+des données, réduisant la pénalité DRAM. Avec des blocs de $4$ mots,
+le vecteur complet serait remplacé, nécessitant deux pénalités DRAM.
+
+Concernant le type de cache (directe, associatif par ensemble, ou totalement
+associative), une cache associative par ensemble paraît pertinente.
+Les vecteurs réutilisés peuvent être placés dans un premier ensemble,
+et les données des matrices dans un second, car l'accès aux matrices
+$4\times4$ se fait une seule fois sans réutilisation. Cela réduit la taille
+de la cache mais augmente la complexité. La cache se remplit de façon
+automatique, donc le code assembleur doit garantir un ordre d'accès
+approprié pour que les données des matrices ne se retrouvent pas dans
+le même ensemble que les vecteurs.
+
+Dans ces conditions, une cache associative par ensemble avec
+$8$ blocs de $2$ mots par ensemble et $2$ ensembles semble
+très optimisée pour le calcul de référence, en supposant un ordre
+d'accès aux données optimisé. Ce serait préférable à une cache
+directe de $32$ blocs de $2$ mots.
+
+L'analyse du code de référence confirme que les vecteurs d'entrée
+et de sortie sont chargés en premier, donc seront mis dans
+le premier ensemble, tandis que le deuxième sera rempli avec
+les données de la matrice. Cette organisation optimise à la fois
+les accès ratés et la taille de la cache.
+
+\subsection{Optimisation spécifique à Viterbi}
+
+Viterbi utilise un index de boucle stocké en mémoire pour éviter
+les conflits avec les appels de fonctions internes. L'optimisation
+ci-dessus ne prend pas en compte l'ordre d'accès du code Viterbi,
+ni le nombre de données différentes utilisées.
+
+\section{Intégration}
+
+\subsection{Ébauche de priorisation en fonction du temps ressenti}
+
+Les modifications logicielles sont les moins chronophages. Si un non-respect total
+des standards MIPS optimise significativement le code Viterbi ou le code de
+référence, cela devrait être prioritaire.
+
+Viennent ensuite les modifications matérielles. L'entreprise dispose déjà d'une
+base permettant de créer des caches modulables. L'ajout d'une cache d'instructions
+est prioritaire, car elle apporte un gain de performance important pour les cas
+d'étude, suivie par la cache de données.
+
+Le changement d’organisation en pipeline avec branchement au 4\textsuperscript{e} étage est moins
+complexe que celui au 2\textsuperscript{e} étage, qui requiert des modules logiques supplémentaires.
+Chacune apporte un gain de performance. Des architectures similaires existent en
+open source, notamment pour des processeurs simples comme ceux étudiés. Toutefois,
+cela nécessite une restructuration matérielle, donc un coût potentiellement élevé.
+
+Enfin, l’implémentation des instructions SIMD est la plus coûteuse. Elle exige
+non seulement des modifications matérielles majeures, mais aussi un temps de
+développement important et risqué. Certaines instructions peuvent n’être utiles
+que pour ce cas précis, ce qui réduit la versatilité.
+
+\subsection{Ébauches des gains en ordre de priorisation}
+Sachant que le total de coups d'horloge sans aucun changement, pour
+l'organisation unicycle, est le suivant:
+\begin{align}
+  \text{T} &= 10 \times \text{instructions} + 10 \times \text{accès données} + \text{instructions} \\
+  &= 10 \times 393 + 10 \times 64 + 393 \\
+  &= 3930 + 640 + 393 \\
+  &= 4963
+\end{align}
+
+Le plus gros gain vient de l’implémentation des instructions SIMD, qui réduit
+le nombre d’instructions de $393$ à $45$. Ce changement diminue aussi bien les
+pénalités d’accès à la cache d’instructions que celles à la DRAM données.
+En effet, dans le nouveau programme, au lieu de $4$ accès DRAM par boucle exécutée
+$4$ fois, seuls $2$ accès impactent la mémoire de données, exécutés $4$ fois.
+La nouvelle formule devient :
+
+\begin{align}
+  \text{T} &= 10 \times 45 + 10 \times (2 \times 4 + 1) + 45 \\
+  &= 450 + 90 + 45 \\
+  &= 585
+\end{align}
+
+Soit une amélioration d’un facteur $\approx 8{,}5$.
+
+L’ajout d’une cache d’instructions apporte initialement un gain d’un facteur $32$
+sur les pénalités d’accès. Appliqué au calcul initial, ce gain effectif est
+d’environ $4{,}3$, ce qui dépasse les gains liés à l’organisation pipeline ou
+à la cache de données. Ainsi, le nombre de pénalités d’accès passe de $45$ à $18$.
+Appliqué au code SIMD, le total devient :
+
+\begin{align}
+  \text{T} &= 10\times(18/2) + 10\times(2\times4+1) + 45 \\
+  \text{T} &= 90 + 90 + 45 \\
+  \text{T} &= 225
+\end{align}
+Ce qui est un gain de $2{,}6$ après l'implémentation du SIMD. Avant
+l'implémentation du SIMD, c'est un gain de $4{,}3$.
+
+Changer l'organisation pour être en pipeline 2\textsuperscript{e} étage serait la prochaine chose
+à faire. En effet, la durée d'un coup d'horloge baisse de \SI{25}{\nano\s} à \SI{10}{\nano\s}, mais
+le nombre d'instructions total exécuté change. Le gain observé sans SIMD est de
+$2{,}2$. Pour le SIMD, le calcul mathématique est à refaire. On obtient un total
+de $59$ instructions en effectuant la même méthode que le calcul unicycle. Ceci
+donne un gain de $1{,}9$ au lieu de $2{,}2$.
+
+Pour l'ajout de la cache de données, le gain final n'est pas très grand. En
+effet, avec le code de référence initial, un gain de $1{,}17$ est observé. Si
+cette cache est implémentée après l'implémentation du SIMD, le gain est
+d'uniquement $1{,}05$ car le nombre de coups d'horloge passe de $585$ à $555$.
+S'il est implémenté après l'implémentation de la cache d'instructions et du
+SIMD, alors le gain est un peu plus grand. On passe de $225$ à $195$ pour un gain
+de $1{,}15$.
+
+\subsection{Système proposé}
+Le système proposé est une organisation avec branchement au 2\textsuperscript{e} étage incluant
+une unité d'avancement et de détection d'hazards, avec des caches d'instructions
+et de données. La cache de données est de $8$ blocs de $2$ mots et est
+associative par ensemble. La cache d'instructions est de $256$ blocs de $2$ mots
+et est directe.
+
+Sans changer l'organisation, le nombre total de coups d'horloge passe de $4963$
+à $195$. C'est un gain de performance de $25$. Avec le changement
+d'organisation, $249$ instructions sont faites au lieu de $195$ mais avec des
+coups d'horloge de \SI{10}{\nano\s} au lieu de \SI{25}{\nano\s}. C'est donc un
+gain de performance total, après avoir refait tous les calculs,
+d'environ $50$.
+
+\subsection{Devancement du calendrier}
+La première chose à laisser tomber est l'organisation en pipeline. Une chose est
+sûre, le SIMD doit rester. Après ça, la cache de données peut être écartée.
+L'important est que le SIMD reste implémenté, car il répond à la problématique,
+qui est de réduire d’un facteur $3$ le nombre d'instructions exécutées.
+
+\section{Conclusion}
+
+Cette étude a démontré que l'implémentation d'instructions SIMD offre le gain
+de performance le plus significatif, réduisant le nombre d'instructions d'un
+facteur 8,7, dépassant largement l'objectif initial d'une réduction d'un
+facteur 3. L'ajout d'une cache d'instructions et le passage à une
+organisation en pipeline avec branchement au 2\textsuperscript{e} étage
+permettent des gains supplémentaires
+significatifs.
+
+La configuration optimale proposée combine ces trois améliorations pour un
+gain total d'environ 50 fois. Cependant, en cas de contraintes temporelles,
+l'implémentation des instructions SIMD seule suffirait à atteindre les
+objectifs d'optimisation pour l'algorithme de Viterbi.
+
+\end{document}

@@ -1,0 +1,5 @@
+[[project]]
+path = ""
+version = "0.10.0"
+assembler = "mars"
+instruction_set = "mips"

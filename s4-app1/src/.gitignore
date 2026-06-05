@@ -1,0 +1,12 @@
+# Vivado generated directories
+pb_APP_log_comb.runs/
+pb_APP_log_comb.cache/
+pb_APP_log_comb.hw/
+pb_APP_log_comb.sim/
+pb_APP_log_comb.ip_user_files/
+# Vivado temp/backup files
+*.jou
+*.log
+*.backup.jou
+*.backup.log
+*.str

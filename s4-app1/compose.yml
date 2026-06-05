@@ -19,6 +19,21 @@ services:
     environment:
       REALTIME: true
 
+  doctest:
+    extends:
+      file: ../assets/container/compose.yml
+      service: compile
+    environment:
+      PROJECT: s4-app1
+      INPUT_FILE: doctest/README.md
+      OUTPUT_FILE: plan-de-tests.pdf
+
+  doctest-watch:
+    extends:
+      service: app
+    environment:
+      REALTIME: true
+
   helper:
     extends:
       file: ../assets/container/compose.yml

@@ -1,0 +1,11 @@
+# LTspice generated files
+spice/*.raw
+spice/*.op.raw
+spice/*.log
+spice/*.plt
+spice/*.plt.bak
+spice/*.net
+
+# macOS
+spice/.DS_Store
+.DS_Store

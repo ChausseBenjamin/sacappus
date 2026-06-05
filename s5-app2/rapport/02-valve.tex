@@ -1,0 +1,55 @@
+En ce qui concerne la friction lors de la descente selon l'ouverture de la valve,
+deux d'approximations  sont faites (linéaire et quadratique). La méthode des
+moindres carrés est utilisée pour déterminer la courbe passant le plus proche
+des points selon l'ordre choisi (linéaire étant un ordre 1). Seul le
+nombre d'inconnus/coefficients $a$ diffère dans la démarche pour les deux
+approximations. La plus complexe est donnée en exemple ici:
+
+{\footnotesize
+\begin{align}
+	Y = \begin{bmatrix} 0.87\\0.78\\0.71\\0.61\\0.62
+	\\0.51\\0.51\\0.49\\0.46\\0.48\\0.46 \end{bmatrix}\hspace{.5cm}
+		M &=
+	\begin{bmatrix}
+	1 &0   &0  \\
+	1 &10  &10^2  \\
+	1 &20  &20^2  \\
+	1 &30  &30^2  \\
+	1 &40  &40^2  \\
+	1 &50  &50^2  \\
+	1 &60  &60^2  \\
+	1 &70  &70^2  \\
+	1 &80  &80^2  \\
+	1 &90  &90^2  \\
+	1 &100 &100^2 \\
+	\end{bmatrix}\hspace{.5cm}
+	V =
+	\begin{bmatrix} a_0\\a_1\\a_2 \end{bmatrix} \\
+	M^T MV = M^T Y \Rightarrow
+	V &= \left( M^T M \right)^{-1} M^T Y \Rightarrow
+	V =
+	\begin{bmatrix} 0.8668\\-0.0092\\0.0001 \end{bmatrix} \\
+		F(x) &= 0.8668 -0.0092x + 0.0001 x^2
+		\label{eq:valve-quad}
+\end{align}}
+
+Pour chacune des approximations, il est possible de connaitre l'erreur RMS en
+faisant la racine de la somme des écarts au carrés (écart entre la valeur
+expérimentale et celle prédite par la fonction développée):
+
+\begin{equation}
+	\textrm{RMS} = \sqrt{\frac{1}{N}\sum_{i=1}^{N}\Delta_y^2}
+\end{equation}
+\begin{equation}
+	\textrm{RMS}_\textrm{linéaire} = 0.0494\hspace{.5cm}
+	\textrm{RMS}_\textrm{quadratique} = 0.0180
+\end{equation}
+
+Puisque le RMS est déjà faible pour une approximation quadratique (ordre 2) et
+que seules 11 données sont disponibles de 0 à 100\%, il n’est pas pertinent
+d’utiliser des polynômes d’ordre supérieur (3, 4, \ldots), qui pourraient
+surparamétriser l’approximation, amplifier les erreurs expérimentales ou générer
+des oscillations non-représentatives de la réalité. Les deux courbes sont
+présentées à la figure \ref{fig:02-valve}, montrant que la plage de coefficients
+de friction possible pour le système varie approximativement entre 0,47 et 0,87.
+

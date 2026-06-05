@@ -4,6 +4,21 @@ services:
       file: ../assets/container/compose.yml
       service: clean
 
+  helper:
+    extends:
+      file: ../assets/container/compose.yml
+      service: compile
+    environment:
+      PROJECT: s4-app1
+      INPUT_FILE: helper/00-helper.tex
+      OUTPUT_FILE: aide-memoire.pdf
+
+  helper-watch:
+    extends:
+      service: helper
+    environment:
+      REALTIME: true
+
   devoir:
     extends:
       file: ../assets/container/compose.yml

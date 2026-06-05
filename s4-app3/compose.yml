@@ -18,3 +18,17 @@ services:
       service: app
     environment:
       REALTIME: true
+
+  design:
+    extends:
+      file: ../assets/container/compose.yml
+      service: compile
+    environment:
+      PROJECT: s4-app3
+      INPUT_FILE: design/00-design.tex
+      OUTPUT_FILE: design-plan.pdf
+  design-watch:
+    extends:
+      service: app
+    environment:
+      REALTIME: true

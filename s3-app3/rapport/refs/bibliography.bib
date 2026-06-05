@@ -1,0 +1,163 @@
+%   _____ _ _        _   _
+%  / ____(_) |      | | (_)
+% | |     _| |_ __ _| |_ _  ___  _ __  ___
+% | |    | | __/ _` | __| |/ _ \| '_ \/ __|
+% | |____| | || (_| | |_| | (_) | | | \__ \
+%  \_____|_|\__\__,_|\__|_|\___/|_| |_|___/
+%
+
+% Ce document contient des examples de références contenant les informations
+% demandées par le style de référence requis par la faculté de génie. Le
+% commentaire `OPTIONEL` désigne les informations qui ne sont pas obligatoires
+% pour ce style de références des information devant nécéssairement s'y
+% retrouver. Toute référence ne commençant psa par `sample_` est une référence
+% ayant été utilisée par moi lors de mon parcours dans la faculté de génie:
+
+% Article de périodique
+@ARTICLE{sample_article,
+  % Année de publication
+  year    = {{2000}},
+  % Auteurs
+  author  = {{Alexandre Nom1 and Benoit Nom2}},
+  % Intervalle de pages où se trouve l'article
+  pages   = {{123-156}},
+  % Titre
+  title   = {{Titre de l'article}},
+  % Revue, titre complet
+  journal = {{Titre du périodique}},
+  % OPTIONEL: Numéro du périodique dans lequel se trouve l'article
+  number  = {{2}},
+  % OPTIONEL: Volume du périodique dans lequel se trouve l'article
+  volume  = {{1}}
+
+}
+
+% Article d'actes de conférence
+@INPROCEEDINGS{sample_inproceeding,
+  % Année de publication des actes
+  year         = {{2006}},
+  % Auteurs de I'article
+  author       = {{Nom1, Alexandre}},
+  % Nom de la maison d’édition qui a publié les actes
+  publisher    = {{Maison d'édition}},
+  % Intervalle de pages ou se trouve 'article
+  pages        = {{123-133}},
+  % Titre des actes
+  booktitle    = {{Titre des actes}},
+  % Titre de l'article
+  title        = {{Titre de l'article}},
+  % OPTIONEL: Titre de la collection dans laquelle s’inscrivent les actes
+  series       = {{Titre de la collection}},
+  % OPTIONEL: Éditeurs (rédacteurs) des actes
+  editor       = {{Nom2, Benoit}},
+  % OPTIONEL: Numéro de volume dans lequel se trouve l'article
+  volume       = {{1}},
+  % OPTIONEL: Nom de la ville et du pays de la maison d’édition
+  address      = {{Ville, Pays}},
+  % OPTIONEL: Organisme responsable de I'organisation de l'activité (ex: conférence)
+  organization = {{Nom de l'organisation}}
+}
+
+% Livre
+@BOOK{sample_book,
+  % Année de publication du livre
+  year      = {{2000}},
+  % Auteurs ou les éditeurs (rédacteurs) du livre
+  % editor    = {{}}, % Interchangeable avec author
+  author    = {{Alexandre Nom}},
+  % Édition du livre, I'édition est obligatoire uniquement a partir de la 2°
+  edition   = {{2}}, % TODO: check if I have to write 2e edition
+  % Nom de la maison d’édition qui a publié le livre
+  publisher = {{Maison d'édition}},
+  % Nombre total de pages du livre
+  pages     = {{456}},
+  % Titre du livre
+  title     = {{Titre du livre}},
+  % OPTIONEL: Nom de la ville et du pays de la maison d’édition
+  address   = {{Ville, Pays}},
+  % OPTIONEL: Numéro de volume du livre
+  volume    = {{1}},
+
+}
+
+% Livre, une partie
+@INCOLLECTION{sample_incollection,
+  % Année de publication du livre
+  year      = {{2000}},
+  % Auteurs de la partie du livre
+  author    = {{Alexandre Nom1}},
+  % Édition du livre, I’édition est obligatoire uniquement a partir de la 2e
+  edition   = {{2}},
+  % Nom de la maison d’édition qui a publié le livre
+  publisher = {{Maison d'édition}},
+  % Intervalle de pages de la partie visée
+  pages     = {{234-345}},
+  % Titre du livre
+  booktitle = {{Titre du livre}},
+  % Titre de la partie visée
+  title     = {{Titre de la partie}},
+  % OPTIONEL: Éditeurs (rédacteurs) du livre
+  editor    = {{Nom2, Benoit}},
+  % OPTIONEL: Nom de la ville et du pays de la maison d’édition
+  address   = {{Ville, Pays}},
+  % OPTIONEL: Numéro de volume du livre
+  volume    = {{1}},
+  % number     = {{1}}, % Interchangeable avec volume
+}
+
+% Essai, mémoire et thèse
+% @MASTERTHESIS{ % aussi une option
+@PHDTHESIS{sample_phdthesis,
+  % Année de publication du document.
+  year    = {{2007}},
+  % Auteur du document.
+  author  = {{Alexandre Nom}},
+  % Type de document (essai, mémoire ou thèse)
+  type    = {{Essai de maîtrise}},
+  % Nom de I'institution qui a publié le document.
+  school  = {{Nom de l'institution}},
+  % Nom de la ville, de la province et du pays de l'institution.
+  address = {{Ville, Province, Pays}},
+  % Nombre total de pages du document.
+  pages   = {{234}},
+  % Titre du document.
+  title   = {{Titre du document}},
+}
+
+% Rapport technique
+@TECHREPORT{sample_techreport,
+  % Année de publication du rapport
+  year        = {{2000}},
+  % Auteurs du rapport
+  author      = {{Alexandre Nom}},
+  % Nom de I'institution et département ou nom de la maison d’édition
+  institution = {{Nom de la maison d'édition}},
+  % Nombre total de pages du rapport
+  pages       = {{234}},
+  % Titre du rapport
+  title       = {{Titre du rapport}},
+  % OPTIONEL: Ville et du pays de l'institution ou de la maison d’édition
+  address     = {{Ville, Pays}},
+  % OPTIONEL: Numéro du rapport
+  number      = {{numéro de rapport}},
+  % OPTIONEL: Type de rapport
+  type        = {{Type de rapport}},
+}
+
+% Site web
+% TODO: change misc to webpage using the faculty bst file (if I find it)
+@MISC{sample_misc,
+  % Année de la publication ou de la derniére mise a jour du site web.
+  year        = {{2000}},
+  % Auteurs ou l'organisme auteur du site web.
+  author      = {{Alexandre Nom}},
+  % Date de la visite du site web.
+  lastchecked = {{01-01-2001}},
+  % Titre du site ou de la page d’accueil du site.
+  sitetitle   = {{Titre du site}},
+  % URL (I'adresse) du site web.
+  url         = {{http://aaa.bbb.ccc}},
+  % OPTIONEL: Mois et jour* de la publication/derniére update du site
+  month       = {{01}}, % Le jour est facultatif
+
+}

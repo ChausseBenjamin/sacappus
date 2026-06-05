@@ -1,0 +1,106 @@
+\begin{code}[title=\texttt{arret05/docker-compose.yaml}, listing options={language=yaml}]
+version: '3.2'
+
+services:
+  c1: # Premier client - Ajoute et retire des taches automatiquement
+    build:
+      context: .
+      dockerfile: Dockerfile.client
+    container_name: arret05-c1
+    image: arret05-client
+    depends_on:
+      - s1
+    environment:
+      - MONSERVEUR=s1
+      - MONNOM=c1
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DATABASE=postgres
+    tty: true
+    networks:
+      arret05-todo-net:
+  c2: # Deuxieme client - Ajoute et retire des taches automatiquement
+    container_name: arret05-c2
+    image: arret05-client
+    depends_on:
+      - s1
+    environment:
+      - MONSERVEUR=s1
+      - MONNOM=c2
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DATABASE=postgres
+    tty: true
+    networks:
+      arret05-todo-net:
+\end{code}
+\begin{code}[title=\texttt{arret05/docker-compose.yaml} (suite), listing options={language=yaml}]
+  c3: # Troisieme client - Ajoute et retire des taches automatiquement
+    container_name: arret05-c3
+    image: arret05-client
+    depends_on:
+      - s1
+    environment:
+      - MONSERVEUR=s1
+      - MONNOM=c3
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DATABASE=postgres
+    tty: true
+    networks:
+      arret05-todo-net:
+  s1: # Serveur unique - Traite les demandes todo
+    build:
+      context: .
+      dockerfile: Dockerfile.serveur
+    container_name: arret05-s1
+    image: arret05-serveur
+    tty: true
+    depends_on:
+      - db
+    environment:
+      - MONSERVEUR=bd
+      - MONNOM=s1
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DATABASE=postgres
+    networks:
+      arret05-todo-net:
+\end{code}
+\begin{code}[title=\texttt{arret05/docker-compose.yaml} (suite), listing options={language=yaml}]
+  gestionnaire: # Permet d'observer les taches en cours
+    build:
+      context: .
+      dockerfile: Dockerfile.gestionnaire
+    container_name: arret05-gestionnaire
+    image: a5-gestionnaire
+    tty: true
+    environment:
+      MONSERVEUR: s1
+      MONNOM: gestionnaire
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DATABASE: postgres
+    depends_on:
+      - s1
+    networks:
+      arret05-todo-net:
+  db: # Permet d'enregistrer les taches
+    container_name: arret05-db
+    image: postgres:15
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DATABASE: postgres
+      POSTGRES_ROLE: postgres
+    volumes:
+      - "./init_db/sql:/docker-entrypoint-initdb.d"
+    ports:
+      - 5456:5432
+    networks:
+      arret05-todo-net:
+volumes:
+  todo-db:
+networks: # Reseau par defaut
+  arret05-todo-net:
+\end{code}

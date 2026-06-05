@@ -1,0 +1,13 @@
+\begin{code}[title=\texttt{arret06/kustomization.yaml}, listing options={language=yaml}]
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - client_pod.yaml
+  - gest_pod.yaml
+  - db_pod.yaml
+  - serveur_pod.yaml
+  - configs/db_env_config.yaml
+  - configs/db_init.yaml
+  - configs/volumes.yaml
+\end{code}

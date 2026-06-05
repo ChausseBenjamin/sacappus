@@ -1,0 +1,121 @@
+\subsection{Mouvement contraint horizontalement}
+\label{sec:x-bound}
+
+\noindent
+\begin{minipage}[t]{0.5\textwidth}
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=.5\textwidth]{figures/horizontal-fig.pdf}
+		\caption{$A$ contraint à un mouvement en $x$}
+		\label{fig:horizontal-fig}
+	\end{figure}
+\end{minipage}
+\begin{minipage}[t]{0.5\textwidth}
+	Il est possible de déterminer une relation entre $\theta$ et $\varphi$ à l'aide
+	de la figure \ref{fig:horizontal-fig}:
+	\begin{align}
+		% \intertext{ En supposant $\theta,\varphi \in \left[-\frac{\pi}{2},\,\frac{\pi}{2}\right]$:}
+		0 &= l\sin\theta + l\sin\varphi \\
+		0 &= \sin\theta  +  \sin\varphi \\
+		\sin\varphi   &= -\sin\theta    \\
+		\sin\varphi   &=  \sin(-\theta) \\
+		% \intertext{$\arcsin$ peut être effectué de part et d'autre:}
+		\varphi   &= -\theta
+	\end{align}
+\end{minipage} \vspace{.3cm}
+
+
+
+Ainsi, puisque dans ce cas d'étude spécifique, $\varphi = -\theta$, les
+solutions trouvées en \ref{sec:geometry} peuvent être transformées comme suit:
+
+\begin{align}
+  A_x(\theta,\varphi) = l_1\cos{\theta}+l_2\cos{\varphi} &\Rightarrow
+  A_x(\theta)         = l_1\cos{\theta}+l_2\cos(-\theta)
+\end{align}
+
+Avec peu d'effort, ce même type de transformation peut être fait pour les
+équations de vitesse et d'accélération où $\theta$ dépend du temps.
+Puisque $-1$ est une constante, la dérivation est triviale:
+
+\begin{equation}
+  \varphi(t)        = -\theta(t) \Rightarrow
+  \dot{\varphi}(t)  = -\dot{\theta}(t)  \Rightarrow
+  \ddot{\varphi}(t) = -\ddot{\theta}(t)
+\end{equation}
+
+Cela permet d'exprimer les équations de vitesse et d'accélération de $A$ comme
+suit:
+
+\begin{align}
+  V_A_x(t) &= -l_1\sin(\theta(t))\dot\theta(t)
+    + l_2\sin(-\theta(t))\dot\theta(t) \\
+  \alpha_A_x(t) &= -l_1 \left(
+      \cos(\theta(t))\dot{\theta}(t)^2 + \sin(\theta(t))\ddot{\theta}(t)
+    \right) - l_2 \left(
+      -\cos(-\theta(t))\dot{\theta}(t)^2 - \sin(-\theta(t))\ddot{\theta}(t)
+    \right)
+\end{align}
+
+Dans le cadre de cette analyse, il est demandé de modéliser le bras entre
+$\theta=0$ et $\theta=\frac{\pi}{3}$ en posant que la vitesse angulaire de
+$\theta$ est constante et vaut $\omega$. Puisque $\dot{\theta}(t)$ est en soi
+une vitesse angulaire, nous obtenons ceci:
+
+\begin{equation}
+  \dot{\theta}(t) = \omega \Rightarrow
+    \ddot{\theta}(t) = 0 \Rightarrow
+		\label{eq:simple-derivatives}
+    \theta(t) = \omega t \\
+\end{equation}
+
+\begin{align}
+	A_x(t)   &= l_1\cos(\theta(t))+l_2\cos(-\theta(t)) \Rightarrow
+	A_x(t)   = l_1\cos(\omega t)+l_2\cos(-\omega t) \\
+  V_A_x(t) &= -l_1\sin(\omega t)\omega
+    + l_2\sin(-\omega t)\omega \\
+  \alpha_A_x(t) &= -l_1 \left( \cos(\omega t )\omega^2 + \sin(\omega t )\cdot 0 \right)
+    - l_2 \left( \cos(-\omega t)\omega^2 + \sin(-\omega t )\cdot 0 \right) \\
+    &=
+    - l_1 \cos(\omega t )\omega^2
+    - l_2 \cos(-\omega t)\omega^2
+\end{align}
+
+\newpage
+Toutefois l'analyse de ce cas porte sur les valeurs de
+position/vitesse/accélérations selon $\theta$ et non pas selon $t$.
+Les deux étant interdépendants, les équations ci-dessus peuvent être exprimées
+selon $\theta$ puisque $\theta = \omega t$ implique que:
+
+\begin{equation}
+	\label{eq:substitute-time}
+	t = \frac{\theta}{\omega}
+\end{equation}
+Ainsi:
+
+\begin{align}
+	A_x(\theta)&= l_1\cos(\omega \frac{\theta}{\omega})+l_2\cos(-\omega \frac{\theta}{\omega}) \\
+	           &= l\cos(\theta)+l\cos(-\theta) \\
+						 &= l\left[\cos(\theta)+\cos(-\theta)\right] \\
+  V_A_x(\theta) &= -l_1\sin(\omega \frac{\theta}{\omega})\omega
+    + l_2\sin(-\omega \frac{\theta}{\omega})\omega \\
+		&= -l\sin(\theta)\omega + l\sin(-\theta)\omega \\
+		&= -l\sin(\theta)\omega - l\sin(\theta)\omega \\
+		&= -2l\sin(\theta)\omega \\
+  \alpha_A_x(\theta) &=
+    - l_1 \cos(\omega \frac{\theta}{\omega} )\omega^2
+    + l_2 \cos(-\omega \frac{\theta}{\omega})\omega^2 \\
+    &=
+    - l \cos(\theta)\omega^2
+    - l \cos(-\theta)\omega^2 \\
+		&= -l\omega^2 \left[ \cos(\theta) + \cos(-\theta) \right] \\
+		&= -l\omega^2 \left[ \cos(\theta) + \cos(\theta) \right] \\
+		&= -2l\omega^2 \cos(\theta)
+\end{align}
+
+Pour le cas à l'étude $0\leq\theta\leq\frac{\pi}{3}$, une modélisation des
+équations (figure \ref{fig:horizontal-plots}) avec les valeurs spécifiées au tableau
+\ref{tab:values-cinematique} peut être trouvée en annexe. Aussi, les
+positions de départ et de fin du bras pour cette modélisation peuvent être
+consultées à la figure \ref{fig:horizontal-fig}.
+

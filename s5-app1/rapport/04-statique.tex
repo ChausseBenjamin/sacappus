@@ -1,0 +1,80 @@
+
+Dans un premier temps, il est demandé d'observer la force et le moment en
+$B$ alors que le bras est immobile (statique) selon l'angle auquel il se
+trouve. Un DCL n'analysant que le segment $\overline{BA}$ est utilisé pour
+faire abstraction de ce qui se produit en ce qui concerne $\overline{OB}$ et
+ses forces, considérant le tout comme des forces et moments externes
+nécessaires pour maintenir la tige observée immobile.
+
+\begin{multicols}{2}
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.65\linewidth]{figures/static.pdf}
+    \caption{DCL de la tige $\overline{BA}$}
+    \label{fig:dcl}
+  \end{figure}
+
+  \columnbreak
+
+	\begin{definitions}[]
+    \vec{\alpha_g} & Accélération gravitationnelle \\
+    m_A            & Masse de l'objet accroché au point $A$ \\
+    m_{BA}         & Masse de la tige $\overline{BA}$ \\
+    \vec{P_l_2}    & Poids de la tige $l_2$ \\
+    \vec{P_A}      & Poids de l'objet accroché au point $A$ \\
+    \vec{P_B}      & Poids du moteur $B$ \\
+    \vec{F_B}      & Force en $B$ nécessaire pour que la somme des forces soit nulle \\
+    \vec{BA}       & Tige $\overline{BA}$ \\
+    \vec{BA}/2     & Moitié de la tige $\overline{BA}$ \\
+    \vec{M_l_2}    & Moment au point $B$ causé par $\vec{P_l_2}$ \\
+    \vec{M_A}      & Moment au point $B$ causé par $\vec{P_A}$ \\
+    \vec{M_B}      & Moment en $B$ nécessaire pour que la somme des moments soit nulle \\
+  \end{definitions}
+\end{multicols}
+
+\begin{align}
+  \vec{P_l_2} &= m_{BA} \cdot \vec{\alpha_g}
+    = -9.81m_{BA}\vec{j} \\
+  \vec{P_A} &= m_A \cdot \vec{\alpha_g}
+    = -9.81m_A\vec{j} \\
+  \vec{P_B} &= m_B \cdot \vec{\alpha_g}
+    = -9.81m_B\vec{j} \\
+    \sum{\vec{F}} &= \vec{P_l_2} + \vec{P_A} + \vec{F_B} + \vec{P_B}= \vec{0} \\
+  \vec{0} &= -9.81m_{BA}\vec{j} + (-9.81m_A\vec{j}) + \vec{F_B} + (-9.81m_B\vec{j}) \\
+  \vec{F_B} &= 9.81m_{BA}\vec{j} + 9.81m_A\vec{j} + 9.81m_B\vec{j} \\
+  \vec{F_B} &= 9.81(m_{BA}+m_A+m_B)\vec{j}
+\end{align}
+
+Les moments sont calculés par rapport au point $B$. Le moment causé par le poids
+du moteur n'est pas considéré puisqu'il est nul (le bras de levier est nul).
+
+\begin{align}
+  \vec{BA}   &= \begin{bmatrix} l_2\cos(\varphi)\\ l_2\sin(\varphi)\\ 0 \end{bmatrix} \\
+  \vec{BA}/2 &= \frac{1}{2} \begin{bmatrix} l_2\cos(\varphi)\\ l_2\sin(\varphi)\\ 0 \end{bmatrix}
+    = \begin{bmatrix} l_2\cos(\varphi)/2 \\ l_2\sin(\varphi)/2 \\ 0 \end{bmatrix}
+\end{align}
+\begin{align}
+  \vec{M_A} &= \vec{BA}\times\vec{P_A}
+    = \begin{bmatrix} l_2\cos(\varphi)\\ l_2\sin(\varphi)\\ 0 \end{bmatrix}
+      \times (-9.81 m_A\vec{j}) \\
+    &=  \vec{i} \begin{vmatrix} l_2\sin(\varphi) & 0         \\ -9.81m_A & 0        \end{vmatrix}
+      - \vec{j} \begin{vmatrix} l_2\cos(\varphi) & 0         \\ 0        & 0        \end{vmatrix}
+      + \vec{k} \begin{vmatrix} l_2\cos(\varphi) & l_2\sin(\varphi) \\ 0        & -9.81m_A \end{vmatrix} \\
+    &= 0\vec{i} - 0\vec{j} + \left(-9.81m_Al_2\cos(\varphi)-0\right)\vec{k}
+      = -9.81m_Al_2\cos(\varphi)\vec{k} \\
+  \vec{M_l_2} &= (\vec{BA}/2)\times\vec{P_l_2}
+    = \begin{bmatrix} l_2\cos(\varphi)/2 \\ l_2\sin(\varphi)/2\\ 0 \end{bmatrix}
+      \times (-9.81 m_{BA}\vec{j}) \\
+    &=  \vec{i} \begin{vmatrix} l_2\sin(\varphi)/2 & 0           \\ -9.81m_{BA} & 0          \end{vmatrix}
+      - \vec{j} \begin{vmatrix} l_2\cos(\varphi)/2 & 0           \\ 0          & 0          \end{vmatrix}
+      + \vec{k} \begin{vmatrix} l_2\cos(\varphi)/2 & l_2\sin(\varphi)/2 \\ 0          & -9.81m_{BA} \end{vmatrix} \\
+    &= 0\vec{i} - 0\vec{j} + \frac{-9.81m_{BA}l_2\cos(\varphi)}{2}\vec{k}
+      = -\frac{9.81m_{BA}l_2\cos(\varphi)}{2}\vec{k} \\
+  \sum{\vec{M}} &= \vec{M_A} + \vec{M_l_2} + \vec{M_B} = \vec{0} \\
+  \vec{0} &= -9.81m_Al_2\cos(\varphi)\vec{k} + \left(-\frac{9.81m_{BA}l_2\cos(\varphi)}{2}\vec{k}\right) + \vec{M_B} \\
+  \vec{M_B} &= 9.81m_Al_2\cos(\varphi)\vec{k} + \frac{9.81m_{BA}l_2\cos(\varphi)}{2}\vec{k} \\
+    &= 9.81\cos(\varphi)l_2(m_A+m_{BA}/2)\vec{k}
+\end{align}
+
+Pour le cas statique, l'analyse porte sur l'évolution du couple résultant $M_{B_z}$ en fonction de l'angle $\varphi$ lorsque $\varphi$ varie entre $-\frac{\pi}{3}$ et $\frac{\pi}{3}$. La modélisation présentée à la figure \ref{fig:static-torque} utilise les valeurs spécifiées au tableau \ref{tab:values-statique-dynamique}. Dans ce cas, seules les forces gravitationnelles sont considérées, l'accélération angulaire étant nulle ($\ddot{\varphi} = 0$).
+

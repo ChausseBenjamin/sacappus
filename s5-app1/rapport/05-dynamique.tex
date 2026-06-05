@@ -1,0 +1,200 @@
+\subsection{Moments $\vec{M}_{B,B}$}
+
+Dans cette section, le moment de force $\vec{M}_{B,B}$ est calculé à l'aide des moments trouvés lors de l'analyse statique. Or, la somme des moments en dynamique est donnée par l'équation suivante :
+
+\begin{equation}
+  \sum \vec{M}_X = I_X \cdot \alpha
+\end{equation}
+
+En réutilisant les moments de la section statique, l'équation devient :
+\begin{align}
+  I_X \cdot \alpha_{BA} &= \vec{M}_{B,B} + \vec{M}_{A,B} + \vec{M}_{BA,B} \\
+  I_X \cdot \alpha_{BA} &= \vec{M}_{B,B} +
+    \begin{bmatrix}
+      0 \\
+      0 \\
+      l_2 \cdot m_{A} \cdot g \cdot \cos\varphi
+    \end{bmatrix} +
+    \begin{bmatrix}
+      0 \\
+      0 \\
+      \frac{l_2}{2} \cdot m_{BA} \cdot g \cdot \cos\varphi
+    \end{bmatrix}
+\end{align}
+
+L'équation de la somme des moments d'inertie indique qu'une inertie totale doit être obtenue. Or, pour $\vec{M}_{A,B}$, il s'agit d'une masse à une distance $L$ d'un axe de rotation ; pour $\vec{M}_{BA,B}$, il s'agit d'une tige uniforme ; et pour $\vec{M}_{B,B}$, l'inertie est nulle car le point coïncide avec le centre de rotation.
+
+\begin{align}
+  I_B &= 0 \\
+  I_A &= m \cdot l_2^2 \\
+  I_{BA} &= \frac{m \cdot (l_2/2)^2}{3}
+\end{align}
+
+\newpage
+Voici la résolution de l'inertie totale :
+
+\begin{align}
+  I &= 0 + m_A l_2^2 + \frac{m_{BA} \cdot {l_2}^2}{3} \\
+  I &= m_A l_2^2 + \frac{m_{BA} \cdot {l_2}^2}{3} \\
+  I &= l_2^2 \cdot \left(m_A^2 + \frac{1}{3}m_{BA}\right)
+\end{align}
+Une fois remplacée dans l'équation, on peut isoler le moment recherché et calculer le tout en fonction de la composante $z$, puisque l'axe est colinéaire.
+
+Voici la démarche :
+
+\begin{align}
+  &l_2^2 \cdot \left(m_A^2 + \frac{1}{3}m_{BA}\right) \cdot \alpha_{BA} = \vec{M}_{B,B} +
+    \begin{bmatrix}
+      0 \\
+      0 \\
+      l_2 \cdot m_{A} \cdot g \cdot \cos\varphi
+    \end{bmatrix} +
+    \begin{bmatrix}
+      0 \\
+      0 \\
+      \frac{l_2}{2} \cdot m_{BA} \cdot g \cdot \cos\varphi
+    \end{bmatrix} \\
+  &-\vec{M}_{{B,B}_z} = l_2 \cdot m_{A} \cdot g \cdot \cos\varphi +
+    \frac{l_2}{2} \cdot m_{BA} \cdot g \cdot \cos\varphi -
+    l_2^2 \cdot \left(m_A^2 + \frac{1}{3}m_{BA}\right) \cdot \alpha_{BA} \\
+  &\vec{M}_{{B,B}_z} = -g \cdot l_2 \cdot \cos\varphi \left(m_{A} +
+    \frac{1}{2} \cdot m_{BA}\right) +
+    l_2^2 \cdot \left(m_A^2 + \frac{1}{3}m_{BA}\right) \cdot \alpha_{BA}
+\end{align}
+
+\subsection{Force $\vec{F}_B$}
+
+En dynamique, la somme des forces externes est :
+
+\begin{equation}
+  \sum\vec{F}_e = m \cdot \vec{\gamma}_G
+\end{equation}
+
+Or, l'équation de la statique se transforme lorsqu'on veut trouver $\vec{F}_B$, car la somme n'est plus égale à $0$ :
+
+\begin{equation}
+  m \cdot \vec{\gamma}_G = \vec{F}_B +
+    \begin{bmatrix}
+      0 \\
+      g \cdot (m_B + m_{BA} + m_{A}) \\
+      0
+    \end{bmatrix}
+\end{equation}
+
+L'équation avec $\vec{F}_B$ isolé est :
+
+\begin{equation}
+  \vec{F}_B = m \cdot \vec{\gamma}_G -
+    \begin{bmatrix}
+      0 \\
+      g \cdot (m_B + m_{BA} + m_{A}) \\
+      0
+    \end{bmatrix}
+\end{equation}
+
+De l'équation précédente, $\vec{\gamma}_G$ est l'accélération linéaire du centre de masse et $m$ est la masse totale. $\vec{\gamma}_G$ est décomposé en une accélération tangentielle et une accélération normale :
+
+\begin{equation}
+  \vec{\gamma}_G = \vec{\gamma}_G^t + \vec{\gamma}_G^n
+\end{equation}
+
+Où :
+\begin{itemize}
+  \item l'accélération tangentielle est $\alpha \times \vec{r}$ ;
+  \item l'accélération normale est $\vec{\omega} \times (\vec{\omega} \times \vec{r})$.
+\end{itemize}
+
+\newpage
+$\vec{r}$ est en réalité $\vec{r}_{B/G}$, défini comme suit :
+
+\begin{align}
+  \vec{r} &= \frac{l_2}{2}
+    \begin{bmatrix}
+      \cos\varphi \\
+      \sin\varphi \\
+      0 \\
+    \end{bmatrix} \\
+  \vec{r} &=
+    \begin{bmatrix}
+      \frac{l_2}{2} \cdot \cos\varphi \\
+      \frac{l_2}{2} \cdot \sin\varphi \\
+      0 \\
+    \end{bmatrix}
+\end{align}
+
+L'accélération est une constante posée par la problématique. Afin de simplifier les équations, la vitesse initiale est considérée comme nulle : $\vec{\omega} = \vec{0}$. Ceci simplifie grandement l'équation finale. Une fois les valeurs remplacées, on obtient :
+
+\begin{align}
+  \vec{\gamma}_G &= \vec{\gamma}_G^t + \vec{\gamma}_G^n \\
+  \vec{\gamma}_G &= \alpha \times \vec{r} + \vec{\omega} \times (\vec{\omega} \times \vec{r}) \\
+  \vec{\gamma}_G &=
+    \begin{bmatrix}
+      0\\
+      0\\
+      \alpha_{BA}
+    \end{bmatrix}
+    \times
+    \begin{bmatrix}
+      \frac{l_2}{2} \cdot \cos\varphi \\
+      \frac{l_2}{2} \cdot \sin\varphi \\
+      0 \\
+    \end{bmatrix}
+    + \vec{0} \times (\vec{0} \times \vec{r}) \\
+  \vec{\gamma}_{G_x} &= 0 \cdot 0 + \alpha_{BA} \cdot \frac{l_2}{2} \cdot \sin\varphi \\
+  \vec{\gamma}_{G_y} &= \alpha_{BA} \cdot \frac{l_2}{2} \cdot \cos\varphi - 0 \cdot 0 \\
+  \vec{\gamma}_{G_z} &= 0 \cdot \frac{l_2}{2} \cdot \sin\varphi + 0 \cdot \frac{l_2}{2} \cdot \cos\varphi \\
+  \vec{\gamma}_{G} &=
+    \begin{bmatrix}
+      \alpha_{BA} \cdot \frac{l_2}{2} \cdot \sin\varphi \\
+      \alpha_{BA} \cdot \frac{l_2}{2} \cdot \cos\varphi \\
+      0
+    \end{bmatrix}
+\end{align}
+Cela se remplace facilement dans l'équation initiale. Afin de rendre l'expression plus lisible, on pose $m_t = m_B + m_{BA} + m_A$.
+
+\begin{align}
+  \vec{F}_B &= m_{total} \cdot \vec{\gamma}_G -
+    \begin{bmatrix}
+      0 \\
+      g \cdot (m_B + m_{BA} + m_{A}) \\
+      0
+    \end{bmatrix} \\
+  \vec{F}_B &= m_{t} \cdot
+    \begin{bmatrix}
+      \alpha_{BA} \cdot \frac{l_2}{2} \cdot \sin\varphi \\
+      \alpha_{BA} \cdot \frac{l_2}{2} \cdot \cos\varphi \\
+      0
+    \end{bmatrix}
+    -
+    \begin{bmatrix}
+      0 \\
+      g \cdot m_t \\
+      0
+    \end{bmatrix} \\
+  \vec{F}_B &=
+    \begin{bmatrix}
+      \alpha_{BA} \cdot m_t \frac{l_2}{2} \cdot \cos\varphi \\
+      \alpha_{BA} \cdot m_t \frac{l_2}{2} \cdot \sin\varphi \\
+      0 \\
+    \end{bmatrix}
+    -
+    \begin{bmatrix}
+      0 \\
+      g \cdot m_t \\
+      0
+    \end{bmatrix} \\
+  \vec{F}_B &=
+    \begin{bmatrix}
+      \alpha_{BA} \cdot m_t \frac{l_2}{2} \cdot \cos\varphi - 0 \\
+      \alpha_{BA} \cdot m_t \frac{l_2}{2} \cdot \sin\varphi - g \cdot m_t \\
+      0 - 0 \\
+    \end{bmatrix} \\
+  \vec{F}_B &=
+    \begin{bmatrix}
+      \alpha_{BA} \cdot m_t \frac{l_2}{2} \cdot \cos\varphi \\
+      (\alpha_{BA} \cdot m_t \frac{l_2}{2} \cdot \sin\varphi) - g \cdot m_t \\
+      0 \\
+    \end{bmatrix}
+\end{align}
+
+Pour le cas dynamique, l'analyse examine l'évolution du couple résultant $M_{B_z}$ en fonction de l'angle $\varphi$ avec une accélération angulaire constante $\alpha_{BA} = 5$ rad/s$^2$. La modélisation présentée à la figure \ref{fig:dynamic-torque} utilise également les valeurs spécifiées au tableau \ref{tab:values-statique-dynamique}. Contrairement au cas statique, ce scénario inclut les effets dynamiques dus à l'accélération du système, ce qui modifie significativement l'allure du couple résultant.

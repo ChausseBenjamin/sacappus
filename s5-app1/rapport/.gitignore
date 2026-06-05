@@ -1,0 +1,7 @@
+*.aux
+*.bcf
+*.log
+*.synctex.gz
+*.xml
+00-main.pdf
+*.toc

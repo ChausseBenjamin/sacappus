@@ -1,0 +1,100 @@
+\subsection{Mouvement contraint verticalement}
+
+Dans ce cas de figure, la position en $x$ du point $A$ est définie comme étant
+toujours à une distance $l$ de l'origine. D'ailleurs, $l$ correspond aussi à la
+longueur de $l_1$ et $l_2$. L'équation générale de $A_x$ peut être utilisée pour
+contraindre $\varphi$ en fonction de $\theta$:
+
+\begin{align}
+  A_x = l_1\cos{\theta}+l_2\cos{\varphi} \Rightarrow
+  l &= l\cos{\theta}+l\cos{\varphi} \\
+  \label{eq:vert-simple-x}
+  1 &= \cos{\theta}+\cos{\varphi} \\
+  1-\cos{\theta} &= \cos{\varphi} \\
+  \varphi &= \arccos(1-\cos{\theta})
+\end{align}
+
+\newpage
+Pour éviter d'avoir à dériver $\varphi$ dans le temps, il est possible
+d'utiliser l'équation \ref{eq:vert-simple-x} et les dérivées partielles:
+
+\begin{align}
+  1 &= \cos{\theta}+\cos{\varphi} \\
+  \dd{t} 1 &= \dd{t}\left(\cos{\theta}+\cos{\varphi}\right) \\
+         0 &= \dd{t}\cos{\theta}+\dd{t}\cos{\varphi} \\
+         0 &= -\sin(\theta)\dot{\theta}+\dd{t}\cos{\varphi} \\
+         0 &= -\sin(\theta)\dot{\theta}-\sin(\varphi)\dot{\varphi} \\
+         \sin(\varphi)\dot{\varphi} &= -\sin(\theta)\dot{\theta} \\
+         \dot{\varphi} &= -\frac{\sin(\theta)}{\sin(\varphi)}\dot{\theta}
+\end{align}
+
+Enfin, puisque le mouvement est contraint, par définition, à un mouvement uniquement sur
+l'axe des $y$, il est seulement nécessaire d'analyser la position et la vitesse
+selon cet axe. Encore une fois, les équations générales sont utilisées comme
+point de départ:
+
+\begin{align}
+	A_y(t) &= l_0+l\sin{\theta(t)}+l\sin{\varphi(t)} \\
+         &= l_0+l\sin{\theta(t)}+l\sin{\arccos(1-\cos(\theta(t)))} \\
+         &= l_0+l\sin{\theta(t)}+l\sin{\arccos(1-\cos(\theta(t)))} \\
+				 &= l_0+l\left[\sin{\theta(t)}+\sin{\arccos(1-\cos(\theta(t)))}\right] \\
+  V_{A_y}(t) &=
+      l_1\cos(\theta(t))\dot{\theta}(t)
+    + l_2\cos(\varphi(t))\dot{\varphi}(t) \\
+             &=
+    l\cos(\theta(t))\cdot\dot{\theta}(t) +
+    l\cos(\varphi(t))\left(-\frac{\sin(\theta(t))}{\sin(\varphi(t))}\dot{\theta}(t)\right) \\
+             &=
+      l\cos(\theta(t))\cdot\dot{\theta}(t)
+    - l\cos(\arccos(1-\cos(\theta(t)))) \left(
+        \frac{\sin(\theta(t))}{\sin(\arccos(1-\cos(\theta(t))))}\dot{\theta}(t)
+      \right)
+\end{align}
+
+Puisque la vitesse angulaire de $\theta$ est constante et est la même que dans le
+cas d'étude horizontal, il est possible d'utiliser la relation de l'équation
+\ref{eq:simple-derivatives} pour éliminer tout $\dot{\theta}(t)$ et
+enfin tout considérer en fonction de $\theta$ au lieu du temps à l'aide de
+l'équation \ref{eq:substitute-time}:
+
+\begin{align}
+	A_y(t)     &= l_0 + l\left[\sin(\omega t)+\sin(\arccos(1-\cos(\omega t)))\right] \\
+	A_y(\theta)&= l_0 + l\left[\sin(\omega t)+\sin(\arccos(1-\cos(\omega t)))\right] \\
+	           &= l_0 + l\left[\sin(\omega \frac{\theta}{\omega})+\sin(\arccos(1-\cos(\omega \frac{\theta}{\omega})))\right] \\
+	           &= l_0 + l\left[\sin(\theta)+\sin(\arccos(1-\cos(\theta)))\right]
+\end{align}
+\begin{align}
+  V_{A_y}(t) &=
+      l\cos(\omega t)\omega
+    - l\cos(\arccos(1-\cos(\omega t))) \left(
+        \frac{\sin(\omega t)}{\sin(\arccos(1-\cos(\omega t)))}\omega
+      \right) \\
+  V_{A_y}(\theta) &=
+			l\cos(\omega \frac{\theta}{\omega})\omega
+		- l\cos(\arccos(1-\cos(\omega \frac{\theta}{\omega}))) \left(
+				\frac{\sin(\omega \frac{\theta}{\omega})}{\sin(\arccos(1-\cos(\omega
+				\frac{\theta}{\omega})))}\omega
+      \right) \\
+                  &=
+			l\cos(\theta)\omega
+		- l\cos(\arccos(1-\cos\theta)) \left(
+				\frac{\sin\theta}{\sin(\arccos(1-\cos\theta))}\omega
+      \right) \\
+                  &=
+			l\cos(\theta)\omega
+		- l\cos(\arccos(1-\cos\theta)) \left(
+				\frac{\sin\theta}{\sin(\arccos(1-\cos\theta))}\omega
+      \right) \\
+                  &=
+			l\left[\cos(\theta)\omega
+		- \cos(\arccos(1-\cos\theta)) \left(
+				\frac{\sin\theta}{\sin(\arccos(1-\cos\theta))}\omega
+			\right)\right]
+\end{align}
+
+Pour le cas à l'étude $0\leq\theta\leq\frac{\pi}{3}$, une modélisation des
+équations (figure \ref{fig:vertical-plots}) avec les valeurs spécifiées au tableau
+\ref{tab:values-cinematique} peut être trouvée en annexe. Aussi, les
+positions de départ et de fin du bras pour cette modélisation peuvent être
+consultées à la figure \ref{fig:vertical-fig}.
+

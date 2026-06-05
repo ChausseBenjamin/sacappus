@@ -1,0 +1,130 @@
+\subsection{Analyse géométrique}
+\label{sec:geometry}
+
+\noindent
+\begin{minipage}[t]{0.4\textwidth}
+\begin{figure}[H]
+  \centering
+  \begin{center}
+    \includegraphics[width=\textwidth]{figures/geometry.pdf}
+  \end{center}
+  \caption{Tiges du bras mécanique}
+  \label{fig:geometry}
+\end{figure}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.6\textwidth}
+
+\begin{align}
+  \vec{XO} = \begin{bmatrix} 0\\l_0\\0 \end{bmatrix} \hspace{.5cm}
+  \vec{OB} &= \begin{bmatrix} l_1\cos{\theta}\\ l_1\sin{\theta} \\0 \end{bmatrix} \hspace{.5cm}
+  \vec{BA} = \begin{bmatrix} l_2\cos{\varphi}\\l_2\sin{\varphi} \\0 \end{bmatrix} \\
+  \vec{B} = \vec{XO}+\vec{OB} &= \begin{bmatrix} l_1\cos{\theta}\\l_0+l_1\sin{\theta} \\0 \end{bmatrix} \\
+  \vec{A} = \vec{B}+\vec{BA} &= \begin{bmatrix}
+  l_1\cos{\theta}+l_2\cos{\varphi}\\l_0+l_1\sin{\theta}+l_2\sin{\varphi} \\0 \end{bmatrix} \\
+  \intertext{Autrement dit:}
+  B_x(\theta) &= l_1\cos{\theta} \\
+  B_y(\theta) &= l_0+l_1\sin{\theta} \\
+  \label{eq:gen-a-x}
+  A_x(\theta,\varphi) &= l_1\cos{\theta}+l_2\cos{\varphi} \\
+  A_y(\theta,\varphi) &= l_0+l_1\sin{\theta}+l_2\sin{\varphi} \\
+\end{align}
+\end{minipage}
+
+\subsection{Vitesses}
+\label{sec:speed}
+
+Lorsque des angles fixes sont considérés, il est possible de trouver les coordonnées
+$x$, $y$ en fonction de ceux-ci. Toutefois, il se peut que ces angles varient
+dans le temps (essentiel à considérer pour déterminer la vitesse du
+point $A$). $\theta$ et $\varphi$ sont donc dorénavant présentés comme des fonctions
+pour le reste de l'analyse cinématique générale du bras mécanique :
+
+\begin{equation*}
+  \theta \rightarrow \theta(t) &\hspace{1cm} \varphi \rightarrow \varphi(t)
+\end{equation*}
+
+Déterminer la vitesse du point $A$ ne devient par la suite qu'un exercice de
+dérivation dans le temps de la position, en utilisant les équations développées
+à la section \ref{sec:geometry} comme fondement. Afin d'en faciliter la résolution (et
+la lecture), cette opération est segmentée par composantes $x$ et $y$ dans les
+sections suivantes.
+
+\subsubsection{Composante $x$}
+
+\begin{align}
+  A_x(t) &= l_1\cos{\theta(t)}+l_2\cos{\varphi(t)} \hspace{1cm} \\
+  \dd{t} A_x(t) &= \dd{t} l_1\cos(\theta(t)) + \dd{t} l_2\cos(\varphi(t)) \\
+  V_A_x(t) &= \dd{t} l_1\cos(\theta(t)) + \dd{t} l_2\cos(\varphi(t)) \\
+  V_A_x(t) &= l_1\dd{t} \cos(\theta(t)) + l_2\dd{t} \cos(\varphi(t)) \\
+  V_A_x(t) &= l_1\left( -\sin(\theta(t))\dot\theta(t)  \right) +
+    l_2\left( - \sin(\varphi(t))\dot\varphi(t) \right) \\
+  V_A_x(t) &= -l_1\sin(\theta(t))\dot\theta(t)
+    - l_2\sin(\varphi(t))\dot\varphi(t)
+\end{align}
+
+\subsubsection{Composante $y$}
+\begin{align}
+  A_y(t)&=l_0+l_1\sin(\theta(t))+l_2\sin(\varphi(t)) \\
+  \dd{t}A_y(t) &=
+      \dd{t}l_0
+    + \dd{t}l_1\sin(\theta(t))
+    + \dd{t}l_2\sin(\varphi(t)) \\
+  V_{A_y}(t) &=
+      \dd{t}l_1\sin(\theta(t))
+    + \dd{t}l_2\sin(\varphi(t)) \\
+  V_{A_y}(t) &=
+      l_1\dd{t}\sin(\theta(t))
+    + l_2\dd{t}\sin(\varphi(t)) \\
+  V_{A_y}(t) &=
+      l_1\cos(\theta(t))\cdot\dot{\theta}(t)
+    + l_2\cos(\varphi(t))\cdot\dot{\varphi}(t)
+\end{align}
+
+\subsection{Accélérations}
+
+L'accélération se définit comme étant la dérivée de la vitesse. Comme la
+vitesse a déjà été définie de façon générale à la section \ref{sec:speed}, il ne suffit
+qu'à en effectuer la dérivée (encore une fois par composante pour simplifier
+la lecture) afin d'obtenir une solution générale de l'accélération selon
+n'importe quelles fonctions décrivant le mouvement angulaire des moteurs
+dans le temps.
+
+\subsubsection{Composante $x$}
+
+\begin{align}
+  V_A_x(t) &= -l_1\sin(\theta(t))\dot\theta(t)
+    - l_2\sin(\varphi(t))\dot\varphi(t) \\
+  \dd{t} V_A_x(t) &= \dd{t}\left(-l_1\sin(\theta(t))\dot\theta(t)
+    - l_2\sin(\varphi(t))\dot\varphi(t)\right) \\
+  \alpha_A_x(t) &= -l_1 \dd{t}\sin(\theta(t))\dot\theta(t)
+    - l_2\dd{t}\sin(\varphi(t))\dot\varphi(t) \\
+  \alpha_A_x(t) &= -l_1 \left(
+      \cos(\theta(t))\dot{\theta}(t)^2 + \sin(\theta(t))\ddot{\theta}(t)
+    \right) - l_2 \left(
+      \cos(\varphi(t))\dot{\varphi}(t)^2 + \sin(\varphi(t))\ddot{\varphi}(t)
+    \right)
+\end{align}
+
+\subsubsection{Composante $y$}
+
+\begin{align}
+  \alpha_{A_y}(t) &=
+      \dd{t} l_1\cos(\theta(t))\cdot\dot{\theta}(t)
+    + \dd{t} l_2\cos(\varphi(t))\cdot\dot{\varphi}(t) \\
+  \alpha_{A_y}(t) &=
+      l_1\dd{t} \cos(\theta(t))\cdot\dot{\theta}(t)
+    + l_2\dd{t} \cos(\varphi(t))\cdot\dot{\varphi}(t) \\
+  \alpha_{A_y}(t) &=
+     l_1\left(-\sin(\theta(t))\cdot\dot\theta(t)\cdot\dot{\theta}(t) + \cos(\theta(t))\cdot\ddot{\theta}(t)\right)
+   + l_2\dd{t} \cos(\varphi(t))\cdot\dot{\varphi}(t) \\
+  \alpha_{A_y}(t) &=
+     l_1\left(\cos(\theta(t))\cdot\ddot{\theta}(t) -\sin(\theta(t))\cdot\dot\theta(t)^2 \right)
+   + l_2\dd{t} \cos(\varphi(t))\cdot\dot{\varphi}(t) \\
+  \alpha_{A_y}(t) &=
+     l_1\left(\cos(\theta(t))\cdot\ddot{\theta}(t) -\sin(\theta(t))\cdot\dot\theta(t)^2 \right)
+   + l_2\left( -\sin(\varphi(t))\cdot\dot\varphi(t)\cdot\dot{\varphi}(t) + \cos(\varphi(t))\cdot\ddot{\varphi}(t) \right) \\
+  \alpha_{A_y}(t) &=
+     l_1\left(\cos(\theta(t))\cdot\ddot{\theta}(t) -\sin(\theta(t))\cdot\dot\theta(t)^2 \right)
+   + l_2\left(\cos(\varphi(t))\cdot\ddot{\varphi}(t) -\sin(\varphi(t))\cdot\dot\varphi(t)^2 \right)
+\end{align}

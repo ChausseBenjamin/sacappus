@@ -3,33 +3,47 @@
 Pot-pourrit de tout les APP fait (plutôt subit) pendant le bac en Génie
 Informatique à [USherbrooke][1].
 
-## How this repo works
+## Usage
 
-- Chaque APP est développé dans sa propre branche (dans son propre dossier)
-  * Seulement les fichier qui servent directement à la résolution son importés
-  * Des scripts programmes c'est ok.
-  * Pas de `.env` ou de `png` générés qui pèsent une tonne (or worst: Vivado bullshit)
-- la branche `core` ne doit pas contenir aucun APP, seulement le tooling utilisé
-  pour build les APPs (build containers type-shit)
-- `master` contient tout les APP complétés ainsi que le tooling pour build les rapports.
-  - seulement moi peut merge dans master, mes partners d'APP travaillent dans
-    les branches qu'ils ont accès
+### Creating a Project
 
-Endgoal workflow:
-1. Nouvel app: je crée sa branche à partir de `core` qui est vide et ajoute mon
-   parnter comme collaborateur s'il l'est pas déjà.
-2. Je donne à mon partner les permission pour update la nouvelle branche (et
-   celles qu'il crée s'il en veut on-the-side)
-3. Si du nouveaux tooling doit être fait pour compiler le rapport:
-   - je vais dans `core` et update le build-container
-4. À la fin d'un APP, je merge la branch dans master (potentiellement je fais
-   une release pour le projet)
+**Initialisation**:
 
-Initial setup for me:
-- restrict `master` to only me
-- require my approval for merging into `core`
-- restrict creating branches that match a certain regex to only me
-  (so my partner can't create `s8-app3` while we do `s6-app1` and block
-  future me)
+```sh
+# Start from the core branch which is mostly empty
+git checkout core && git pull
+
+app="s[x]-app[y]"
+init_file="$app/README.md"
+git checkout -b "$app"
+mkdir "$app" && touch "$init_file"
+git add "$init_file" && git commit -m "setup $app"
+```
+
+**Compiling LaTeX, KnitR, Markdown**:
+
+Copy and adapt to your usecase the template for projects:
+`./assets/container/project-compose.yml`
+
+Temporary [LaTeX][2] files should magically never appear in the git history
+(I did some hacks with volume mounts and hardlinks to to some weird shit...)
+
+**Submitting/sealing**:
+
+Just push the code and make a PR to merge onto master. This should only be done
+once a Project is finished as the squashed commit to `master` is meant to
+represent the final *release*.
+
+### Updating the compiler and/or `core` repo
+
+Branch off of `core` and make a PR with the desired changes (ex: new compilation
+format like [Typst][3], LICENSE change, etc...).
+
+To avoid project squash commits from constantly apply the new change to master,
+merge the new change to master, and keep using `core` as a starting point for
+new projects.
+
 
 [1]: https://gegi.usherbrooke.ca
+[2]: https://www.latex-project.org
+[3]: https://typst.app

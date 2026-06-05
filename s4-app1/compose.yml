@@ -1,0 +1,20 @@
+services:
+  clean:
+    extends:
+      file: ../assets/container/compose.yml
+      service: clean
+
+  devoir:
+    extends:
+      file: ../assets/container/compose.yml
+      service: compile
+    environment:
+      PROJECT: s4-app1
+      INPUT_FILE: devoir/00-devoir.tex
+      OUTPUT_FILE: chab1704.pdf
+
+  devoir-watch:
+    extends:
+      service: devoir
+    environment:
+      REALTIME: true

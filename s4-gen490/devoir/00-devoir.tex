@@ -1,0 +1,282 @@
+\documentclass[a11paper]{article}
+
+\usepackage{tabularx}
+\usepackage{libs/titlepage}
+\usepackage{libs/document}
+\usepackage{booktabs}
+\usepackage{multicol}
+\usepackage{float}
+\usepackage{varwidth}
+\usepackage{tcolorbox}
+\usepackage{tikz}
+\usepackage{graphicx}
+\usepackage{pifont}
+\usepackage{framed}
+% \usepackage[toc,page]{appendix}
+\usepackage[dvipsnames]{xcolor}
+
+\title{Observations clés issues de la visite chez Polytech}
+
+\class{Innovation et création de produits}
+\classnb{GEN490}
+
+\teacher{Joao Gabriel Alves Ribeiro Rosa}
+
+\author{
+  \addtolength{\tabcolsep}{-0.4em}
+  \begin{tabular}{rcl} % Ajouter des auteurs au besoin
+      Benjamin Chausse & -- & CHAB1704 \\
+  \end{tabular}
+}
+
+\newcommand{\todo}[1]{\begin{color}{Red}\textbf{TODO:} #1\end{color}}
+\newcommand{\note}[1]{\begin{color}{Orange}\textbf{NOTE:} #1\end{color}}
+\newcommand{\fixme}[1]{\begin{color}{Fuchsia}\textbf{FIXME:} #1\end{color}}
+\newcommand{\question}[1]{\begin{color}{ForestGreen}\textbf{QUESTION:} #1\end{color}}
+
+% Define the command
+\newcommand{\boxfig}[3]{%
+  \begin{figure}[H]
+    \centering
+    \begin{tcolorbox}[colback=gray!5!white, colframe=black!50, boxrule=0.5pt,
+                      width=0.9\linewidth, arc=3pt, auto outer arc,
+                      boxsep=5pt, left=5pt, right=5pt, top=5pt, bottom=5pt]
+      #3
+    \end{tcolorbox}
+    \caption{#1}
+    \label{box:#2}
+  \end{figure}
+}
+
+\newcommand{\quickfig}[4]{%
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=#3\textwidth]{#4}
+    \caption{#1}
+    \label{fig:#2}
+  \end{figure}
+}
+
+\begin{document}
+\maketitle
+\newpage
+\footnotesize
+\tableofcontents
+\listoffigures
+\newpage
+\normalsize
+
+\newpage
+% Rolls {{{
+\newpage
+\section{Rouleaux difficiles d'accès}
+\subsection{Description}
+
+Toute la production de produits de vinyles repose sur le matériel principal,
+le vinyle, qui arrive dans l'usine sous forme de rouleau. Le rangement de ces
+rouleaux est pêle-mêle ce qui rends les rouleaux du bas et des côtés difficiles
+d'accès sans causer de déboulements.
+
+\subsection{Contexte}
+
+Lors de la visite de la section des vinyles, ce coin du département est le
+premier qui a été visité puisque cela consiste en la première étape pour la
+production d'un produit finit.
+
+\quickfig{Rangement des rouleaux à vinyle}{rolls}{.6}{figures/rolls-2.jpg}
+
+\subsection{En quoi est-ce un détail?}
+
+Ce problème pourrait sembler anodin, puisqu’il n’entrave pas directement le fonctionnement
+des machines ou la qualité du produit final. Il concerne uniquement la logistique de
+manutention, un aspect souvent négligé car en périphérie du processus de transformation
+proprement dit.
+
+\subsection{En quoi est-ce une observation méprisée?}
+
+La disposition des rouleaux est perçue comme une contrainte tolérée par les employés,
+suggérant qu’aucune solution n’a été priorisée. L’espace de stockage est considéré comme
+acquis et peu flexible, donc l’enjeu est ignoré ou relégué à une simple question d’effort
+physique à fournir.
+
+\subsection{En quoi est-ce une observation singulière?}
+
+Elle révèle un point d’ancrage du processus qui n’est pas automatisé ni mécanisé, et qui
+dépend entièrement de l’organisation spatiale et de la manipulation humaine. Cela met en
+évidence un goulet d’étranglement potentiel dès l’étape initiale, rarement abordé dans
+l’analyse des flux de production.
+% }}}
+\newpage
+% Templates {{{
+\section{Gabarits de production}
+\subsection{Description}
+
+Dans l'usine Polytech, il y a plusieurs machines qui ont besoin de gabarits
+afin de permettre la production de leurs différents produits en vinyle. Tous
+les gabarits sont placés sur un rack avec plus d'une centaine de gabarits
+différents qui semblent un peu pêle-mêle et difficiles à retrouver rapidement.
+Les échaffaudages requièrent l'utilisation d'une échelle pour être capable
+d'aller chercher certains gabarits, ce qui rend l'installation peu pratique
+lors de changements à la production.
+
+\subsection{Contexte}
+
+Cette observation à été faite peu de temps après celle des rouleaux. Les deux
+sections du département étant connexes et très rapprochées physiquement au fond
+du département.
+
+\quickfig{Rangement des gabarits}{templates}{.3}{figures/templates.jpg}
+
+\subsection{En quoi est-ce un détail?}
+
+La disposition désorganisée des gabarits semble secondaire, car elle n’interfère pas
+immédiatement avec la production tant que les opérateurs savent où chercher. Le système
+fonctionne tant bien que mal, ce qui peut masquer l’inefficacité sous-jacente.
+
+\subsection{En quoi est-ce une observation méprisée?}
+
+Le recours à une échelle et la perte de temps associée sont banalisés comme faisant
+partie du quotidien. Le manque d’organisation est accepté comme norme, et aucune mesure
+corrective apparente n’a été mise en place, signe que cette contrainte est tolérée
+plutôt que remise en question.
+
+\subsection{En quoi est-ce une observation singulière?}
+
+Elle met en lumière la dépendance humaine dans un processus pourtant industrialisé.
+Le contraste entre la précision nécessaire des gabarits et leur stockage rudimentaire
+souligne une tension entre exigence technique et improvisation logistique rarement évoquée.
+
+% }}}
+\newpage
+% Tape {{{
+\section{Perte de travail à chaque mise en place}
+
+\subsection{Description}
+
+Chaque poste de production est situé autour d'une machine qui positionne tout
+les travailleurs en cercle autour, chacun ayant son poste. Chaque station a des
+papiers collants avec de l'écriture désignant comment aligner/couper/plier
+certains morceaux de vinyles pour en faire un produit. À chaque fois qu'une
+machine doit être réassignée à la production d'un produit différent, toutes ces
+notes sont perdues. Elles doivent être arrachées afin de faire place à de
+nouvelles notes.
+
+\subsection{Contexte}
+
+L'observation a été faite lors d'un moment où les travailleurs étaient en pause
+me permettant d'observer les machines d'un peu plus près.
+
+\quickfig{Autocollants devant être refaits à chaque mise en place}{tape}{.6}{figures/tape-close.jpg}
+
+\subsection{En quoi est-ce un détail?}
+
+Cette perte d’information peut sembler mineure, car elle n’interrompt pas directement la
+production et les opérateurs semblent habitués à la réécriture manuelle des notes. Le
+processus de remplacement des étiquettes est rapide, ce qui le rend presque invisible
+dans le quotidien.
+
+\subsection{En quoi est-ce une observation méprisée?}
+
+La disparition systématique de ces connaissances tacites à chaque changement de production
+indique un manque de valorisation du savoir opérateur. L'absence d’un support plus durable
+ou standardisé démontre que cette mémoire de travail est vue comme jetable et sans importance.
+
+\subsection{En quoi est-ce une observation singulière?}
+
+Elle révèle une forme de documentation vivante mais éphémère, maintenue uniquement par les
+gestes et la mémoire des travailleurs. Cette perte cyclique d’informations expose une faille
+dans la capitalisation du savoir pratique, rarement considérée dans les analyses de performance.
+
+% }}}
+\newpage
+% Communication {{{
+\section{Communication difficile}
+\subsection{Description}
+
+Le département de vinyle est assez bruillant ce qui rends la communication
+entre les travailleurs et avec les contremaîtres assez difficile en plus de
+rendre l'expérience de travail inférieure à celle qu'elle pourrait être.
+
+\subsection{Contexte}
+
+La discussion qui suit s'est produite non pas durant un pause, mais pendant que
+toutes les machines marchaient à plein régime dans un environnement à aire
+ouverte où il est possible d'entendre les machines de tous les autres
+département en plus de celles du département.
+
+\boxfig{Discussion ayant mené à la réalisation du niveau de bruit}{noise}{
+	Un fois arrivé à l'atelier de vinyle (les autre sections de l'usine nous
+	ayant été montrées juste avant), la personne en charge de la visite nous
+	laisses entre les mains de la personne en charge de la production de produits
+	vinyles. Nous commençons à lui poser plusieurs questions face à son
+	environnement. Malgré le fait qu'ils réponds à toutes nos questions, nous
+	arrivons difficilement à comprendre tous ses propos vu la quantité de bruits
+	présents dans l'usine.
+}
+
+\subsection{En quoi est-ce un détail?}
+
+Le bruit est souvent perçu comme une composante normale du milieu industriel.
+Il n'affecte pas directement la production matérielle, ce qui en fait un enjeu
+facilement relégué au second plan malgré son impact humain et organisationnel.
+
+\subsection{En quoi est-ce une observation méprisée?}
+
+Les difficultés de communication ne sont pas activement adressées, malgré leur
+influence sur la coordination et la sécurité. Le bruit est toléré comme une
+contrainte inévitable, sans mesure apparente pour le réduire ou le contourner.
+
+\subsection{En quoi est-ce une observation singulière?}
+
+Elle met en lumière un facteur invisible mais omniprésent qui affecte
+directement la qualité des interactions humaines. Ce bruit rend plus difficile
+la transmission d’information, et donc la fluidité des opérations, ce qui
+s’oppose au principe fondamental d’efficacité dans un environnement manufacturier.
+
+% }}}
+% Setup Time {{{
+\newpage
+\section{Temps de mise en place}
+\subsection{Description}
+
+Chaque machine agissant comme chaîne de production pour un produit de vinyle
+nécessite une mise en place afin de permetre à un nouveau produit d'être
+manufacturé (selon les demandes). Beaucoup de produits ne sont pas produits en
+énormes quantité ce qui résulte en un temps de mise en place des machines qui
+est plus long que le temps de production en soit.
+
+\subsection{Contexte}
+
+Voyant diverses machines semblant tous travailler sur des produits
+différents, je remarques qu'une machine est en train d'être mise en place
+pour la production d'un nouveau produit.
+
+\boxfig{Discussion ayant dévoilé le temps de mise en place}{setup}{
+	Je demande à celui en charge du département à quoi ressemble le
+	processus de mise en place des machines et il me réponds que ce processus est
+	assez long, souvent plus long que la production du produit qu'ils ont à
+	faire ayant l'
+}
+
+\subsection{En quoi est-ce un détail?}
+
+Ce phénomène peut sembler anecdotique lorsqu'on observe uniquement le produit final.
+Le fait que le temps de mise en place dépasse celui de production n’est pas visible
+extérieurement, surtout si le rendement global semble constant.
+
+\subsection{En quoi est-ce une observation méprisée?}
+
+Le temps de mise en place est traité comme un mal nécessaire, rarement optimisé ou
+réduit de manière systémique. Il est intégré à la routine des opérateurs, mais sans
+effort manifeste pour le minimiser, malgré son impact direct sur l’efficacité.
+
+\subsection{En quoi est-ce une observation singulière?}
+
+Elle révèle un paradoxe fondamental dans le modèle de production : une grande
+flexibilité est exigée sans que l’infrastructure ne soit conçue pour des
+changements fréquents. Cette tension entre variété et productivité expose une limite
+structurelle du système.
+
+% }}}
+
+\end{document}

@@ -1,0 +1,48 @@
+\begin{tikzpicture}[
+    > = stealth,
+    shorten > = 1pt,
+    auto,
+    node distance = 2cm,
+    semithick,
+    state/.style = {circle, draw, minimum size = 1cm},
+    error/.style = {circle, draw, fill = red!20, minimum size = 1cm},
+    final/.style = {circle, draw, double, minimum size = 1cm}
+]
+
+% States
+\node[state]                     (0)     {0};
+\node[state, right = 2.3cm of 0] (3)     {3};
+\node[state, right = 1.5cm of 3] (4)     {4};
+\node[state, above = of 4]       (1)     {1};
+\node[state, above = 1cm of 1]   (2)     {2};
+\node[state, below = 2.5cm of 3] (5)     {5};
+\node[state, below = 1cm of 5]   (7)     {7};
+\node[state, right = of 5]       (6)     {6};
+\node[error, below = of 0]       (err)   {Err};
+\node[final, right = 4cm of 4]   (final) {};
+
+\draw[->] (0) to             node[left] {Autre}      (err);
+\draw[->] (0) to             node       {Délimiteur} (1);
+\draw[->] (0) to             node       {Nombre}     (3);
+\draw[->] (0) to[bend left]  node       {Opérateur}  (2);
+\draw[->] (0) to[bend right] node       {Majuscule}  (5);
+
+\draw[->] (1) to node[left] {Retour: Délimiteur, lexeme} (final);
+
+\draw[->] (2) to node {Retour: Opérateur, lexeme} (final);
+
+\draw[->] (3) to[loop below] node {Nombre} (3);
+\draw[->] (3) to             node {Autre}  (4);
+
+\draw[->] (4) to node[below] {Retour: Litéral, lexeme} (final);
+
+\draw[->] (5) to[loop above] node {Lettre} (5);
+\draw[->] (5) to             node {Autre}  (6);
+\draw[->] (5) to[bend left]  node {'\_'}   (7);
+
+\draw[->] (6) to node[right] {Retour: Identificateur, lexeme} (final);
+
+\draw[->] (7) to[bend left] node {Lettre} (5);
+\draw[->] (7) to[bend left] node {Autre}  (err);
+
+\end{tikzpicture}

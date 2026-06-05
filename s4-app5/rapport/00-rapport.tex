@@ -1,0 +1,77 @@
+\documentclass[a11paper]{article}
+
+\usepackage[many]{tcolorbox}
+\usetikzlibrary{calc}
+\usepackage{subcaption}
+\usepackage{tabularx}
+\usepackage{libs/titlepage}
+\usepackage{libs/document}
+\usepackage{libs/tools}
+\usepackage{booktabs}
+\usepackage{multicol}
+\usepackage{multirow}
+\usepackage{float}
+\usepackage{longtable}
+\usepackage{varwidth}
+\usepackage{graphicx}
+\usepackage{siunitx}
+\usepackage{pifont}
+\usepackage{tikz}
+\usepackage[bookmarks]{hyperref}
+\usetikzlibrary{automata, positioning, arrows}
+% \usepackage[toc,page]{appendix}
+\usepackage[usenames,dvipsnames]{xcolor}
+
+\setcounter{secnumdepth}{4}
+
+\titleformat{\paragraph}
+{\normalfont\normalsize\bfseries}{\theparagraph}{1em}{}
+\titlespacing*{\paragraph}
+{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+
+\title{Rapport d'APP}
+
+\class{Éléments de compilation}
+\classnb{GIF340}
+
+\teacher{Marouane Adnane}
+
+\author{
+  \addtolength{\tabcolsep}{-0.4em}
+  \begin{tabular}{rcl} % Ajouter des auteurs au besoin
+      Benjamin Chausse & -- & CHAB1704 \\
+      Shawn Couture    & -- & COUS1912 \\
+  \end{tabular}
+}
+
+
+\renewcommand{\frenchtablename}{Tableau}
+
+
+\begin{document}
+{\footnotesize
+\maketitle
+\newpage
+\tableofcontents
+\listoffigures
+\listoftables
+}
+
+\newpage
+
+\newpage
+\input{01-lex-analysis.tex}
+
+\newpage
+\input{02-ast.tex}
+
+\newpage
+\input{03-syntax-analysis.tex}
+
+\newpage
+\input{04-validation.tex}
+
+\newpage
+\input{05-appendix.tex}
+
+\end{document}

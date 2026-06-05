@@ -1,0 +1,89 @@
+\ProvidesPackage{tools}[
+Sherbrooke Engineering Toolbox by Benjamin Chausse
+]
+
+\newcommand{\todo}[1]{\begin{color}{Red}\textbf{TODO:} #1\end{color}}
+\newcommand{\note}[1]{\begin{color}{Orange}\textbf{NOTE:} #1\end{color}}
+\newcommand{\fixme}[1]{\begin{color}{Fuchsia}\textbf{FIXME:} #1\end{color}}
+\newcommand{\question}[1]{\begin{color}{ForestGreen}\textbf{QUESTION:} #1\end{color}}
+
+\newcommand{\quicktab}[4]{
+  \begin{table}[H]
+    \centering
+    \caption{#1}
+    \label{tab:#2}
+    \begin{tabular}{#3}
+      #4
+    \end{tabular}
+  \end{table}
+}
+
+\newcommand{\quickfig}[4]{
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=#3\textwidth]{#4}
+  \caption{#1}
+  \label{fig:#2}
+\end{figure}
+}
+
+% Checkboxes
+\setlength{\fboxsep}{1pt}
+\newcommand{\cbox}{\fbox{\phantom{\ding{51}}}}
+\newcommand{\cboxtick}{\fbox{\ding{51}}}%
+
+% self-incrementing Test-ID
+\newcounter{tid}
+\newcommand{\tid}{\stepcounter{tid}\thetid}
+\newcommand{\tidlabel}[1]{\refstepcounter{tid}\label{#1}\thetid}
+
+\definecolor{myred}{RGB}{243,69,0}
+
+\tcbset{mystyle/.style={
+  breakable,
+  enhanced,
+  outer arc=0pt,
+  arc=0pt,
+  colframe=myred,
+  colback=myred!20,
+  attach boxed title to top left,
+  boxed title style={
+    colback=myred,
+    outer arc=0pt,
+    arc=0pt,
+    top=3pt,
+    bottom=3pt,
+    },
+  fonttitle=\sffamily
+  }
+}
+
+\newtcolorbox[auto counter,number within=section]{error}[2][]{
+  mystyle,label=#2,
+  title=Erreur~\thetcbcounter,
+  overlay unbroken and first={
+      \path
+        let
+        \p1=(title.north east),
+        \p2=(frame.north east)
+        in
+        node[anchor=west,font=\sffamily,color=myred,text width=\x2-\x1]
+        at (title.east) {#1};
+  }
+}
+\newtcolorbox[auto counter]{assumption}[2][]{
+  mystyle,label=#2,
+  colback=white,
+  rightrule=0pt,
+  toprule=0pt,
+  title=Assumption SLR.\thetcbcounter,
+  overlay unbroken and first={
+      \path
+        let
+        \p1=(title.north east),
+        \p2=(frame.north east)
+        in
+        node[anchor=west,font=\sffamily,color=myred,text width=\x2-\x1]
+        at (title.east) {#1};
+  }
+}

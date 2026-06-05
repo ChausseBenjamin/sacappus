@@ -1,0 +1,65 @@
+services:
+  clean:
+    extends:
+      file: ../assets/container/compose.yml
+      service: clean
+
+  app:
+    extends:
+      file: ../assets/container/compose.yml
+      service: compile
+    environment:
+      PROJECT: s4-app1
+      INPUT_FILE: rapport/00-rapport.tex
+      OUTPUT_FILE: chab1704-cous1912.pdf
+
+  app-watch:
+    extends:
+      service: app
+    environment:
+      REALTIME: true
+
+  doctest:
+    extends:
+      file: ../assets/container/compose.yml
+      service: compile
+    environment:
+      PROJECT: s4-app1
+      INPUT_FILE: doctest/README.md
+      OUTPUT_FILE: plan-de-tests.pdf
+
+  doctest-watch:
+    extends:
+      service: app
+    environment:
+      REALTIME: true
+
+  helper:
+    extends:
+      file: ../assets/container/compose.yml
+      service: compile
+    environment:
+      PROJECT: s4-app1
+      INPUT_FILE: helper/00-helper.tex
+      OUTPUT_FILE: aide-memoire.pdf
+
+  helper-watch:
+    extends:
+      service: helper
+    environment:
+      REALTIME: true
+
+  devoir:
+    extends:
+      file: ../assets/container/compose.yml
+      service: compile
+    environment:
+      PROJECT: s4-app1
+      INPUT_FILE: devoir/00-devoir.tex
+      OUTPUT_FILE: chab1704.pdf
+
+  devoir-watch:
+    extends:
+      service: devoir
+    environment:
+      REALTIME: true

@@ -1,0 +1,56 @@
+\documentclass{minimal}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+% --- Narrower versions of symbols ---
+\renewcommand{\ldots}{\mathinner{.\mkern-3mu.\mkern-3mu.}}
+\newcommand{\nplus}{\mathbin{\mkern-2mu+\mkern-2mu}}
+\newcommand{\ntimes}{\mathbin{\mkern-2mu\cdot\mkern-2mu}}
+\renewcommand{\not}[1]{#1^{\mkern-2mu\prime}}
+\newcommand{\ncomma}{\mkern-2mu,\mkern-2mu}
+\newcommand{\nargs}[1]{\mathinner{#1}}
+
+\begin{document}
+
+% Table 4‑1: one variable
+\begin{align*}
+\tag{T1 } X \nplus     0  &= X &\text{(Identity)}     \\
+\tag{T1'} X \ntimes    1  &= X &\text{(Identity)}     \\
+\tag{T2 } X \nplus     1  &= 1 &\text{(Null element)} \\
+\tag{T2'} X \ntimes    0  &= 0 &\text{(Null element)} \\
+\tag{T3 } X \nplus     X  &= X &\text{(Idempotency)}  \\
+\tag{T3'} X \ntimes    X  &= X &\text{(Idempotency)}  \\
+\tag{T4 } (\not{X})'      &= X &\text{(Involution)}   \\
+\tag{T5 } X \nplus \not{X} &= 1 &\text{(Complements)}  \\
+\tag{T5'} X \ntimes \not{X} &= 0 &\text{(Complements)}
+\end{align*}
+
+% Table 4‑2: two or three variables
+\begin{align*}
+\tag{T6  } X\nplus Y              &= Y\nplus X         &\text{(Commutativity)}  \\
+\tag{T6' } X\ntimes Y             &= Y\ntimes X        &\text{(Commutativity)}  \\
+\tag{T7  } (X\nplus Y)\nplus Z    &= X\nplus(Y\nplus Z) &\text{(Associativity)} \\
+\tag{T7' } (X\ntimes Y)\ntimes Z  &= X\ntimes(Y\ntimes Z) &\text{(Associativity)} \\
+\tag{T8  } X\ntimes Y \nplus X\ntimes Z &= X\ntimes(Y\nplus Z) &\text{(Distributivity)} \\
+\tag{T8' } (X\nplus Y)(X\nplus Z) &= X\nplus Y\ntimes Z &\text{(Distributivity)} \\
+\tag{T9  } X\nplus X\ntimes Y     &= X           &\text{(Covering)}       \\
+\tag{T9' } X\ntimes(X\nplus Y)    &= X           &\text{(Covering)}       \\
+\tag{T10 } X\ntimes Y \nplus X\ntimes\not{Y} &= X  &\text{(Combining)}      \\
+\tag{T10'} (X\nplus Y)(X\nplus \not{Y}) &= X &\text{(Combining)}      \\
+\tag{T11 } X\ntimes Y \nplus \not{X}\ntimes Z \nplus Y\ntimes Z &= X\ntimes Y \nplus \not{X}\ntimes Z &\text{(Consensus)} \\
+\tag{T11'} (X\nplus Y)(\not{X}\nplus Z)(Y\nplus Z) &= (X\nplus Y)(\not{X}\nplus Z) &\text{(Consensus)}
+\end{align*}
+
+% Table 4‑3: n variables
+\begin{align*}
+\tag{T12 } X\nplus X\nplus\ldots\nplus X &= X &\text{(Generalized Idempotency)} \\
+\tag{T12'} X\ntimes X\ntimes\ldots\ntimes X &= X &\text{(Generalized Idempotency)} \\
+\tag{T13 } (\nargs{X_1\ntimes X_2\ntimes\ldots\ntimes X_n})' &= \not{X_1} \nplus \not{X_2} \nplus \ldots \nplus \not{X_n} &\text{(DeMorgan's Theorems)} \\
+\tag{T13'} (\nargs{X_1\nplus X_2\nplus\ldots\nplus X_n})' &= \not{X_1}\ntimes \not{X_2} \ntimes \ldots \ntimes \not{X_n} &\text{(DeMorgan's Theorems)} \\
+\tag{T14 } \not{F(\nargs{X_1\ncomma X_2\ncomma\ldots\ncomma X_n})} &= F(\nargs{\not{X_1}\ncomma \not{X_2}\ncomma\ldots\ncomma \not{X_n}}) &\text{(Generalized DeMorgan)} \\
+\tag{T15 } F(\nargs{X_1\ncomma X_2\ncomma\ldots\ncomma X_n}) &= X_1\ntimes F(\nargs{1\ncomma X_2\ncomma\ldots\ncomma X_n}) \nplus \not{X_1}\ntimes F(\nargs{0\ncomma X_2\ncomma\ldots\ncomma X_n}) &\text{(Shannon's Expansion)} \\
+\tag{T15'} F(\nargs{X_1\ncomma X_2\ncomma\ldots\ncomma X_n}) &= (X_1 \nplus F(\nargs{0\ncomma X_2\ncomma\ldots\ncomma X_n}))( \not{X_1} \nplus F(\nargs{1\ncomma X_2\ncomma\ldots\ncomma X_n})) &\text{(Shannon's Expansion)}
+\end{align*}
+
+\end{document}

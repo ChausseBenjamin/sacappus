@@ -1,0 +1,190 @@
+\documentclass[a11paper]{article}
+
+\usepackage{karnaugh-map}
+\usepackage{tabularx}
+\usepackage{libs/titlepage}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{libs/document}
+\usepackage{booktabs}
+\usepackage{multicol}
+\usepackage{float}
+
+\usepackage{witharrows}
+\usepackage{enumitem}
+
+\usepackage[usenames,dvipsnames]{xcolor}
+
+% \renewcommand{\not}[1]{\overline{#1}}
+\renewcommand{\not}[1]{#1^{\prime}}
+\newcommand{\rhs}[1]{#1^{\prime}}
+\newcommand{\xor}{\oplus}
+\newcommand{\Cuz}[1]{\Arrow{\footnotesize #1}}
+
+% \item $A+B=B+A \hspace{\fill}\text{commutativity}$
+\usepackage{enumitem}       % customizable list environments
+
+
+\title{Devoir}
+
+\class{Logique Combinatoire}
+\classnb{APP1}
+
+\teacher{Marwan Besrour \& Gabriel Bélanger}
+
+\author{Benjamin Chausse --- CHAB1704}
+
+\begin{document}
+\maketitle
+
+\section{Démontrer la solution la plus simple au segment G d'un afficheur 7 segment}
+
+Commençons par dresser la table de vérité du segment G de l'afficheur. À partir
+de celle-ci, il sera possible de trouver la solution en créant une table de
+Karnaugh à partir de cette table.
+
+\begin{table}[H]
+  \centering
+  \footnotesize
+  \caption{Table de vérité du segment G}
+  \begin{tabular}{lllllc}
+    \toprule
+    Dec. & $D_3$ & $D_2$ & $D_1$ & $D_0$ & \textbf{G} \\
+    \midrule
+    0  & 0 & 0 & 0 & 0 & 0 \\
+    1  & 0 & 0 & 0 & 1 & 0 \\
+    2  & 0 & 0 & 1 & 0 & 1 \\
+    3  & 0 & 0 & 1 & 1 & 1 \\
+    4  & 0 & 1 & 0 & 0 & 1 \\
+    5  & 0 & 1 & 0 & 1 & 1 \\
+    6  & 0 & 1 & 1 & 0 & 1 \\
+    7  & 0 & 1 & 1 & 1 & 0 \\
+    8  & 1 & 0 & 0 & 0 & 1 \\
+    9  & 1 & 0 & 0 & 1 & 1 \\
+    10 & 1 & 0 & 1 & 0 & X \\
+    11 & 1 & 0 & 1 & 1 & X \\
+    12 & 1 & 1 & 0 & 0 & X \\
+    13 & 1 & 1 & 0 & 1 & X \\
+    14 & 1 & 1 & 1 & 0 & X \\
+    15 & 1 & 1 & 1 & 1 & X \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{figure}[H]
+  \centering
+    \begin{karnaugh-map}[4][4][1][$D_0$][$D_1$][$D_2$][$D_3$]
+        \manualterms{
+          0,0,1,1,
+          1,1,1,0,
+          1,1,X,X,
+          X,X,X,X}
+        \implicant{2}{10}
+        \implicant{4}{13}
+        \implicant{12}{10}
+        \implicantedge{3}{2}{11}{10}
+    \end{karnaugh-map}
+  \caption{Table de Karnaugh du segment G}
+\end{figure}
+
+En représentant de façon formelle ce que nous révèle la table de Karnaugh
+nous obtenons l'équation que nous avions à démontrer:
+
+\begin{equation}
+  G = \underbrace{D_3}_{\textit{\textcolor{YellowOrange}{Jaune}}}+
+      \underbrace{D_2\not{D_1}}_{\textit{\textcolor{ForestGreen}{Vert}}}+
+      \underbrace{\not{D_2}D_1}_{\textit{\textcolor{RoyalBlue}{Bleu}}}+
+      \underbrace{D_1\not{D_0}}_{\textit{\textcolor{Mahogany}{Rouge}}}
+\end{equation}
+
+\section{Prouver que l'égalité qui suit est vraie par l'algèbre de Boole}
+
+Équation initiale:
+
+\begin{equation}
+  \tiny
+  \not{D_3} \not{D_2} D_1 +
+  \not{D_3} D_1 \not{D_0} +
+  D_3 \not{D_2} \not{D_1} +
+  \not{D_3} D_2 \not{D_1} =
+  D_3 \left[ (D_2 \xor D_1) + \not{( \not{D_1} + D_0)} \right] +
+  D_3(\not{D_1}\not{(D_2\not{D_1})}) +
+  (D_1\xor D_3)(D_1\xor D_2)(D_1(D_2\not{D_1} + \not{D_2}\not{D_1}))
+\end{equation}
+
+Afin de simplifier la résolution (et alléger la lecture), les termes de
+l'équation sont substitués par de plus petits segments représentés par des
+variables:
+
+\begin{align}
+  A &= \not{D_3} \left[ (D_2 \xor D_1) + \not{( \not{D_1} + D_0)} \right] \\
+  B &= D_3(\not{D_1}\not{(D_2\not{D_1})}) \\
+  C &= (D_1\xor D_3)(D_1\xor D_2)(D_1(D_2\not{D_1} + \not{D_2}\not{D_1})) \\
+  \not{D_3} \not{D_2} D_1 + \not{D_3} D_1 \not{D_0} + D_3 \not{D_2} \not{D_1} + \not{D_3} D_2 \not{D_1} = R &= A+B+C
+\end{align}
+
+\subsection{Simplification de $A$}
+\begin{DispWithArrows}
+  A &= \not{D_3} \left[ (D_2 \xor D_1) + \not{( \not{D_1} + D_0)} \right]
+  \Cuz{T13' DeMorgan}\\
+  A &= \not{D_3} \left[ (D_2 \xor D_1) + ( \not{D_1'} \not{D_0}) \right]
+  \Cuz{T4 Involution}\\
+  A &= \not{D_3} \left[ (D_2 \xor D_1) + ( D_1 \not{D_0}) \right]
+  \Cuz{Expansion du \textit{XOR}}\\
+  A &= \not{D_3} \left[ (\not{D_1}D_2 + D_1\not{D_2}) +  (D_1 \not{D_0}) \right]
+  \Cuz{T7 Associativité}\\
+  A &= \not{D_3} \left[ \not{D_1}D_2 + D_1\not{D_2} +  D_1 \not{D_0} \right]
+  \Cuz{T8 Distributivité}\\
+  A &= \not{D_3}\not{D_1}D_2 + \not{D_3}D_1\not{D_2} +  \not{D_3}\not{D_0}D_1
+\end{DispWithArrows}
+
+\subsection{Simplification de $B$}
+
+\begin{DispWithArrows}
+  B &= D_3(\not{D_1}\not{(D_2\not{D_1})})
+  \Cuz{T13 DeMorgan}\\
+  B &= D_3(\not{D_1}(\not{D_2}+\not{D_1'}))
+  \Cuz{T4 Involution}\\
+  B &= D_3(\not{D_1}(\not{D_2}+D_1))
+  \Cuz{T8 Distributivité}\\
+  B &= D_3(\not{D_1}\not{D_2}+\not{D_1}D_1)
+  \Cuz{T5' Compléments}\\
+  B &= D_3(\not{D_1}\not{D_2}+0)
+  \Cuz{T1 Identité}\\
+  B &= D_3(\not{D_1}\not{D_2})
+  \Cuz{T7' Associativité}\\
+  B &= \not{D_1}\not{D_2}D_3
+\end{DispWithArrows}
+
+\subsection{Simplification de $C$}
+\begin{DispWithArrows}
+  C &= (D_1\xor D_3)(D_1\xor D_2)(D_1(D_2\not{D_1} + \not{D_2}\not{D_1}))  \Cuz{T8 Distributivité}\\
+    &= (D_1\xor D_3)(D_1\xor D_2)(D_1D_2\not{D_1} + D_1\not{D_2}\not{D_1}) \Cuz{T5' Compléments}\\
+    &= (D_1\xor D_3)(D_1\xor D_2)(0 D_2 + 0\not{D_2}) \Cuz{T2' Élément nul}\\
+    &= (D_1\xor D_3)(D_1\xor D_2)(0+0) \Cuz{T1 Identité} \\
+    &= (D_1\xor D_3)(D_1\xor D_2)0 \Cuz{T2' Élément nul} \\
+    &= 0
+\end{DispWithArrows}
+
+\subsection{Simplification finale}
+\begin{DispWithArrows}
+  R &= A+B+C \\
+  R &= \not{D_3}\not{D_1}D_2 + \not{D_3}D_1\not{D_2} +  \not{D_3}\not{D_0}D_1+
+       \not{D_1}\not{D_2}D_3+
+       0
+      \Cuz{T1 Identité}\\
+  R &= \not{D_3}\not{D_1}D_2 + \not{D_3}D_1\not{D_2} + \not{D_3}\not{D_0}D_1 + \not{D_1}\not{D_2}D_3
+      \Cuz{T6 Commutativité}\\
+  R &=  \not{D_3}D_1\not{D_2} + \not{D_3}\not{D_0}D_1 + \not{D_1}\not{D_2}D_3 + \not{D_3}\not{D_1}D_2
+      \Cuz{T6' Commutativité}\\
+  R &=  \not{D_3}\not{D_2}D_1 + \not{D_3}D_1\not{D_0} + D_3\not{D_2}\not{D_1} + \not{D_3}D_2\not{D_1}
+\end{DispWithArrows}
+
+\begin{equation}
+  \not{D_3}\not{D_2}D_1 + \not{D_3}D_1\not{D_0} + D_3\not{D_2}\not{D_1} + \not{D_3}D_2\not{D_1}
+  =  \not{D_3}\not{D_2}D_1 + \not{D_3}D_1\not{D_0} + D_3\not{D_2}\not{D_1} + \not{D_3}D_2\not{D_1}
+\end{equation}
+
+\textbf{\textit{Q.E.D.}}
+
+\end{document}

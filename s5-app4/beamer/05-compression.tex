@@ -1,0 +1,187 @@
+
+\begin{frame}
+    \frametitle{Compression Matrice A — Théorie}
+    \begin{enumerate}
+        \item Obtenir la matrice de covariance
+        \begin{enumerate}
+            \item Analyze des données (colonnes)
+            \item Construction du vecteur moyen
+            \item Centrage des données
+            \item Transposé de la matrice
+            \item Produit matricielle
+        \end{enumerate}
+        \item Valeurs propres
+        \begin{enumerate}
+            \item Application de la formule
+            \item Déterminant de la matrice
+            \item Valeurs $\lambda$ qui donnent $0$
+        \end{enumerate}
+        \item Vecteurs propres
+        \begin{enumerate}
+            \item $\Sigma-\lambda I$ pour chaque $\lambda$ trouvé sachant $\Sigma v=\lambda v$
+            \item Isolé $x$ et $y$ de chaque lignes (confirmation)
+            \item Posé une valeur ($x$ ou $y$)
+            \item Résolution pour trouvé la manquante
+        \end{enumerate}
+    \end{enumerate}
+\end{frame}
+
+
+\begin{frame}
+    \frametitle{Déterminants et valeurs propres}
+		\begin{columns}[t]
+
+		\begin{column}{.5\linewidth}
+		\textbf{Déterminant}:
+			\footnotesize{\begin{align}
+			\det(A-\lambda I)&=0 \\
+        \det\left(
+        \begin{bmatrix}
+            4-\lambda&1\\
+            2&5-\lambda
+        \end{bmatrix}
+        \right)&=0 \\
+        \det\left(
+            \begin{bmatrix}
+                a&b\\
+                c&d
+            \end{bmatrix}
+        \right)
+				&=
+        ad-bc \\
+				(4-\lambda)(5-\lambda)-(1)(2) &= \det\\
+				-\lambda^2-9\lambda+18 &= \det
+			\end{align}}
+
+		\end{column}
+		\begin{column}{.5\linewidth}
+		\textbf{Valeurs propres}:
+			\footnotesize{
+				\begin{align}
+				\lambda   &= \frac{-b\pm\sqrt{b^2-4ac}}{2a} \\
+				\lambda   &= \frac{9\pm3}{2}
+				\end{align}
+				\begin{align}
+				\lambda_1 &= \frac{9-3}{2} & \lambda_2 &= \frac{9+3}{2} \\
+				\lambda_1 &= 3             & \lambda_2 &= 6
+			\end{align}}
+
+		\end{column}
+	\end{columns}
+\end{frame}
+
+
+\begin{frame}
+    \frametitle{Matrice A - Vecteurs propres - Fonctions}
+
+		\begin{columns}
+		\begin{column}{0.5\textwidth}
+
+			\scriptsize{\begin{align}
+			A&-\lambda I \nonumber \\
+				\lambda_2&=6 \nonumber \\
+				\begin{bmatrix} 4&1\\ 2&5 \end{bmatrix}
+				  - \begin{bmatrix} 6&0\\ 0&6 \end{bmatrix}
+				  &= \begin{bmatrix} -2&1\\ 2&-1 \end{bmatrix} \\
+				\begin{bmatrix} -2&1\\ 2&-1 \end{bmatrix}
+				  \begin{bmatrix} x\\y \end{bmatrix}
+				  &= \begin{bmatrix} 0\\0 \end{bmatrix} \\
+				-2x+1y&=0 \\
+				2x-1y&=0 \\
+				2x-y&=0
+			\end{align}}
+		\end{column}
+
+		\begin{column}{0.5\textwidth}
+			\scriptsize{\begin{align}
+				A \vec v&=\lambda\vec v \nonumber\\
+				\lambda_1&=3 \nonumber\\
+				\begin{bmatrix} 4&1\\ 2&5 \end{bmatrix}
+					- \begin{bmatrix} 3&0\\ 0&3 \end{bmatrix}
+					&= \begin{bmatrix} 1&1\\ 2&2 \end{bmatrix} \\
+				\begin{bmatrix} 1&1\\ 2&2 \end{bmatrix}
+					\begin{bmatrix} x\\y \end{bmatrix}
+					&= \begin{bmatrix} 0\\0 \end{bmatrix} \\
+				1x+1y&=0 \\
+				2x+2y&=0 \\
+				x-y&=0
+			\end{align}}
+		\end{column}
+	\end{columns}
+
+	\begin{columns}
+		\begin{column}{0.3\textwidth}
+			\quickfigure{
+				\scriptsize{Original}
+			}{compressed-original}{.7}{compressed-original.png}
+		\end{column}
+		\begin{column}{0.3\textwidth}
+			\quickfigure{
+				\scriptsize{Compression 50\%}
+			}{compressed-fifty}{.7}{compressed-fifty.png}
+		\end{column}
+		\begin{column}{0.3\textwidth}
+			\quickfigure{
+				\scriptsize{Compression 70\%}
+			}{compressed-seventy}{.7}{compressed-seventy.png}
+		\end{column}
+
+	\end{columns}
+
+\end{frame}
+
+\begin{frame}[fragile]
+\begin{minted}{python}
+def compute_change_of_basis(image: np.ndarray, change_of_basis_matrix: np.ndarray):
+    return image @ change_of_basis_matrix.T
+\end{minted}
+
+\begin{columns}[t]
+\begin{column}{0.5\linewidth}
+\begin{minted}{python}
+cov, mean, centered = get_covariance_matrix(image)
+eigenvalues, eigenvectors = get_eigen(cov)
+P = get_change_of_basis_matrix(eigenvectors)
+projected = compute_change_of_basis(centered, P)
+compressed = compress_projected(projected, keep_ratio)
+reconstructed = reconstruct_image(compressed, P, mean)
+\end{minted}
+
+\begin{minted}{python}
+def get_covariance_matrix(image: np.ndarray):
+    mean = np.mean(image, axis=0)
+    centered = image - mean
+    covariance = np.cov(centered, rowvar=False)
+    return covariance, mean, centered
+\end{minted}
+
+\begin{minted}{python}
+def get_eigen(covariance: np.ndarray):
+    eigenvalues, eigenvectors = np.linalg.eig(covariance)
+    idx = np.argsort(eigenvalues)[::-1] # Tri décroissant
+    return eigenvalues[idx], eigenvectors[:, idx]
+\end{minted}
+\end{column}
+\begin{column}{0.5\linewidth}
+\begin{minted}{python}
+def get_change_of_basis_matrix(eigenvectors: np.ndarray):
+    return eigenvectors.T
+\end{minted}
+
+\begin{minted}{python}
+def reconstruct_image(compressed, change_of_basis_matrix, mean):
+    reconstructed = compressed @ change_of_basis_matrix
+    return reconstructed += mean
+\end{minted}
+
+\begin{minted}{python}
+def compress_projected(projected: np.ndarray, keep_ratio: float):
+    compressed = projected.copy()
+    n_components = projected.shape[1]
+    k = int(n_components * keep_ratio)
+    compressed[:, k:] = 0
+    return compressed
+\end{minted}
+\end{column}
+\end{columns}
+\end{frame}

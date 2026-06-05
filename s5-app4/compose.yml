@@ -1,0 +1,19 @@
+services:
+  clean:
+    extends:
+      file: ../assets/container/compose.yml
+      service: clean
+
+  app:
+    extends:
+      file: ../assets/container/compose.yml
+      service: compile
+    environment:
+      PROJECT: s5-app4
+      INPUT_FILE: beamer/00-presentation.tex
+      OUTPUT_FILE: chab1704-cous1912.pdf
+  app-watch:
+    extends:
+      service: app
+    environment:
+      REALTIME: true

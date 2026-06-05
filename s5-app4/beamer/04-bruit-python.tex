@@ -1,0 +1,38 @@
+\subsection{Approche Python}
+
+\begin{frame}
+\frametitle{Approche Python — Conception}
+	\begin{columns}
+		\begin{column}{0.5\textwidth}
+
+			\quickfigure{
+				\footnotesize{Filtre Butterworth}
+			}{noise-test-butter}{}{denoise-butterworth.pdf}
+
+			\quickfigure{
+				\footnotesize{Filtre Élliptique (choisi)}
+			}{noise-test-butter}{}{denoise-elliptic.pdf}
+
+		\end{column}
+		\begin{column}{0.5\textwidth}
+
+			\quickfigure{
+				\footnotesize{Filtre Chebyshev Type I}
+			}{noise-test-butter}{}{denoise-chebyshev-i.pdf}
+
+			\quickfigure{
+				\footnotesize{Filtre Chebyshev Type II}
+			}{noise-test-butter}{}{denoise-chebyshev-ii.pdf}
+
+		\end{column}
+	\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{Approche Python — Choix final: Elliptique d'ordre 3}
+
+			\quickfigure{
+				\footnotesize{Filtre \textit{Python} choisi en $z$}
+			}{noise-zplane-final}{.45}{denoise-zplane-final.pdf}
+
+\end{frame}

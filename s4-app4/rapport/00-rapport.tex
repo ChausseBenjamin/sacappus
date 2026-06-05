@@ -1,0 +1,391 @@
+\documentclass[a11paper]{article}
+
+\usepackage{karnaugh-map}
+\usepackage{subcaption}
+\usepackage{tabularx}
+\usepackage{libs/titlepage}
+\usepackage{libs/document}
+\usepackage{booktabs}
+\usepackage{multicol}
+\usepackage{multirow}
+\usepackage{float}
+\usepackage{longtable}
+\usepackage{varwidth}
+\usepackage{graphicx}
+\usepackage{siunitx}
+\usepackage{pifont}
+% \usepackage[toc,page]{appendix}
+\usepackage[usenames,dvipsnames]{xcolor}
+
+\title{Rapport d'APP}
+
+\class{Physique des portes logiques}
+\classnb{GIF470}
+
+\teacher{Keven Deslandes}
+
+\author{
+  \addtolength{\tabcolsep}{-0.4em}
+  \begin{tabular}{rcl} % Ajouter des auteurs au besoin
+      Benjamin Chausse & -- & CHAB1704 \\
+      Shawn Couture    & -- & COUS1912 \\
+  \end{tabular}
+}
+
+\newcommand{\todo}[1]{\begin{color}{Red}\textbf{TODO:} #1\end{color}}
+\newcommand{\note}[1]{\begin{color}{Orange}\textbf{NOTE:} #1\end{color}}
+\newcommand{\fixme}[1]{\begin{color}{Fuchsia}\textbf{FIXME:} #1\end{color}}
+\newcommand{\question}[1]{\begin{color}{ForestGreen}\textbf{QUESTION:} #1\end{color}}
+
+\newcommand{\quicktab}[4]{
+  \begin{table}[H]
+    \centering
+    \caption{#1}
+    \label{tab:#2}
+    \begin{tabular}{#3}
+      #4
+    \end{tabular}
+  \end{table}
+}
+
+\newcommand{\quickfig}[4]{
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=#3\textwidth]{#4}
+  \caption{#1}
+  \label{fig:#2}
+\end{figure}
+}
+
+% Checkboxes
+\setlength{\fboxsep}{1pt}
+\newcommand{\cbox}{\fbox{\phantom{\ding{51}}}}
+\newcommand{\cboxtick}{\fbox{\ding{51}}}%
+% self-incrementing Test-ID
+\newcounter{tid}
+\newcommand{\tid}{\stepcounter{tid}\thetid}
+
+\renewcommand{\frenchtablename}{Tableau}
+
+
+\begin{document}
+\maketitle
+\newpage
+\tableofcontents
+\listoffigures
+\listoftables
+
+\newpage
+\section{Plan de vérification}
+
+\begin{center}
+  \footnotesize
+	\begin{longtable}{lp{4cm}p{4cm}p{5cm}l}
+		% Headers & Footers {{{
+		\caption{Plan de vérification} \label{tab:verif}
+		\\
+
+		\toprule
+		\multicolumn{3}{l}{Objectif Ciblé} &
+		\multicolumn{2}{l}{Test des nouvelles opérations}
+		\\
+
+		\midrule
+		\#                                 &
+		\bfseries Test                     &
+		\bfseries Action                   &
+		\bfseries Résultat Attendu         &
+		\cboxtick
+		\\
+
+		\midrule
+		\endfirsthead
+
+		\multicolumn{5}{c}%
+		{{\itshape \tablename\ \thetable{} -- Continué de la page précédente\ldots}}
+		\\
+
+		\midrule
+		\#                                 &
+		Test                               &
+		Action                             &
+		Résultat Attendu                   &
+		\cboxtick
+		\\
+
+		\midrule
+		\endhead
+
+		\midrule \multicolumn{5}{r}{{Continué à la prochaine page}}
+		\\
+		\midrule
+		\endfoot
+
+		\bottomrule
+		\endlastfoot
+		% }}}
+		% Tests {{{
+		\tid                                       &
+    Temps de transition Non-Ou &
+		Éxecuter \verb|nor_test.asc| et ourvir les logs &
+		Le temps de transition \verb|transition_up| et \verb|transition_down| sont
+    en bas de 130ps &
+		\cbox \\
+
+	\tid                                         &
+    Temps de transition Non-Ou                 &
+		Éxecuter \verb|nor_test.asc| et ourvir les logs &
+		Le temps de transition \verb|transition_up| et \verb|transition_down| sont
+    en bas de 130ps &
+		\cbox \\
+
+	  \tid &
+    Temps de transition Non-Et &
+		Éxecuter \verb|nand_test.asc| et ourvir ses logs &
+		Le temps de transition \verb|transition_up| et \verb|transition_down| sont
+    en bas de 130ps &
+		\cbox \\
+
+		\tid &
+    Temps de transition Non-Ou &
+		Éxecuter \verb|nor_test.asc| et ourvir ses logs &
+		Le temps de transition \verb|transition_up| et \verb|transition_down| sont
+    en bas de 130ps &
+		\cbox \\
+
+	  \tid &
+    Temps de transition Non-Et &
+		Éxecuter \verb|nand_test.asc| et ourvir ses logs &
+		Le temps de transition \verb|transition_up| et \verb|transition_down| sont
+    en bas de 130ps &
+		\cbox \\
+
+	  \tid &
+    Temps de transition Ou exclusif &
+		Éxecuter \verb|xor_test.asc| et ourvir ses logs &
+		Le temps de transition \verb|transition_up| et \verb|transition_down| sont
+    en bas de 130ps & \\
+
+	  \tid &
+    TVm du Non-Et &
+		Éxecuter \verb|nand_transfer.asc| et ourvir ses logs &
+		Le Vm est proche de VDD/2 (0.9) &
+		\cbox \\
+
+	  \tid &
+    Vm du Ou exclusif &
+		Éxecuter \verb|xor_transfer.asc| et ourvir ses logs &
+		Le Vm est proche de VDD/2 (0.9) &
+		\cbox \\
+
+    % - Buffer - %
+
+    \tid &
+    Temps de propagation &
+		Éxecuter \verb|pad_buffer_test.asc| et ourvir ses logs &
+		Le temps de propagation est plus rapide que l'autre alternative
+    d'inverseurs. &
+		\cbox \\
+
+    % - ALU - %
+
+    \tid &
+    Largeur de transistors &
+		Vérifier les largeurs des transistors &
+		Tout les transistors on une longueur de 180n et une largeur égal ou en haut
+    de 180n &
+		\cbox \\
+
+    % - AND 3 bit - %
+
+    \tid &
+    Sortie du ET 3 bits &
+		Executer \verb|and3b_test.asc| et analyzer le graphique généré &
+		Les sorties respectent la table de vérité d'une porte ET. &
+		\cbox \\
+
+    \tid &
+    Temps de transition du ET 3 bits &
+		Executer \verb|and3b_test_transfer.asc| et ouvrir les logs &
+		Le temps de transition entre les entrées et les sorties sont d'au plus
+    200ps &
+		\cbox \\
+
+    % - ADD 3 bit - %
+
+    \tid &
+    Sortie de l'additionneur 3 bits &
+		Executer \verb|add3b_test.asc| et analyzer le graphique généré &
+		Les sorties respectent la table de vérité d'un additionneur 3 bits. &
+		\cbox \\
+
+    \tid &
+    Temps de transition du ET 3 bits &
+		Executer \verb|add3b_test_transfer.asc| et ouvrir les logs &
+		Le temps de transition entre les entrées et les sorties sont d'au plus 200ps &
+		\cbox \\
+
+
+    % }}}
+	\end{longtable}
+\end{center}
+
+\section{Shématiques diverses}
+\label{appdx:schematics}
+
+\subsection{UAL}
+\quickfig{Unité d'arithmétique logique (UAL)}{alu}{1}{figures/alu.png}
+
+\newpage
+\subsection{Additionneur}
+Pour simplifier la schématique et éviter la redondance, une composante
+\verb|ADDER_1B| a été créée pour ensuite être utilisée dans l'additionneur
+3 Bits.
+
+\quickfig{Additionneur 1 Bit}{add1b}{1}{figures/add1b.png}
+\quickfig{Additionneur 3 Bits}{add3b}{.4}{figures/add3b.png}
+
+\newpage
+\subsection{Opérateur ET}
+\quickfig{ET 3 Bits}{and3b}{1}{figures/and3b.png}
+
+
+\newpage
+\section{Conception du Multiplexeur 2 vers 1}
+
+Afin de simplifier la résolution de sa table de vérité \ref{tab:mux2x1b}, les
+fils suivant chaque porte logique on été ajoutés commes étapes intermédiaires.
+Ces fils peuvent être vu dans la figure \ref{fig:mux2x1b}.
+
+\begin{minipage}{0.48\textwidth}
+\quicktab{Multiplexeur 2 vers 1 Bit}{mux2x1b}{ccccccc}{
+  \toprule
+  \multirow{2}{*}{$s_{el}$} &
+  \multirow{2}{*}{$a$} &
+  \multirow{2}{*}{$b$} &
+  $T_1$ &
+  $T_2$ &
+  $T_3$ &
+  $o_{ut}$ \\
+  & & &
+  $\overline{s}$ &
+  $\overline{(aT_1)}$ &
+  $\overline{(bs)}$ &
+  $\overline{(T_2T_3)}$ \\
+  \midrule
+  0&0&0&1&1&1&0 \\
+  0&0&1&1&1&1&0 \\
+  0&1&0&1&0&1&1 \\
+  0&1&1&1&0&1&1 \\
+  1&0&0&0&1&1&0 \\
+  1&0&1&0&1&0&1 \\
+  1&1&0&0&1&1&0 \\
+  1&1&1&0&1&0&1
+  \\
+  \bottomrule
+}
+\end{minipage}
+\hfill
+\begin{minipage}{0.48\textwidth}
+\begin{align}
+  Y &= \overline{(T_2T_3)} = o_{ut}  \\
+  &= \overline{(\overline{[aT_1]}\cdot\overline{[bs]} )} \\
+  &= \overline{(\overline{[a\overline{s}]}\cdot\overline{[bs]} )} \\
+  &= \overline{\overline{[a\overline{s}]}} + \overline{\overline{[bs]}} \\
+  Y &= a\overline{s} + bs \\
+  \overline{Y} &= \overline{(a\overline{s} + bs)} \\
+  \overline{Y} &= \overline{(a\overline{s})} \cdot \overline{(bs)} \\
+  \overline{Y} &= (\overline{a}+\overline{\overline{s}}) \cdot (\overline{b}+\overline{s}) \\
+  \overline{Y} &= (\overline{a}+s) \cdot (\overline{b}+\overline{s}) \\
+\end{align}
+\end{minipage}
+
+\subsection{Dimmensionnement relatif PUN, PDN}
+
+Le dimmensionnement relatif pour PUN et PDN dépend de si les transistors sont
+en série ou en parallèle à l'intérieur même des portes logiques. Uniquement
+l'inverseur et des portes non et sont utilisé dans le multiplexeur. Hors, dans
+l'inverseurs le PUN et le PDN on les mêmes dimmensionnement relatif, tandis que
+dans les portes non et, le PDN des NMOS ont un facteur multiplicatif de 2 pour
+que leurs temps de transitions soit similaire au PUN à cause que sont PDN
+consiste en 2 NMOS en série.
+
+\subsection{Dimensionnement absolue des transistors}
+
+Le dimmensionnement absolue des largeurs de $w_p$ sur $w_n$ à été trouvé avec
+l'inverseur. Il s'agissait de trouver des valeurs de marge de bruit (NMH et
+NML) pour plusieurs valeurs de mp différentes. Éventuellement, la valeur
+d'environ 2.5 donnait que le NMH et le NML était identique et le Vm était de
+VDD/2. Ce ratio relatif à été utilisé pour tout les transistors en plus du
+dimmensionnement relatif. Les MOSFET PMOS sont donc de base 2.5 fois plus parge
+que les MOSFET NMOS.
+
+
+\newpage
+\section{Le tampon de sortie}
+\quickfig{Tampon de sortie}{pad_buffer}{.5}{figures/pad_buffer.png}
+
+
+\begin{align}
+  x^n &= \frac{C_L}{C} \\
+  x^n &= \frac{1.5\times10^{-12}}{1\times10^{-15}} \\
+  x^n &= 1500
+\end{align}
+
+On sait que $x=e$, donc:
+
+\begin{equation}
+n=\ln(1500) \approx7.31 \\
+\end{equation}
+
+On veut un nombre paire pour évité d'inverser le signal. C'est donc soit $8$ ou
+$6$. Moins d'inverseur implique un plus petit délai de propagation. Mais plus
+d'inverseur = plus de facilité. Cependant, on veut minimiser le délai de
+propagation. Il reste donc à calculer la valeur du facteur x pour les deux
+valeurs de n et de calculer le plus petit délai de propagation. Donc, pour
+$n=6$:
+
+\begin{align}
+  x^6 &=1500 \\
+  x &=1500^{\frac{1}{6}} \approx3.38 \\
+\end{align}
+
+Pour $n=8$:
+
+\begin{align}
+  x^8 &= 1500 \\
+  x   &= 1500^{\frac{1}{8}} \approx 2.49 \\
+\end{align}
+
+Après un essai dans LTspice et des mesures avec des curseurs et des directives,
+6 inverseurs donne un délai de propagation moindre que 8 inverseurs. On obtient
+$\SI{365}{\pico\s}$ au lieu de $\SI{406}{\pico\s}$ .
+
+\section{Prises de mesures}
+
+\quicktab{Temps de transition des composantes en montée}{ttLH-Sortie}{ll}{
+\toprule
+Composante & Temps de montée 10\%-90\% ($\SI{}{\pico\s}$) \\
+\midrule
+AND (\&) & 83 \\
+ADD ($+$) & 100 \\ % 100 ns = 100,000 ps
+ALU & 95 \\
+\bottomrule
+}
+
+Les mesures de temps de propagations ont été mesurer à 50\% des signaux au lieu
+du 90\% à 10\% pris pour les temps de transitions.
+
+\quicktab{Délais de propagation des composantes}{propagation}{llll}{
+\toprule
+Composante & Signal & Bas vers Haut ($\SI{}{\pico\s}$) & Haut vers Bas ($\SI{}{\pico\s}$) \\
+\midrule
+AND (\&) & $a_1 \rightarrow o_1$ & 89 & 101 \\
+ADD ($+$) & $a_1 \rightarrow o_1$ & 243 & 237 \\
+ADD ($+$) & $c_{in} \rightarrow o_1$ & 555 & 536 \\
+\bottomrule
+}
+
+\input{99-annexes.tex}
+
+\end{document}

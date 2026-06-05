@@ -1,0 +1,54 @@
+\documentclass[10pt]{beamer}
+
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{siunitx}
+\usepackage{multirow}
+\usepackage{libs/utils}
+\usepackage{fancyvrb}
+\usepackage[cache=false]{minted}
+\setminted{fontsize=\tiny,frame=single}
+
+
+\input{libs/theming.tex}
+% \usetheme{metropolis}
+
+\title[Algèbre linéaire et filtres numériques]{S5-APP4: Algèbre linéaire et filtres numériques}
+\author[Benjamin C. \& Shawn C.]{
+  Benjamin Chausse (chab1704) \\
+  Shawn Couture (cous1912)
+}
+
+\institute[UDS]{Université de Sherbrooke}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{frame}
+  \frametitle{Table des matières}
+  \tableofcontents
+\end{frame}
+
+\section{Correction des aberrations}
+\input{02-aberrations.tex}
+
+\section{Rotation de l'image}
+\input{03-rotation.tex}
+
+\section{Débruitage}
+\input{04-bruit-maths.tex}
+\input{04-bruit-python.tex}
+\input{04-bruit-results.tex}
+
+\section{Compression d'image}
+\input{05-compression.tex}
+
+\section{Conclusion}
+\input{06-conclusion.tex}
+
+\end{document}

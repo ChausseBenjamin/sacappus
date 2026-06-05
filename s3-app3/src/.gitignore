@@ -1,0 +1,19 @@
+# macOS junk
+.DS_Store
+._*
+
+# IDE/editor junk
+*.iml
+.idea/
+.vscode/
+
+# ctags
+tags
+TAGS
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Temp files from docker-compose volumes
+tmp_todo*/
